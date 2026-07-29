@@ -157,7 +157,33 @@ Zahlenrätsel, klassisch. Begleitfigur: **Elda** (Dorfälteste, bedächtig — p
   kommt jede Ziffer von 1 bis 9 genau einmal vor; vorgegebene Ziffern sind fest
 - **HUD**: Zeit, Schwierigkeit, Fehlerzähler
 - **Hilfen**: Notizen, Hinweis, Rückgängig
-- **OFFEN**: Schwierigkeitsstufen, Anzahl Fehler bis zum Verlieren, Rätselerzeugung
+
+**Festgelegt am 29.07.2026** (war offen: Stufen, Fehlergrenze, Rätselerzeugung):
+
+| Stufe | Vorgegebene Zahlen | Gedacht für |
+|---|---|---|
+| Leicht | 42 | Einstieg, ohne Verzweigen lösbar |
+| Mittel | 34 | Standard |
+| Schwer | 26 | Für Geübte |
+
+- **Drei Fehler**, dann ist die Runde verloren. Ein falscher Eintrag bleibt sichtbar rot
+  stehen, bis er ersetzt wird — kommentarloses Verschwinden würde verwirren.
+- **Drei Hinweise** je Runde: Ein Hinweis trägt die richtige Zahl in ein leeres Feld ein.
+- **Notizen** und **Rückgängig** sind unbegrenzt.
+
+**Rätselerzeugung** — zwei Schritte:
+
+1. Ein vollständig gefülltes, gültiges Gitter wird durch Rückverfolgung erzeugt.
+2. Danach werden Felder in zufälliger Reihenfolge geleert. **Vor jedem Leeren wird
+   geprüft, ob das Rätsel weiterhin genau eine Lösung hat.** Ist das nicht der Fall,
+   bleibt die Zahl stehen.
+
+Der zweite Punkt ist der Kern: Ein Rätsel mit mehreren Lösungen lässt sich nicht mehr
+durch Folgern lösen, nur noch durch Raten. Deshalb zählt der Löser Lösungen und bricht
+ab, sobald er die zweite findet.
+
+**Sterne**: drei bei fehlerfreier Lösung unter 10 Minuten, zwei unter 20 Minuten,
+sonst einer. Wer verliert, bekommt keinen.
 
 ### 8. Bubble Shooter — `bubbleshooter`
 

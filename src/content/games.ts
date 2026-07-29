@@ -140,7 +140,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/sudoku.jpg'),
     bg: asset('bg/wintergipfel.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'bubbleshooter',

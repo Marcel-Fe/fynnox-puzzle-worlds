@@ -160,12 +160,31 @@ wörtlich im Quelltext stehen. Weil die Kristallfarben zur Laufzeit zusammengese
 (`var(--color-gem-${farbe})`), fehlten sie im gebauten CSS und die Kristalle waren
 unsichtbar. Solche Tokens stehen jetzt in einem normalen `:root`-Block.
 
+### ✅ Sudoku
+
+Klassisches 9 × 9 mit drei Stufen, drei Fehlern und drei Hinweisen.
+Die festgelegten Regeln stehen im [Gamedesign](01-gamedesign.md).
+
+- **Jedes Rätsel hat genau eine Lösung.** Vor dem Leeren eines Feldes wird geprüft, ob
+  das Rätsel eindeutig bleibt; sonst bleibt die Zahl stehen. Ein mehrdeutiges Rätsel
+  lässt sich nicht mehr durch Folgern lösen, nur noch raten.
+- Der Löser rechnet mit **Bitmasken** je Zeile, Spalte und Block. Mit der einfachen
+  Prüfung — jedes Feld gegen alle anderen — lief schon ein einzelner Testlauf minutenlang.
+- **Falsche Zahlen bleiben rot stehen**, statt zu verschwinden. Kommentarloses Schlucken
+  ließe den Spieler ratlos zurück, warum sein Zug nichts bewirkt hat.
+- Notizen werden beim Setzen einer Zahl automatisch bei allen betroffenen Feldern
+  gestrichen.
+
+**Nachgewiesen**: 37 Tests, darunter Eindeutigkeit für alle drei Stufen über je fünf
+Startzahlen. Vier Messungen halten die Erzeugungsdauer fest, damit der Rundenstart nicht
+unbemerkt langsam wird. Im Browser geprüft: genau 42 Vorgaben auf „leicht" wie
+dokumentiert, Hinweis füllt ein Feld, Fehlerzähler und Notizmodus reagieren.
+
 ### Noch offen
 
-1. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
-3. **Bubble Shooter** — erste Schussbahn, versetztes Raster
-4. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
-5. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+1. **Bubble Shooter** — erste Schussbahn, versetztes Raster
+2. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
+3. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
 
 **Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
 
