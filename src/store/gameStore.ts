@@ -22,6 +22,8 @@ interface GameState {
   finishRound(result: RoundResult): RoundRewards | null
   claimMission(id: string): void
   clearRewards(): void
+  renameProfile(name: string): void
+  updateSettings(patch: Partial<SaveData['settings']>): void
   resetSave(): Promise<void>
 }
 
@@ -112,6 +114,26 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   clearRewards() {
     set({ lastRewards: null })
+  },
+
+  renameProfile(name) {
+    const save = get().save
+    if (!save) return
+    // Leere Namen und Übermaß abfangen — der Name steht in Kopfzeilen und Ranglisten.
+    const clean = name.trim().slice(0, 20)
+    if (!clean) return
+
+    const next: SaveData = { ...save, profile: { ...save.profile, name: clean } }
+    set({ save: next })
+    persist(next)
+  },
+
+  updateSettings(patch) {
+    const save = get().save
+    if (!save) return
+    const next: SaveData = { ...save, settings: { ...save.settings, ...patch } }
+    set({ save: next })
+    persist(next)
   },
 
   async resetSave() {

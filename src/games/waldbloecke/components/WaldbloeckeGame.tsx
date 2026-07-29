@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card } from '../../../components/Card'
+import { RoundResultOverlay } from '../../../components/RoundResult'
 import { GAMES_BY_ID } from '../../../content/games'
 import { useGameStore } from '../../../store/gameStore'
 import {
@@ -28,6 +29,8 @@ export function WaldbloeckeGame() {
   const navigate = useNavigate()
   const spendEnergy = useGameStore((s) => s.spendEnergy)
   const finishRound = useGameStore((s) => s.finishRound)
+  const clearRewards = useGameStore((s) => s.clearRewards)
+  const rewards = useGameStore((s) => s.lastRewards)
   const progress = useGameStore((s) => s.save?.progress.waldbloecke ?? null)
   const energy = useGameStore((s) => s.save?.profile.energy ?? 0)
 
@@ -42,11 +45,12 @@ export function WaldbloeckeGame() {
       return
     }
     const now = Date.now()
+    clearRewards()
     setGame(createGame(now, now))
     setSelected(0)
     setFlash(null)
     setSettled(false)
-  }, [spendEnergy])
+  }, [clearRewards, spendEnergy])
 
   /** Rundenergebnis genau einmal verrechnen, wenn das Feld dicht ist. */
   const settle = useCallback(
@@ -224,30 +228,21 @@ export function WaldbloeckeGame() {
       </Card>
 
       {game.over && (
-        <Card>
-          <h2 className="text-xl font-black text-gold">Feld voll!</h2>
-          <p className="mt-1 text-sm text-ink-muted">
-            {game.score.toLocaleString('de-DE')} Punkte · {game.linesCleared} Reihen ·{' '}
-            {starsFor(game.score)} von 3 Sternen
-          </p>
-          <div className="mt-3 flex gap-2">
-            <button
-              type="button"
-              onClick={start}
-              className="min-h-12 flex-1 rounded-xl text-sm font-black text-deep uppercase"
-              style={{ background: INFO.colorVar }}
-            >
-              Nochmal (1 ⚡)
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/')}
-              className="min-h-12 flex-1 rounded-xl border border-edge text-sm font-bold text-ink uppercase"
-            >
-              Zum Start
-            </button>
-          </div>
-        </Card>
+        <RoundResultOverlay
+          won={false}
+          title="Feld voll!"
+          stars={starsFor(game.score)}
+          facts={[
+            { label: 'Punkte', value: game.score.toLocaleString('de-DE') },
+            { label: 'Reihen', value: String(game.linesCleared) },
+            { label: 'Kombos', value: String(game.combos) },
+          ]}
+          rewards={rewards}
+          accent={INFO.colorVar}
+          onAgain={start}
+          onLeave={() => navigate('/')}
+          againDisabled={energy < 1}
+        />
       )}
     </div>
   )

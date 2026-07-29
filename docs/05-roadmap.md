@@ -53,13 +53,25 @@ wird abgezogen und bleibt nach dem Neuladen erhalten.
 
 ---
 
-## Phase 5 — Restliche Bildschirme mit echten Daten
+## Phase 5 — Restliche Bildschirme mit echten Daten ✅
 
-Spieleauswahl mit Filterleiste, Profil mit Statistik und Erfolgen, Ergebnisbildschirm
-nach einer Runde („GEWONNEN!"-Vorlage aus den Mockups), Ladebildschirm mit Fynnox.
+- **Spieleauswahl** mit Filterleiste (Alle · Puzzle · Karten · Sport)
+- **Profil** mit Statistik, Erfolgen, Bestwerten je Spiel und änderbarem Namen
+- **Ergebnisbildschirm** nach einer Runde — als gemeinsamer Baustein
+  `components/RoundResult.tsx`, den alle künftigen Spiele verwenden
+- **Ladebildschirm** mit Fynnox, Sprechblase und echtem Fortschritt
+- **Weiterspielen-Reihe** auf dem Dashboard aus `recentGames`
+- Die Spielkachel liegt in `components/GameTile.tsx` — eine einzige Stelle, damit
+  Dashboard und Spieleliste nicht auseinanderlaufen
 
-**Fertig, wenn**: Kein Bildschirm der Tab-Leiste zeigt mehr einen Platzhalter,
-und alle Zahlen stimmen mit dem Spielstand überein.
+**Nachgewiesen** im Browser (390 × 844): Eine volle Runde bis „Feld voll!" gespielt
+(35 Züge, 1.216 Punkte, 10 Reihen). Der Ergebnisbildschirm zeigte einen von drei Sternen,
+32 XP, 12 Münzen, „Neuer Bestwert!" und „1 Mission geschafft".
+Das Profil wies danach 1 Spiel, 12 gesammelte Münzen und Waldblöcke als Lieblingsspiel aus.
+Eine Namensänderung überlebte das Neuladen der Seite.
+
+Offen aus dieser Phase: Shop, Events, Freunde, Rangliste und Einstellungen sind noch
+Platzhalter — sie gehören zu Phase 7 bzw. 8.
 
 ---
 

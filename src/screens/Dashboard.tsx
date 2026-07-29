@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { GAMES } from '../content/games'
+import { GAMES, GAMES_BY_ID } from '../content/games'
 import { Card, ProgressBar } from '../components/Card'
+import { GameTile } from '../components/GameTile'
 import { xpForNextLevel } from '../core/progression'
 import { useGameStore } from '../store/gameStore'
 
@@ -83,58 +84,36 @@ export function Dashboard() {
         </Link>
       </div>
 
+      {save.recentGames.length > 0 && (
+        <Card title="Weiterspielen">
+          <div className="flex flex-wrap gap-2">
+            {save.recentGames.map((id) => {
+              const game = GAMES_BY_ID[id]
+              return (
+                <Link
+                  key={id}
+                  to={game.available ? `/spiel/${id}` : '/spiele'}
+                  className="min-h-11 rounded-lg px-4 py-2.5 text-sm font-bold"
+                  style={{
+                    background: `color-mix(in srgb, ${game.colorVar} 25%, transparent)`,
+                    color: game.colorVar,
+                  }}
+                >
+                  {game.title}
+                </Link>
+              )
+            })}
+          </div>
+        </Card>
+      )}
+
       <Card title="Wähle dein Spiel">
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {GAMES.map((game) => {
-            const best = save.progress[game.id]
-            const bestValue =
-              game.bestLabel === 'Bestes Level'
-                ? best.highScore > 0
-                  ? best.highScore.toLocaleString('de-DE')
-                  : '—'
-                : best.bestTimeMs
-                  ? formatTime(best.bestTimeMs)
-                  : '—'
-            return (
-              <article
-                key={game.id}
-                className="flex flex-col gap-2 rounded-xl border border-edge bg-deep/60 p-3"
-                style={{ borderTopColor: game.colorVar, borderTopWidth: 3 }}
-              >
-                <h3 className="text-sm font-bold">{game.title}</h3>
-                <p className="flex-1 text-xs text-ink-muted">{game.tagline}</p>
-                <p className="text-[10px] font-semibold tracking-wider text-ink-muted uppercase">
-                  {game.bestLabel === 'Bestes Level' ? 'Bestpunkte' : game.bestLabel}: {bestValue}
-                </p>
-                {game.available ? (
-                  <Link
-                    to={`/spiel/${game.id}`}
-                    className={[
-                      'grid min-h-11 place-items-center rounded-lg text-sm font-bold uppercase',
-                      game.textOnColor === 'dark' ? 'text-deep' : 'text-white',
-                    ].join(' ')}
-                    style={{ background: game.colorVar }}
-                  >
-                    Spielen
-                  </Link>
-                ) : (
-                  <span
-                    className="grid min-h-11 place-items-center rounded-lg text-sm font-bold text-white uppercase opacity-40"
-                    style={{ background: game.colorVar }}
-                  >
-                    Bald
-                  </span>
-                )}
-              </article>
-            )
-          })}
+          {GAMES.map((game) => (
+            <GameTile key={game.id} game={game} progress={save.progress[game.id]} />
+          ))}
         </div>
       </Card>
     </div>
   )
-}
-
-function formatTime(ms: number): string {
-  const total = Math.floor(ms / 1000)
-  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
 }

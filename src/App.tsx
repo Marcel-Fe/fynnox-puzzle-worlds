@@ -1,11 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
 import { WaldbloeckeGame } from './games/waldbloecke/components/WaldbloeckeGame'
 import { Dashboard } from './screens/Dashboard'
+import { Games } from './screens/Games'
+import { Loading } from './screens/Loading'
 import { Missions } from './screens/Missions'
 import { More } from './screens/More'
 import { Placeholder } from './screens/Placeholder'
+import { Profile } from './screens/Profile'
 import { useGameStore } from './store/gameStore'
 
 /*
@@ -15,34 +18,26 @@ import { useGameStore } from './store/gameStore'
 export default function App() {
   const init = useGameStore((s) => s.init)
   const loaded = useGameStore((s) => s.loaded)
+  const [percent, setPercent] = useState(10)
 
   useEffect(() => {
-    void init()
+    // Der Balken zeigt echte Schritte: Start, Spielstand geladen, fertig.
+    setPercent(35)
+    void init().then(() => setPercent(100))
   }, [init])
 
-  if (!loaded) {
-    return (
-      <div className="grid min-h-full place-items-center bg-deep">
-        <div className="text-center">
-          <p className="text-5xl" aria-hidden>
-            🦊
-          </p>
-          <p className="mt-3 text-2xl font-black tracking-wide text-gold">FYNNOX</p>
-          <p className="mt-1 text-sm text-ink-muted">Wird geladen …</p>
-        </div>
-      </div>
-    )
-  }
+  if (!loaded) return <Loading percent={percent} />
 
   return (
     <HashRouter>
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<Dashboard />} />
+          <Route path="spiele" element={<Games />} />
           <Route path="spiel/waldbloecke" element={<WaldbloeckeGame />} />
-          <Route path="mehr" element={<More />} />
-          <Route path="spiele" element={<Placeholder title="Spiele" phase="Phase 5" />} />
           <Route path="missionen" element={<Missions />} />
+          <Route path="profil" element={<Profile />} />
+          <Route path="mehr" element={<More />} />
           <Route path="shop" element={<Placeholder title="Shop" phase="Phase 7" />} />
           <Route
             path="abenteuer"
@@ -51,8 +46,7 @@ export default function App() {
           <Route path="events" element={<Placeholder title="Events" phase="Phase 7" />} />
           <Route path="freunde" element={<Placeholder title="Freunde" phase="Phase 8" />} />
           <Route path="rangliste" element={<Placeholder title="Rangliste" phase="Phase 8" />} />
-          <Route path="profil" element={<Placeholder title="Profil" phase="Phase 5" />} />
-          <Route path="erfolge" element={<Placeholder title="Erfolge" phase="Phase 7" />} />
+          <Route path="erfolge" element={<Profile />} />
           <Route
             path="einstellungen"
             element={<Placeholder title="Einstellungen" phase="Phase 8" />}

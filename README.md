@@ -30,14 +30,18 @@ npm run preview  # gebauten Stand lokal ansehen
 | 2 | Gerüst: Navigation, Design-Tokens, PWA | ✅ |
 | 3 | Profil und Speicherung | ✅ |
 | 4 | **Waldblöcke — spielbar** | ✅ |
-| 5 | Restliche Bildschirme mit echten Daten | offen |
+| 5 | Spieleauswahl, Profil, Ergebnisbildschirm, Laden | ✅ |
 | 6 | Die weiteren sieben Spiele | offen |
-| 7 | Abenteuerpfad, Events, Erfolge, Shop | offen |
-| 8 | Cloud-Save, Ranglisten, Ton | offen |
+| 7 | Abenteuerpfad, Events, Shop | offen |
+| 8 | Cloud-Save, Ranglisten, Einstellungen, Ton | offen |
 
 **Spielbar**: Waldblöcke. Eine Runde kostet 1 Energie, bringt XP und Münzen,
 lässt Tagesmissionen hochzählen und wird lokal gespeichert.
+Danach zeigt ein Ergebnisbildschirm Sterne und Belohnungen.
 Die übrigen sieben Spiele stehen als „Bald" auf dem Dashboard.
+
+**Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · Waldblöcke · Missionen · Profil · Mehr.
+Shop, Events, Freunde, Rangliste und Einstellungen sind noch Platzhalter.
 
 ## Dokumentation
 
