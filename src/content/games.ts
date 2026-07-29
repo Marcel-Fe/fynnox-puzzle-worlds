@@ -1,3 +1,5 @@
+import { asset } from './assets'
+
 /**
  * Die acht Spiele. IDs sind unveränderlich (siehe CLAUDE.md).
  * Regeln und Kurztexte stammen aus docs/01-gamedesign.md, Farben aus docs/03-art-ui-guide.md.
@@ -29,6 +31,10 @@ export interface GameInfo {
   bestLabel: 'Bestes Level' | 'Bestzeit'
   /** Tailwind-Token aus src/index.css */
   colorVar: string
+  /** Vorschaubild der Kachel, aus den Konzeptbildern geschnitten */
+  image: string
+  /** Kulisse hinter dem Spielfeld */
+  bg: string
   /**
    * Schriftfarbe auf der Spielfarbe. Waldblöcke ist so hell, dass weiß darauf
    * nur 2,2:1 erreicht — dort muss dunkel geschrieben werden.
@@ -47,6 +53,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-blockfall)',
+    image: asset('games/blockfall.jpg'),
+    bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -59,6 +67,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-waldbloecke)',
+    image: asset('games/waldbloecke.jpg'),
+    bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'dark',
     available: true,
   },
@@ -71,6 +81,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-tempelpaare)',
+    image: asset('games/tempelpaare.jpg'),
+    bg: asset('bg/tempel.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -83,6 +95,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-kristallmix)',
+    image: asset('games/kristallmix.jpg'),
+    bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -95,6 +109,8 @@ export const GAMES: GameInfo[] = [
     category: 'karten',
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-solitaire)',
+    image: asset('games/solitaire.jpg'),
+    bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -107,6 +123,8 @@ export const GAMES: GameInfo[] = [
     category: 'sport',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-minigolf)',
+    image: asset('games/minigolf.jpg'),
+    bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -119,6 +137,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-sudoku)',
+    image: asset('games/sudoku.jpg'),
+    bg: asset('bg/wintergipfel.jpg'),
     textOnColor: 'light',
     available: false,
   },
@@ -131,6 +151,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-bubbleshooter)',
+    image: asset('games/bubbleshooter.jpg'),
+    bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
     available: false,
   },

@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { Avatar } from '../components/Avatar'
 import { Card, ProgressBar } from '../components/Card'
+import { Fynnox3DPanel } from '../components/Fynnox3DPanel'
 import { formatTime } from '../components/GameTile'
 import { GAMES_BY_ID } from '../content/games'
 import { xpForNextLevel } from '../core/progression'
@@ -32,9 +34,7 @@ export function Profile() {
     <div className="mx-auto flex max-w-3xl flex-col gap-4">
       <Card>
         <div className="flex items-center gap-3">
-          <span className="grid size-16 shrink-0 place-items-center rounded-full bg-elevated text-3xl">
-            🦊
-          </span>
+          <Avatar name="Fynnox" size={64} ring="var(--color-gold)" />
           <div className="min-w-0 flex-1">
             {editing ? (
               <div className="flex gap-2">
@@ -73,6 +73,13 @@ export function Profile() {
             Namen ändern
           </button>
         )}
+      </Card>
+
+      <Card title="Fynnox in 3D">
+        <Fynnox3DPanel />
+        <p className="mt-2 text-xs text-ink-muted">
+          Das Modell stammt aus Fynnox Adventure. Es wird erst geladen, wenn du es öffnest.
+        </p>
       </Card>
 
       <Card title="Statistik">

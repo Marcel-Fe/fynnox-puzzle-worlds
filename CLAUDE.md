@@ -35,6 +35,9 @@ Bewusst identisch zu **`fynnox-adventure`**, damit alle Fynnox-Projekte gleich f
 - **TailwindCSS v4** — einzige bewusste Abweichung von `fynnox-adventure`.
   Grund: Dieses Projekt ist UI-lastig (Dashboard, Shop, Missionen, sechs HUDs);
   `fynnox-adventure` ist ein 3D-Spiel mit wenig UI und kommt darum mit reinem CSS aus.
+- **three.js / @react-three/fiber / drei** — **ausschließlich** für die 3D-Ansicht von Fynnox
+  auf dem Profilbildschirm, und nur über `lazy()` nachgeladen. Gebaut wiegt der 3D-Teil
+  rund 1 MB, das Hauptbündel dagegen 274 KB. Nie im Hauptbündel landen lassen.
 - **Framer Motion** für UI-Animationen (erst einbauen, wenn tatsächlich animiert wird)
 - **Spiellogik** als reines TypeScript + React/DOM bzw. Canvas.
   Eine Engine (PixiJS/Phaser) erst dann, wenn ein konkretes Spiel sie nachweislich braucht
@@ -62,6 +65,18 @@ Push auf `main` → GitHub Action baut → GitHub Pages. Nichts manuell hochlade
 
 **Auf dem Handy installieren**: Seite in Safari (iOS) bzw. Chrome (Android) öffnen →
 Teilen/Menü → „Zum Home-Bildschirm". Danach startet sie wie eine echte App, ohne Browserleiste.
+
+## Grafik
+
+Die Spielgrafik ist **nicht** nachgebaut, sondern aus den Konzeptbildern geschnitten.
+`python scripts/build-art.py` erzeugt alles unter `public/art/` neu.
+
+- Soll ein Ausschnitt anders sitzen: Koordinate **im Skript** ändern, Skript laufen lassen.
+  Nie von Hand nachschneiden — sonst ist der Stand nicht reproduzierbar.
+- Beim Zuschneiden auf **fremde Beschriftungen** achten: In den Mockups steht überall UI
+  mit auf den Bildern (Level-Anzeigen, „NEU"-Fähnchen, Schriftzüge). Landet so etwas in
+  einem Ausschnitt, widerspricht es später den echten Werten im Spiel.
+- Details und Quellenzuordnung: [docs/03-art-ui-guide.md](docs/03-art-ui-guide.md).
 
 ## Konventionen
 

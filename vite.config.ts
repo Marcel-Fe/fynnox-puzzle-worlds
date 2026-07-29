@@ -40,7 +40,9 @@ export default defineConfig({
         cacheId: 'fynnox-puzzle-worlds',
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2,mp3}'],
+        // jpg gehört dazu, seit die Kulissen und Kachelbilder als JPEG vorliegen —
+        // ohne das fehlt im Offline-Betrieb die halbe Grafik.
+        globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2,mp3}'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
       },
     }),

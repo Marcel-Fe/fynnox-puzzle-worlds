@@ -43,6 +43,10 @@ export function applyRoundResult(save: SaveData, result: RoundResult): ApplyResu
   if (result.level !== undefined && result.level > progress.highestLevel) {
     progress.highestLevel = result.level
   }
+  // Bestzeit nur bei gewonnenen Runden — bei Tempelpaare oder Solitaire wäre
+  // sonst jedes schnelle Aufgeben die neue Bestzeit.
+  const newBestTime = won && (progress.bestTimeMs === undefined || durationMs < progress.bestTimeMs)
+  if (newBestTime) progress.bestTimeMs = durationMs
   const stars = result.counters?.stars
   if (stars !== undefined && stars > (progress.starsCollected ?? 0)) {
     progress.starsCollected = stars

@@ -82,6 +82,32 @@ describe('applyRoundResult', () => {
     expect(next.profile.xp).toBeLessThan(xpForNextLevel(next.profile.level))
   })
 
+  it('merkt sich die Bestzeit nur bei gewonnenen Runden', () => {
+    // Sonst waere jedes schnelle Aufgeben in Tempelpaare die neue Bestzeit.
+    const save = createNewSave(NOW)
+    const lost = applyRoundResult(save, round({ game: 'tempelpaare', won: false, durationMs: 5000 }))
+    expect(lost.save.progress.tempelpaare.bestTimeMs).toBeUndefined()
+
+    const won = applyRoundResult(save, round({ game: 'tempelpaare', won: true, durationMs: 90_000 }))
+    expect(won.save.progress.tempelpaare.bestTimeMs).toBe(90_000)
+  })
+
+  it('übernimmt eine neue Bestzeit nur, wenn sie schneller ist', () => {
+    const save = createNewSave(NOW)
+    const first = applyRoundResult(save, round({ game: 'tempelpaare', won: true, durationMs: 90_000 }))
+    const slower = applyRoundResult(
+      first.save,
+      round({ game: 'tempelpaare', won: true, durationMs: 120_000 }),
+    )
+    expect(slower.save.progress.tempelpaare.bestTimeMs).toBe(90_000)
+
+    const faster = applyRoundResult(
+      first.save,
+      round({ game: 'tempelpaare', won: true, durationMs: 60_000 }),
+    )
+    expect(faster.save.progress.tempelpaare.bestTimeMs).toBe(60_000)
+  })
+
   it('merkt sich den Bestwert nur, wenn er übertroffen wird', () => {
     const save = createNewSave(NOW)
     const first = applyRoundResult(save, round({ score: 2000 }))

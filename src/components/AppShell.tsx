@@ -1,5 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../content/navigation'
+import { useGameStore } from '../store/gameStore'
+import { Avatar } from './Avatar'
 import { CurrencyBar } from './CurrencyBar'
 
 /**
@@ -7,10 +9,20 @@ import { CurrencyBar } from './CurrencyBar'
  * Am Handy Tab-Leiste unten, ab Desktop Seitenleiste links (docs/03-art-ui-guide.md).
  */
 export function AppShell() {
+  const profile = useGameStore((s) => s.save?.profile)
+
   return (
     <div className="flex min-h-full flex-col bg-deep md:flex-row">
       <aside className="hidden w-56 shrink-0 flex-col gap-1 border-r border-edge bg-sidebar p-3 md:flex">
-        <div className="px-2 pt-2 pb-4 text-xl font-black tracking-wide text-gold">FYNNOX</div>
+        <div className="flex items-center gap-2 px-2 pt-2 pb-4">
+          <Avatar name="Fynnox" size={36} ring="var(--color-gold)" />
+          <div>
+            <p className="text-lg leading-none font-black tracking-wide text-gold">FYNNOX</p>
+            <p className="text-[9px] font-bold tracking-[0.2em] text-ink-muted uppercase">
+              Puzzle Worlds
+            </p>
+          </div>
+        </div>
         {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.to}
@@ -32,8 +44,11 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-edge bg-deep/95 px-4 py-3 backdrop-blur">
-          <span className="text-lg font-black tracking-wide text-gold md:hidden">FYNNOX</span>
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-edge bg-deep/95 px-3 py-2.5 backdrop-blur">
+          <NavLink to="/profil" className="flex items-center gap-2 md:hidden">
+            <Avatar name="Fynnox" size={36} ring="var(--color-gold)" />
+            <span className="max-w-20 truncate text-sm font-bold">{profile?.name}</span>
+          </NavLink>
           <div className="ml-auto">
             <CurrencyBar />
           </div>

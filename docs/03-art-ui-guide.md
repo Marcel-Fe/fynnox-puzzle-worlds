@@ -5,6 +5,57 @@ Alle Farbwerte hier wurden **pixelgenau aus den Konzeptbildern gemessen**
 
 ---
 
+## Grafik: die Konzeptbilder sind das Material
+
+Die Illustrationen aus [`referenzen/`](referenzen/) lassen sich mit CSS nicht nachbauen —
+gerenderte Figuren, gemalte Kulissen und Lichtstimmungen entstehen nicht aus Farbflächen.
+Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
+
+`scripts/build-art.py` schneidet alles heraus und legt es unter `public/art/` ab:
+
+| Ordner | Inhalt | Quelle im Referenzordner |
+|---|---|---|
+| `chars/` | 10 runde Porträts (Fynnox + 9 Begleiter) | Charakterleiste unten in `gameplay-regeln-und-missionen.png` |
+| `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
+| `games/` | 8 Kachelbilder | Spielkarten in `dashboard-hauptansicht.png` |
+| `hero.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
+
+**Regeln dazu:**
+
+1. Soll ein Ausschnitt anders sitzen, wird die Koordinate im **Skript** geändert und das
+   Skript erneut ausgeführt — nie von Hand nachgeschnitten. Sonst ist der Stand nicht
+   reproduzierbar.
+2. **Alles JPEG.** Die Motive haben keine Transparenz; als PNG wäre die App viermal so
+   schwer zu laden (gemessen: 2,8 MB gegenüber 0,9 MB).
+3. **Beim Zuschneiden auf fremde Beschriftungen achten.** In den Mockups steht überall
+   UI mit auf den Bildern. Zwei Beispiele, die schon danebengingen: Das Begrüßungsbanner
+   enthielt die Mockup-Karte „LEVEL 12 · 2.450 XP" und widersprach damit den echten Werten
+   des Spielers; die Blockfall-Kachel zeigte ein angeschnittenes „NEU"-Fähnchen als „EU".
+4. **Freistellen ist nicht möglich.** Eine Figur sauber aus einem KI-Bild zu lösen gelingt
+   nicht — deshalb wird Fynnox samt Landschaft als ganzer Bildausschnitt gezeigt.
+   Auf den Mockups steht er ohnehin mitten in der Kulisse.
+
+### Fynnox in 3D
+
+Aus dem Schwesterprojekt `fynnox-adventure` stammt `public/models/fynnox.glb`
+(2,4 MB, mit Skelett, ohne Animationen). Eingebunden ist es auf dem Profilbildschirm
+hinter einem Knopf.
+
+- Der 3D-Teil wird **nachgeladen**, nie mitgeliefert: three.js wiegt gebaut rund 1 MB und
+  damit mehr als die gesamte übrige App. Wer die Ansicht nicht öffnet, lädt sie nie.
+- Das Modell steht **nicht** im Offline-Vorrat — 2,4 MB für ein Beiwerk wären zu viel.
+- Beleuchtet wird von Hand. Die fertigen Umgebungen von `drei`
+  (`<Stage environment="city">`) laden zur Laufzeit aus dem Netz nach und bleiben
+  offline schwarz.
+- Geräte ohne 3D-Unterstützung bekommen das Porträt und einen Hinweis statt eines
+  leeren Kastens.
+
+> Die Sprites aus `fynnox-adventure` (`public/art/fynnox/*.png`) zeigen einen **anderen**
+> Fynnox — eine schlichte Vektorfigur im blauen Anzug, nicht den Fuchs mit Fliegerbrille,
+> blauem Schal und grüner Kleidung aus dem Masterprompt. Sie werden hier **nicht** verwendet.
+
+---
+
 ## Farben
 
 ### Grundflächen

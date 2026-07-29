@@ -75,6 +75,27 @@ Platzhalter — sie gehören zu Phase 7 bzw. 8.
 
 ---
 
+## Phase 5b — Echte Spielgrafik ✅
+
+Die Oberfläche war bis dahin aus Farbflächen gebaut. Auf Hinweis des Auftraggebers
+(„die Grafik genau so wie auf den Bildern") wurde sie auf das **Bildmaterial der
+Konzeptbilder** umgestellt:
+
+- `scripts/build-art.py` schneidet Porträts, Kulissen, Kachelbilder und App-Icons heraus
+- Dashboard, Ladebildschirm, Spielkacheln, Kopfzeile, Profil und Waldblöcke nutzen sie
+- Alles JPEG statt PNG: 2,8 MB → 0,9 MB
+- Fynnox als **3D-Modell** aus `fynnox-adventure`, nachgeladen auf dem Profilbildschirm
+
+**Nachgewiesen**: Alle Bildschirme im Browser bei 390 × 844 geprüft, keine Fehler.
+Das 3D-Modell zeigt den richtigen Fynnox — orangefarbenes Fell, Fliegerbrille,
+blauer Schal, grüne Kleidung, braune Handschuhe und Stiefel.
+
+Dabei gefunden und behoben: `<Stage environment="city">` aus `drei` lädt seine
+Beleuchtung zur Laufzeit aus dem Netz und bleibt offline schwarz — ersetzt durch
+eigene Lichtquellen.
+
+---
+
 ## Phase 6 — Die weiteren sieben Spiele
 
 In dieser Reihenfolge, jedes nach dem Muster von Waldblöcke:
