@@ -118,18 +118,34 @@ Minigolf mit Physik. *"Ziele, schlage und loch ein! Hole in One für extra Stern
 
 ---
 
-## Weitere Spiele (aus den neueren Mockups)
+## Spiele 7 und 8 — entschieden am 29.07.2026
 
-Die Spieleauswahl im Handy-Design zeigt über die sechs Kernspiele hinaus:
+Beide gehören zum festen Umfang (Entscheidung des Auftraggebers), werden aber
+**nach** den sechs Kernspielen gebaut.
 
-- **Sudoku** — Zahlenrätsel, klassisch
-- **Bubble Shooter** — Blasen abschießen und Gruppen räumen
-- **Mehr Spiele** — eine Kachel, die auf künftige Spiele verweist
+### 7. Sudoku — `sudoku`
 
-Beide sind im [Masterprompt](00-masterprompt.md) **nicht** genannt und tauchen nur in
-einem Bild auf. **OFFEN**: Gehören sie zum festen Umfang oder waren sie Beiwerk der
-Bildgenerierung? Bis das geklärt ist, werden sie **nicht** gebaut.
-Empfehlung: erst die sechs Kernspiele fertigstellen, dann entscheiden.
+Zahlenrätsel, klassisch. Begleitfigur: **Elda** (Dorfälteste, bedächtig — passt zum Grübeln).
+
+- **Regeln**: 9×9-Feld in neun Blöcken; in jeder Zeile, jeder Spalte und jedem Block
+  kommt jede Ziffer von 1 bis 9 genau einmal vor; vorgegebene Ziffern sind fest
+- **HUD**: Zeit, Schwierigkeit, Fehlerzähler
+- **Hilfen**: Notizen, Hinweis, Rückgängig
+- **OFFEN**: Schwierigkeitsstufen, Anzahl Fehler bis zum Verlieren, Rätselerzeugung
+
+### 8. Bubble Shooter — `bubbleshooter`
+
+Blasen abschießen. Begleitfigur: **Juno** (Musiker, fröhlich-leicht).
+
+- **Regeln**: Von unten wird eine farbige Blase nach oben geschossen; drei oder mehr
+  gleichfarbige, die sich berühren, platzen; Blasen, die dadurch den Halt verlieren,
+  fallen herunter; verloren, wenn die Blasen die untere Linie erreichen
+- **HUD**: Punkte, verbleibende Schüsse oder Reihen, nächste Blase
+- **OFFEN**: Feldgröße, Farbanzahl, Punkteformel
+
+### „Mehr Spiele"
+
+Eine Kachel am Ende der Spieleliste, die auf künftige Spiele verweist. Kein eigenes Spiel.
 
 ### Kategorien in der Spieleauswahl
 
@@ -137,7 +153,7 @@ Filterleiste über der Spieleliste: **Alle Spiele · Puzzle · Karten · Sport**
 
 | Kategorie | Spiele |
 |---|---|
-| Puzzle | Blockfall, Waldblöcke, Tempelpaare, Kristallmix |
+| Puzzle | Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Sudoku, Bubble Shooter |
 | Karten | Fynnox Solitaire |
 | Sport | Fynnox Minigolf |
 
@@ -185,9 +201,40 @@ Alle Spiele zahlen auf **ein** Profil ein.
 
 ### Level und XP
 
-- Fortschrittsbalken mit „aktuelle XP / XP für nächstes Level" (Mockup: Level 12, 2.450 / 3.500)
-- Bei jedem Levelaufstieg gibt es eine Belohnung (Mockup: 2.000 Münzen + 50 Kristalle)
-- **OFFEN**: XP pro Runde je Spiel, XP-Kurve pro Level, Belohnungstabelle
+Fortschrittsbalken mit „aktuelle XP / XP für nächstes Level".
+
+**XP-Kurve** — aus dem Mockup abgeleitet, nicht geraten:
+
+```
+xpForNextLevel(level) = 500 + level * 250
+```
+
+Probe: Level 12 → 500 + 12 × 250 = **3.500**. Genau der Wert auf dem Mockup („2.450 / 3.500").
+
+**Belohnung je Levelaufstieg** — ebenfalls aus dem Mockup abgeleitet
+(dort steht bei Level 12: 2.000 Münzen + 50 Kristalle):
+
+```
+coins    = 200 + level * 150      →  Level 12: 200 + 1.800 = 2.000  ✓
+crystals = 10 + floor(level / 3) * 10  →  Level 12: 10 + 40 = 50     ✓
+```
+
+Beide Formeln treffen die Mockup-Werte exakt. Das ist ein starkes Indiz, dass sie der
+gedachten Kurve entsprechen — trotzdem sind es **Startwerte**, die nach dem ersten
+Spieltest angepasst werden dürfen.
+
+### Belohnung pro Runde
+
+```
+xp     = 20 + floor(score / 100)      bei Sieg × 1,5 (abgerundet)
+coins  = 10 + floor(score / 500)      bei Sieg + 20
+```
+
+Kristalle gibt es **nicht** pro Runde — nur aus Missionen, Levelaufstiegen, Events und Truhen.
+Das hält sie wertvoll und macht den Shop sinnvoll.
+
+Beispiel Waldblöcke mit 3.680 Punkten (Mockup-Wert), Runde regulär beendet:
+20 + 36 = **56 XP**, 10 + 7 = **17 Münzen**.
 
 ### Währungen
 
@@ -197,7 +244,12 @@ Alle Spiele zahlen auf **ein** Profil ein.
 | Kristalle | violetter Kristall | Premiumwährung, seltener |
 | Energie | Blitz, Anzeige „5/5 Max." | Verbrauch pro Spielstart, regeneriert über Zeit |
 
-- **OFFEN**: Energiekosten pro Runde, Regenerationsdauer, Münzen/Kristalle pro Runde
+**Energie**: 1 Einheit je gestarteter Runde, Höchststand 5.
+Regeneration: **1 Einheit alle 10 Minuten**, also volle 5 nach 50 Minuten.
+Läuft auch weiter, während die App geschlossen ist (Berechnung über den Zeitstempel
+`energyRefilledAt`, siehe [Datenmodell](04-datenmodell.md)).
+
+Startwerte für ein neues Profil: Level 1, 0 XP, 500 Münzen, 50 Kristalle, 5/5 Energie.
 
 ### Missionen
 
@@ -232,6 +284,9 @@ Ein Levelpfad quer über alle Spiele. Die Mockups zeigen dazu **zwei verschieden
 | 4 | Pirateninsel | 61–80 |
 | 5 | gesperrt (`???`) | 81–100 |
 
+**Entwurf B ist verbindlich** (entschieden am 29.07.2026). Entwurf A steht nur noch
+zur Erklärung der älteren Bilder hier.
+
 **Entwurf B — Kapitel** (neuere Handy-Bilder, deutlich weiter ausgearbeitet):
 
 - Überschrift „Kapitel 4 · Kristallhöhle" mit eigenem Fortschrittsbalken **8/15**
@@ -241,12 +296,18 @@ Ein Levelpfad quer über alle Spiele. Die Mockups zeigen dazu **zwei verschieden
 - Am Kapitelende eine Truhe
 - Fynnox kommentiert: „Je weiter wir reisen, desto mehr Freunde und Schätze warten auf uns!"
 
-**Empfehlung: Entwurf B.** Er ist konkreter, passt aufs Handy (senkrechter Pfad statt
+Begründung der Wahl: Entwurf B ist konkreter, passt aufs Handy (senkrechter Pfad statt
 waagerechter Abschnittsleiste), und Kapitel zu 15 Leveln lassen sich beliebig fortsetzen —
-damit löst sich auch der Widerspruch zu den elf Welten des Masterprompts von selbst.
+damit löst sich auch der Widerspruch zu den elf Welten des Masterprompts von selbst:
+**ein Kapitel je Welt**, weitere Kapitel kommen später dazu.
 
-**OFFEN** (Entscheidung des Auftraggebers): Entwurf A oder B, und was auf einem Knoten
-passiert — eine Runde in einem bestimmten Spiel mit vorgegebenem Ziel, oder freie Wahl.
+Kapitelreihenfolge nach den Welten des Masterprompts: Sonnenwald → Kristallhöhlen →
+Lavawelt → Pirateninsel → Schneewelt → Candy → Unterwasser → Steampunk → Weltraum.
+Halloween und Weihnachten sind **Saison-Kapitel** und erscheinen nur zur passenden Zeit.
+
+**OFFEN**: Was auf einem Knoten passiert — eine Runde in einem bestimmten Spiel mit
+vorgegebenem Ziel, oder freie Wahl des Spiels. Wird in Phase 7 entschieden, wenn mehrere
+Spiele fertig sind.
 
 ### Events
 

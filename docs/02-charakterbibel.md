@@ -80,6 +80,12 @@ Die neueren Mockups ordnen jedem Spiel eine feste Figur zu, die es in einer Spre
 | Kristallmix | Lumo | „Wow! Diese Kristalle versorgen unser Dorf mit Energie!" |
 | Fynnox Solitaire | Fynnox | „Zeit für eine kleine Pause. Lass uns gemeinsam Karten sortieren." |
 | Fynnox Minigolf | Pip | „Das schaffen wir mit einem perfekten Schlag!" |
+| Sudoku | Elda | *(neu vergeben — Zahlen wollen Geduld, das ist Eldas Sache)* |
+| Bubble Shooter | Juno | *(neu vergeben — bunt und leichtherzig wie seine Musik)* |
+
+Die letzten beiden Zuordnungen stehen auf keinem Mockup; sie wurden am 29.07.2026
+vergeben, als beide Spiele in den Umfang aufgenommen wurden. Sie passen zu den
+belegten Rollen der Figuren und dürfen geändert werden.
 
 Das ist der Grund, warum die Rollen der Figuren wichtiger sind als ihr Aussehen:
 Sie hängen an konkreten Bildschirmen.

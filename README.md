@@ -17,6 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
+npm test         # Logik-Tests (27 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -27,14 +28,16 @@ npm run preview  # gebauten Stand lokal ansehen
 |---|---|---|
 | 1 | Fundament: Dokumente, Repo, Deployment | ✅ |
 | 2 | Gerüst: Navigation, Design-Tokens, PWA | ✅ |
-| 3 | Profil und Speicherung | offen |
-| 4 | Waldblöcke — erstes Spiel | offen |
-| 5 | Dashboard mit echten Daten | offen |
-| 6 | Die weiteren fünf Spiele | offen |
-| 7 | Abenteuerpfad, Missionen, Erfolge, Shop | offen |
+| 3 | Profil und Speicherung | ✅ |
+| 4 | **Waldblöcke — spielbar** | ✅ |
+| 5 | Restliche Bildschirme mit echten Daten | offen |
+| 6 | Die weiteren sieben Spiele | offen |
+| 7 | Abenteuerpfad, Events, Erfolge, Shop | offen |
 | 8 | Cloud-Save, Ranglisten, Ton | offen |
 
-Alle Zahlen in der App sind derzeit **Platzhalter** aus den Konzeptbildern.
+**Spielbar**: Waldblöcke. Eine Runde kostet 1 Energie, bringt XP und Münzen,
+lässt Tagesmissionen hochzählen und wird lokal gespeichert.
+Die übrigen sieben Spiele stehen als „Bald" auf dem Dashboard.
 
 ## Dokumentation
 

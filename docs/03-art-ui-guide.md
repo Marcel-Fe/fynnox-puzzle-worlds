@@ -36,19 +36,27 @@ Violett steht für Fortschritt und Premium (XP, Events, Kristalle).
 
 Jedes Spiel hat eine eigene Farbe — sie färbt Karte, Knopf und HUD-Rand.
 
-| Spiel | Token | Wert | Beleg |
-|---|---|---|---|
-| Blockfall | `game-blockfall` | `#552ABE` (Violett) | „Spielen"-Knopf |
-| Waldblöcke | `game-waldbloecke` | `#2C7B0E` (Laubgrün) | „Spielen"-Knopf |
-| Tempelpaare | `game-tempelpaare` | `#D26A03` (Orange) | „Spielen"-Knopf |
-| Kristallmix | `game-kristallmix` | `#CA314D` (Pink-Rot) | „Spielen"-Knopf |
-| Solitaire | `game-solitaire` | `#135EB0` (Blau) | „Spielen"-Knopf |
-| Minigolf | `game-minigolf` | `#057336` (Rasengrün) | „Spielen"-Knopf |
+| Spiel | Token | Wert | Schrift darauf | Herkunft |
+|---|---|---|---|---|
+| Blockfall | `game-blockfall` | `#552ABE` (Violett) | weiß | gemessen |
+| Waldblöcke | `game-waldbloecke` | `#7CB518` (Limette) | dunkel | angepasst, siehe unten |
+| Tempelpaare | `game-tempelpaare` | `#D26A03` (Orange) | weiß | gemessen |
+| Kristallmix | `game-kristallmix` | `#CA314D` (Pink-Rot) | weiß | gemessen |
+| Solitaire | `game-solitaire` | `#135EB0` (Blau) | weiß | gemessen |
+| Minigolf | `game-minigolf` | `#057336` (Rasengrün) | weiß | gemessen |
+| Sudoku | `game-sudoku` | `#0B7A6A` (Türkis) | weiß | neu vergeben |
+| Bubble Shooter | `game-bubbleshooter` | `#A02BA8` (Magenta) | weiß | neu vergeben |
 
-> **Zu klären**: Waldblöcke (`#2C7B0E`) und Minigolf (`#057336`) sind beide grün und auf
-> kleinen Handy-Kacheln kaum auseinanderzuhalten. Vorschlag: Minigolf bleibt Rasengrün,
-> Waldblöcke wechselt auf ein helleres Limettengrün oder Türkis. Nicht eigenmächtig ändern —
-> erst hier festhalten, dann umsetzen.
+**Warum Waldblöcke gewechselt hat** (entschieden am 29.07.2026): Der gemessene Wert
+`#2C7B0E` lag zu nah an Minigolfs `#057336` — auf kleinen Handy-Kacheln waren beide
+schlicht „grün". Das neue `#7CB518` ist deutlich heller und dadurch klar unterscheidbar,
+passt aber weiter zum Waldthema. Weil es hell ist, steht darauf **dunkle** Schrift
+(`bg-deep`): weiß auf Limette erreicht nur ein Kontrastverhältnis von 2,2 : 1 und wäre
+schlecht lesbar; dunkel auf Limette erreicht 7,8 : 1.
+
+**Kontrastregel**: Jede Spielfarbe muss mit ihrer Schriftfarbe mindestens **4,5 : 1**
+erreichen. Alle acht Werte oben erfüllen das. Wird eine Farbe geändert, ist das
+nachzurechnen — nicht nach Augenmaß entscheiden.
 
 ---
 

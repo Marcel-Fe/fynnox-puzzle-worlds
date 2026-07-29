@@ -1,51 +1,22 @@
 import { Link } from 'react-router-dom'
 import { GAMES } from '../content/games'
 import { Card, ProgressBar } from '../components/Card'
+import { xpForNextLevel } from '../core/progression'
+import { useGameStore } from '../store/gameStore'
 
 /**
  * Startbildschirm nach dem Handy-Design
  * (docs/referenzen/handy-app-10-bildschirme.png).
  *
- * Alle Zahlen sind Platzhalter aus den Mockups — ab Phase 3 kommen sie aus
- * dem Spielstand (docs/05-roadmap.md).
+ * Alle Werte kommen aus dem Spielstand.
  */
-const PLACEHOLDER = {
-  name: 'Fynnox',
-  level: 12,
-  xp: 2450,
-  xpGoal: 3500,
-  dailyMissions: { done: 3, total: 6 },
-  event: { title: 'Sommer Cup', endsIn: '16h 45m' },
-  adventure: { chapter: 4, title: 'Kristallhöhle', node: 8, nodes: 15 },
-}
-
-function QuickTile({
-  to,
-  label,
-  value,
-  accent,
-}: {
-  to: string
-  label: string
-  value: string
-  accent: string
-}) {
-  return (
-    <Link
-      to={to}
-      className="flex min-h-20 flex-1 flex-col justify-center gap-0.5 rounded-xl border border-edge bg-deep/60 px-3 py-2"
-      style={{ borderLeftColor: accent, borderLeftWidth: 3 }}
-    >
-      <span className="text-[10px] font-bold tracking-wider text-ink-muted uppercase">
-        {label}
-      </span>
-      <span className="tabular text-sm font-bold">{value}</span>
-    </Link>
-  )
-}
-
 export function Dashboard() {
-  const { name, level, xp, xpGoal, dailyMissions, event, adventure } = PLACEHOLDER
+  const save = useGameStore((s) => s.save)
+  if (!save) return null
+
+  const { profile, missions, adventure } = save
+  const openMissions = missions.filter((m) => m.progress >= m.goal && !m.claimed).length
+  const doneMissions = missions.filter((m) => m.progress >= m.goal).length
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-4">
@@ -55,12 +26,12 @@ export function Dashboard() {
             🦊
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate font-bold">{name}</p>
+            <p className="truncate font-bold">{profile.name}</p>
             <p className="text-xs font-semibold tracking-wider text-ink-muted uppercase">
-              Level {level}
+              Level {profile.level}
             </p>
             <div className="mt-1.5">
-              <ProgressBar value={xp} goal={xpGoal} />
+              <ProgressBar value={profile.xp} goal={xpForNextLevel(profile.level)} />
             </div>
           </div>
         </div>
@@ -73,51 +44,97 @@ export function Dashboard() {
       </Card>
 
       <div className="flex gap-3">
-        <QuickTile
+        <Link
           to="/missionen"
-          label="Tägliche Missionen"
-          value={`${dailyMissions.done}/${dailyMissions.total}`}
-          accent="var(--color-gold)"
-        />
-        <QuickTile
-          to="/events"
-          label={event.title}
-          value={event.endsIn}
-          accent="var(--color-purple)"
-        />
-        <QuickTile
+          className="flex min-h-20 flex-1 flex-col justify-center gap-0.5 rounded-xl border border-edge bg-deep/60 px-3 py-2"
+          style={{ borderLeftColor: 'var(--color-gold)', borderLeftWidth: 3 }}
+        >
+          <span className="text-[10px] font-bold tracking-wider text-ink-muted uppercase">
+            Tägliche Missionen
+          </span>
+          <span className="tabular text-sm font-bold">
+            {doneMissions}/{missions.length}
+          </span>
+          {openMissions > 0 && (
+            <span className="text-[10px] font-bold text-gold">
+              {openMissions} abholbereit
+            </span>
+          )}
+        </Link>
+        <Link
           to="/abenteuer"
-          label="Abenteuerpfad"
-          value={`Kapitel ${adventure.chapter}`}
-          accent="var(--color-game-kristallmix)"
-        />
+          className="flex min-h-20 flex-1 flex-col justify-center gap-0.5 rounded-xl border border-edge bg-deep/60 px-3 py-2"
+          style={{ borderLeftColor: 'var(--color-purple)', borderLeftWidth: 3 }}
+        >
+          <span className="text-[10px] font-bold tracking-wider text-ink-muted uppercase">
+            Abenteuerpfad
+          </span>
+          <span className="tabular text-sm font-bold">Kapitel {adventure.chapter}</span>
+        </Link>
+        <Link
+          to="/profil"
+          className="flex min-h-20 flex-1 flex-col justify-center gap-0.5 rounded-xl border border-edge bg-deep/60 px-3 py-2"
+          style={{ borderLeftColor: 'var(--color-game-kristallmix)', borderLeftWidth: 3 }}
+        >
+          <span className="text-[10px] font-bold tracking-wider text-ink-muted uppercase">
+            Gespielt
+          </span>
+          <span className="tabular text-sm font-bold">{save.stats.totalGames}</span>
+        </Link>
       </div>
 
       <Card title="Wähle dein Spiel">
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-          {GAMES.map((game) => (
-            <article
-              key={game.id}
-              className="flex flex-col gap-2 rounded-xl border border-edge bg-deep/60 p-3"
-              style={{ borderTopColor: game.colorVar, borderTopWidth: 3 }}
-            >
-              <h3 className="text-sm font-bold">{game.title}</h3>
-              <p className="flex-1 text-xs text-ink-muted">{game.tagline}</p>
-              <p className="text-[10px] font-semibold tracking-wider text-ink-muted uppercase">
-                {game.bestLabel}: —
-              </p>
-              <button
-                type="button"
-                disabled={!game.available}
-                className="min-h-11 rounded-lg text-sm font-bold text-white uppercase disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ background: game.colorVar }}
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {GAMES.map((game) => {
+            const best = save.progress[game.id]
+            const bestValue =
+              game.bestLabel === 'Bestes Level'
+                ? best.highScore > 0
+                  ? best.highScore.toLocaleString('de-DE')
+                  : '—'
+                : best.bestTimeMs
+                  ? formatTime(best.bestTimeMs)
+                  : '—'
+            return (
+              <article
+                key={game.id}
+                className="flex flex-col gap-2 rounded-xl border border-edge bg-deep/60 p-3"
+                style={{ borderTopColor: game.colorVar, borderTopWidth: 3 }}
               >
-                {game.available ? 'Spielen' : 'Bald'}
-              </button>
-            </article>
-          ))}
+                <h3 className="text-sm font-bold">{game.title}</h3>
+                <p className="flex-1 text-xs text-ink-muted">{game.tagline}</p>
+                <p className="text-[10px] font-semibold tracking-wider text-ink-muted uppercase">
+                  {game.bestLabel === 'Bestes Level' ? 'Bestpunkte' : game.bestLabel}: {bestValue}
+                </p>
+                {game.available ? (
+                  <Link
+                    to={`/spiel/${game.id}`}
+                    className={[
+                      'grid min-h-11 place-items-center rounded-lg text-sm font-bold uppercase',
+                      game.textOnColor === 'dark' ? 'text-deep' : 'text-white',
+                    ].join(' ')}
+                    style={{ background: game.colorVar }}
+                  >
+                    Spielen
+                  </Link>
+                ) : (
+                  <span
+                    className="grid min-h-11 place-items-center rounded-lg text-sm font-bold text-white uppercase opacity-40"
+                    style={{ background: game.colorVar }}
+                  >
+                    Bald
+                  </span>
+                )}
+              </article>
+            )
+          })}
         </div>
       </Card>
     </div>
   )
+}
+
+function formatTime(ms: number): string {
+  const total = Math.floor(ms / 1000)
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
 }

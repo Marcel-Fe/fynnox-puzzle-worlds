@@ -1,5 +1,5 @@
 /**
- * Die sechs Spiele. IDs sind unveränderlich (siehe CLAUDE.md).
+ * Die acht Spiele. IDs sind unveränderlich (siehe CLAUDE.md).
  * Regeln und Kurztexte stammen aus docs/01-gamedesign.md, Farben aus docs/03-art-ui-guide.md.
  */
 export type GameId =
@@ -9,6 +9,8 @@ export type GameId =
   | 'kristallmix'
   | 'solitaire'
   | 'minigolf'
+  | 'sudoku'
+  | 'bubbleshooter'
 
 /** Kategorien der Filterleiste in der Spieleauswahl (docs/01-gamedesign.md). */
 export type GameCategory = 'puzzle' | 'karten' | 'sport'
@@ -27,6 +29,11 @@ export interface GameInfo {
   bestLabel: 'Bestes Level' | 'Bestzeit'
   /** Tailwind-Token aus src/index.css */
   colorVar: string
+  /**
+   * Schriftfarbe auf der Spielfarbe. Waldblöcke ist so hell, dass weiß darauf
+   * nur 2,2:1 erreicht — dort muss dunkel geschrieben werden.
+   */
+  textOnColor: 'light' | 'dark'
   available: boolean
 }
 
@@ -40,6 +47,7 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-blockfall)',
+    textOnColor: 'light',
     available: false,
   },
   {
@@ -51,7 +59,8 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-waldbloecke)',
-    available: false,
+    textOnColor: 'dark',
+    available: true,
   },
   {
     id: 'tempelpaare',
@@ -62,6 +71,7 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-tempelpaare)',
+    textOnColor: 'light',
     available: false,
   },
   {
@@ -73,6 +83,7 @@ export const GAMES: GameInfo[] = [
     category: 'puzzle',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-kristallmix)',
+    textOnColor: 'light',
     available: false,
   },
   {
@@ -84,6 +95,7 @@ export const GAMES: GameInfo[] = [
     category: 'karten',
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-solitaire)',
+    textOnColor: 'light',
     available: false,
   },
   {
@@ -95,6 +107,36 @@ export const GAMES: GameInfo[] = [
     category: 'sport',
     bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-minigolf)',
+    textOnColor: 'light',
+    available: false,
+  },
+  {
+    id: 'sudoku',
+    title: 'Sudoku',
+    tagline: 'Denke scharf. Fülle das Gitter.',
+    hint: 'Zahlen wollen Geduld. Nimm dir Zeit, junger Freund.',
+    companion: 'Elda',
+    category: 'puzzle',
+    bestLabel: 'Bestzeit',
+    colorVar: 'var(--color-game-sudoku)',
+    textOnColor: 'light',
+    available: false,
+  },
+  {
+    id: 'bubbleshooter',
+    title: 'Bubble Shooter',
+    tagline: 'Ziele. Triff. Lass es platzen.',
+    hint: 'Drei gleiche Farben und schon platzt es — wie ein guter Rhythmus!',
+    companion: 'Juno',
+    category: 'puzzle',
+    bestLabel: 'Bestes Level',
+    colorVar: 'var(--color-game-bubbleshooter)',
+    textOnColor: 'light',
     available: false,
   },
 ]
+
+export const GAMES_BY_ID = Object.fromEntries(GAMES.map((g) => [g.id, g])) as Record<
+  GameId,
+  GameInfo
+>

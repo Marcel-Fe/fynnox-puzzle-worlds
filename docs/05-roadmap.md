@@ -25,52 +25,57 @@ installieren, startet ohne Browserleiste und zeigt Navigation samt Platzhalter-B
 
 ---
 
-## Phase 3 — Profil und Speicherung
+## Phase 3 — Profil und Speicherung ✅
 
-`SaveData`, `SaveAdapter` mit localStorage, zustand-Store, `applyRoundResult`.
-Währungsleiste und Level-Karte zeigen echte Werte.
-Balancing-Zahlen (XP, Münzen, Energie) werden **vorher** festgelegt und ins
-[Gamedesign](01-gamedesign.md) eingetragen.
+`SaveData`, `SaveAdapter` mit localStorage, zustand-Store, `applyRoundResult`, Energie-Nachfüllung.
+Währungsleiste, Level-Karte und Missionen zeigen echte Werte.
+Balancing-Zahlen stehen im [Gamedesign](01-gamedesign.md) und wurden aus den Mockup-Werten
+abgeleitet.
 
-**Fertig, wenn**: Ein Testknopf schreibt ein Rundenergebnis gut, XP und Münzen steigen sichtbar,
-und nach dem Neuladen der Seite sind die Werte noch da.
+**Nachgewiesen**: 27 Tests in `src/core/round.test.ts` und `src/games/waldbloecke/logic/game.test.ts`
+(`npm test`). Im Browser geprüft: Energie sinkt beim Spielstart von 5 auf 4 und ist nach dem
+Neuladen der Seite immer noch 4.
 
 ---
 
-## Phase 4 — Waldblöcke, vollständig
+## Phase 4 — Waldblöcke, vollständig ✅
 
 Das erste echte Spiel und die Vorlage für alle weiteren:
 8×8-Raster, drei Vorratsblöcke, Reihen und Spalten räumen, Kombos, Sterne, Spielende.
-Logik in `logic/` ohne React, Darstellung getrennt.
+Logik in `logic/` ohne React, Darstellung getrennt, Zufall über einen Seed.
 Am Rundenende wird ein `RoundResult` gemeldet und über `applyRoundResult` verrechnet.
 
-**Fertig, wenn**: Eine Runde ist auf dem Handy per Touch spielbar, endet korrekt,
-zahlt XP und Münzen aufs Profil ein und lässt eine tägliche Mission hochzählen.
+**Bedienung**: erst Block antippen, dann Feld antippen — bewusst kein Ziehen, weil auf
+dem Handy sonst der Finger die Zielstelle verdeckt.
+
+**Nachgewiesen**: Im Browser gespielt, Punkte steigen, Reihen werden geräumt, Energie
+wird abgezogen und bleibt nach dem Neuladen erhalten.
 
 ---
 
-## Phase 5 — Dashboard mit echten Daten
+## Phase 5 — Restliche Bildschirme mit echten Daten
 
-Der Startbildschirm aus den Mockups: Begrüßung mit Fynnox, Level-Karte, sechs Spiele-Kacheln,
-tägliche Missionen, Statistik. Alles aus dem Spielstand, nichts fest verdrahtet.
-Spiele ohne Umsetzung zeigen „Bald verfügbar".
+Spieleauswahl mit Filterleiste, Profil mit Statistik und Erfolgen, Ergebnisbildschirm
+nach einer Runde („GEWONNEN!"-Vorlage aus den Mockups), Ladebildschirm mit Fynnox.
 
-**Fertig, wenn**: Das Dashboard auf dem Handy sieht dem Mockup erkennbar ähnlich
-und alle Zahlen darauf stimmen mit dem Spielstand überein.
+**Fertig, wenn**: Kein Bildschirm der Tab-Leiste zeigt mehr einen Platzhalter,
+und alle Zahlen stimmen mit dem Spielstand überein.
 
 ---
 
-## Phase 6 — Die weiteren fünf Spiele
+## Phase 6 — Die weiteren sieben Spiele
 
 In dieser Reihenfolge, jedes nach dem Muster von Waldblöcke:
 
 1. **Tempelpaare** — feste Layouts, keine Physik, keine Fallgeschwindigkeit
 2. **Kristallmix** — Match-3 mit Nachrücken und Power-Ups
 3. **Blockfall** — braucht als erstes eine Spielschleife mit Zeittakt
-4. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
-5. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+4. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
+5. **Bubble Shooter** — erste Schussbahn, versetztes Raster
+6. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
+7. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
 
-**Fertig, wenn**: Alle sechs Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
+**Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
 
 ---
 
