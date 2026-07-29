@@ -6,10 +6,22 @@ wird nicht geraten.
 
 ---
 
-## Die sechs Spiele
+## Die sechs Kernspiele
 
 Technische IDs sind unveränderlich: `blockfall`, `waldbloecke`, `tempelpaare`,
 `kristallmix`, `solitaire`, `minigolf`.
+
+Jedes Spiel hat eine **Begleitfigur**, die es erklärt (siehe [Charakterbibel](02-charakterbibel.md)),
+und einen **Bestwert**, der auf der Spielkachel steht:
+
+| Spiel | Begleitfigur | Bestwert auf der Kachel |
+|---|---|---|
+| Blockfall | Fynnox | Bestes Level |
+| Waldblöcke | Mira | Bestes Level |
+| Tempelpaare | Finn | Bestzeit |
+| Kristallmix | Lumo | Bestes Level |
+| Solitaire | Fynnox | Bestzeit |
+| Minigolf | Pip | Bestes Level (= erreichte Bahn) |
 
 ### 1. Blockfall — `blockfall`
 
@@ -106,9 +118,70 @@ Minigolf mit Physik. *"Ziele, schlage und loch ein! Hole in One für extra Stern
 
 ---
 
+## Weitere Spiele (aus den neueren Mockups)
+
+Die Spieleauswahl im Handy-Design zeigt über die sechs Kernspiele hinaus:
+
+- **Sudoku** — Zahlenrätsel, klassisch
+- **Bubble Shooter** — Blasen abschießen und Gruppen räumen
+- **Mehr Spiele** — eine Kachel, die auf künftige Spiele verweist
+
+Beide sind im [Masterprompt](00-masterprompt.md) **nicht** genannt und tauchen nur in
+einem Bild auf. **OFFEN**: Gehören sie zum festen Umfang oder waren sie Beiwerk der
+Bildgenerierung? Bis das geklärt ist, werden sie **nicht** gebaut.
+Empfehlung: erst die sechs Kernspiele fertigstellen, dann entscheiden.
+
+### Kategorien in der Spieleauswahl
+
+Filterleiste über der Spieleliste: **Alle Spiele · Puzzle · Karten · Sport**
+
+| Kategorie | Spiele |
+|---|---|
+| Puzzle | Blockfall, Waldblöcke, Tempelpaare, Kristallmix |
+| Karten | Fynnox Solitaire |
+| Sport | Fynnox Minigolf |
+
+---
+
+## Rundenablauf und Rückmeldungen
+
+Aus den Mockups belegte Einblendungen, die in **jedem** Spiel gleich aussehen sollen:
+
+| Moment | Anlass |
+|---|---|
+| `SIEG!` | Runde gewonnen |
+| `LEVEL UP!` | Levelaufstieg des Profils |
+| `BELOHNUNG!` | Truhe oder Belohnung freigeschaltet |
+| `NEUES LEVEL!` | nächstes Spiellevel erreicht |
+| `FEHLER!` | Fehlzug oder verlorene Runde |
+| `PAUSE` | Spiel angehalten |
+
+Dazu spielspezifisch: `COMBO x4` / `KOMBO x3` / `Combo x5!` (Blockfall, Tempelpaare, Kristallmix),
+`TETRIS!` (Blockfall), `Sweet!` (Kristallmix), `PERFEKT!` und `HOLE IN ONE!` (Minigolf).
+
+**Gewonnen-Bildschirm** (aus dem Solitaire-Mockup, gilt als Vorlage für alle Spiele):
+Überschrift „GEWONNEN!", bis zu drei Sterne, die erreichten Werte (Zeit, Punkte)
+und ein Knopf „WEITER".
+
+**Pause** ist in jedem Spiel oben rechts erreichbar.
+
+---
+
+## Start der App
+
+Belegter Ablauf aus den Mockups:
+
+1. **Ladebildschirm** — Logo „Fynnox Puzzle Worlds", Fynnox winkt, Sprechblase
+   („Schön, dass du wieder da bist! Ein neues Abenteuer wartet auf uns!"),
+   Fortschrittsbalken mit Prozentzahl
+2. **Übergang** — Fynnox: „Fast geschafft! Packen wir's an!"
+3. **Dashboard**
+
+---
+
 ## Geteilte Systeme
 
-Alle sechs Spiele zahlen auf **ein** Profil ein.
+Alle Spiele zahlen auf **ein** Profil ein.
 
 ### Level und XP
 
@@ -147,7 +220,9 @@ Kristallen, Abholen per Knopf. **OFFEN**: Belohnungsleiter und Verhalten bei Aus
 
 ### Abenteuerpfad
 
-Ein Levelpfad quer über alle Spiele, in Weltabschnitten zu je 20 Leveln:
+Ein Levelpfad quer über alle Spiele. Die Mockups zeigen dazu **zwei verschiedene Entwürfe**:
+
+**Entwurf A — Weltabschnitte zu je 20 Leveln** (ältere Bilder, Desktop-Ansicht):
 
 | Abschnitt | Welt | Level |
 |---|---|---|
@@ -157,46 +232,87 @@ Ein Levelpfad quer über alle Spiele, in Weltabschnitten zu je 20 Leveln:
 | 4 | Pirateninsel | 61–80 |
 | 5 | gesperrt (`???`) | 81–100 |
 
-Auf dem Pfad liegen Truhen, Kristalle, Sterne und Meilensteine (Krone).
-Jeder Abschnitt zeigt Sterne als Fortschritt.
+**Entwurf B — Kapitel** (neuere Handy-Bilder, deutlich weiter ausgearbeitet):
 
-- **Konflikt, muss geklärt werden**: Der Masterprompt nennt **elf** Welten
-  (Sunforest, Schnee, Lava, Candy, Kristallhöhlen, Pirateninsel, Unterwasser, Steampunk,
-  Weltraum, Halloween, Weihnachten), der Pfad in den Mockups zeigt aber nur vier plus
-  einen gesperrten Abschnitt und endet bei Level 100. Entweder wächst der Pfad auf
-  220 Level, oder ein Teil der Welten sind reine Saison-/Event-Welten
-  (Halloween, Weihnachten, Candy sprechen dafür). → **OFFEN**
+- Überschrift „Kapitel 4 · Kristallhöhle" mit eigenem Fortschrittsbalken **8/15**
+- Der Pfad schlängelt sich durch die Weltkulisse; darauf sitzen **nummerierte Knoten**
+- Jeder abgeschlossene Knoten zeigt **1 bis 3 Sterne**, der nächste ist hervorgehoben,
+  spätere sind grau und gesperrt
+- Am Kapitelende eine Truhe
+- Fynnox kommentiert: „Je weiter wir reisen, desto mehr Freunde und Schätze warten auf uns!"
+
+**Empfehlung: Entwurf B.** Er ist konkreter, passt aufs Handy (senkrechter Pfad statt
+waagerechter Abschnittsleiste), und Kapitel zu 15 Leveln lassen sich beliebig fortsetzen —
+damit löst sich auch der Widerspruch zu den elf Welten des Masterprompts von selbst.
+
+**OFFEN** (Entscheidung des Auftraggebers): Entwurf A oder B, und was auf einem Knoten
+passiert — eine Runde in einem bestimmten Spiel mit vorgegebenem Ziel, oder freie Wahl.
 
 ### Events
 
 Zeitlich begrenzt, mit eigenem Fortschrittsbalken und eigenem Shop.
-Mockup-Beispiel: „Sommer Cup", Restzeit 16 h 45 m, Fortschritt 3.250 / 10.000,
-Belohnung 1.000 Münzen + 100 Kristalle. **OFFEN**: Eventkatalog und Rhythmus.
+Der Eventbildschirm zeigt drei Gruppen:
+
+| Gruppe | Beispiele aus den Mockups |
+|---|---|
+| Laufendes Hauptevent | „Sommer Cup" — „Kämpfe um den Sieg und gewinne großartige Preise!", eigene Platzierung (Platz 245), Restzeit, Fortschritt 3.250 / 10.000, Belohnung 1.000 Münzen + 100 Kristalle |
+| Aktive Events | „Kristalljagd" (endet in 2 T 6 h), „Täglicher Bonus" (Zustand *Bereit!* mit Knopf „Abholen") |
+| Kommende Events | „Piratenfest", „Monsterjagd" |
+
+**OFFEN**: vollständiger Eventkatalog und Rhythmus.
 
 ### Ranglisten und Freunde
 
-- Freundesliste mit Level und Status (Online / Im Spiel / zuletzt aktiv), Anfragen, Bestenliste
-- Rangliste nach Punkten, eigene Position hervorgehoben
-- Freunde können herausgefordert werden
-- **OFFEN**: Wie ohne Backend? Bis zur Cloud-Phase sind Freunde/Ranglisten Platzhalter
+- Reiter: **Freunde · Anfragen · Bestenliste**
+- Freunde erscheinen gruppiert nach **Online** und **Alle Freunde**
+- Je Freund: Bild, Name, Trophäenpunkte und Status — entweder was gerade gespielt wird
+  („Spielt Blockfall") oder wann zuletzt online („Zuletzt online: 1 h")
+- Knopf „Freunden einladen"; Freunde können herausgefordert werden
+- **OFFEN**: Wie ohne Backend? Bis zur Cloud-Phase sind Freunde und Ranglisten Platzhalter
   mit den Spielfiguren als Gegner
 
 ### Erfolge
 
 Dauerhafte Ziele mit Fortschritt, z. B. „Abenteurer — Spiele 100 Spiele" (erfüllt),
 „Sammler — Sammle 10.000 Münzen" (8.450/10.000), „Meister — Erreiche Level 50" (34/50).
+Im Profil steht ein Gesamtstand (Mockup: **25 / 60**) mit Abzeichen in Bronze, Silber und Gold.
 **OFFEN**: vollständige Erfolgsliste.
 
 ### Statistik
 
 Gesamtspiele, gewonnene Spiele, bestes Level, Spielzeit, gesammelte Münzen, gesammelte Kristalle.
-Pro Spiel zusätzlich ein eigener Bestwert (Bestscore, Bestzeit oder bestes Ergebnis unter Par).
+Pro Spiel zusätzlich ein eigener Bestwert (bestes Level oder Bestzeit, siehe Tabelle oben).
 
 ### Shop
 
-Kategorien: **Angebote**, **Outfits**, **Booster**, **Münzen**, **Kristalle**.
-Auf den Mockups stehen Euro-Preise (2,49 € / 4,99 € / 9,99 €) — das sind **Platzhalter**.
-Es ist keine Bezahlung geplant oder implementiert.
+Reiter: **Empfohlen · Outfits · Helfer · Booster** (ältere Mockups nennen zusätzlich
+*Angebote*, *Münzen*, *Kristalle*).
+
+Belegte Waren:
+
+| Ware | Preis |
+|---|---|
+| Fynnox Piraten Outfit | 1.200 Kristalle |
+| Kristall Haustier | 800 Kristalle |
+| Mega Booster Pack | 2.500 Kristalle |
+| Münzpaket 10.000 | 2,49 € |
+| Kristallpaket 500 | 4,99 € |
+| Booster Pack | 5,99 € |
+
+Dazu **tägliche Gratis-Angebote** mit Countdown: 500 Münzen, 10 Kristalle, Energie.
+
+Die Euro-Preise sind **Platzhalter**. Es ist keine Bezahlung geplant oder implementiert.
+Alles, was mit Kristallen bezahlt wird, ist dagegen umsetzbar.
+
+### Einstellungen
+
+Aus dem Handy-Mockup, in drei Gruppen:
+
+| Gruppe | Einträge |
+|---|---|
+| Allgemein | Musik, Soundeffekte, Vibration, Energiesparmodus — jeweils Ein/Aus-Schalter |
+| Spiel | Sprache (Deutsch), Benachrichtigungen, Cloud-Speicherung (Zustand „Verbunden"), Datenschutz |
+| Support | Hilfe & Support, Über Fynnox Puzzle Worlds |
 
 ### Fynnox Club
 

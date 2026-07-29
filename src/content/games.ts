@@ -10,13 +10,21 @@ export type GameId =
   | 'solitaire'
   | 'minigolf'
 
+/** Kategorien der Filterleiste in der Spieleauswahl (docs/01-gamedesign.md). */
+export type GameCategory = 'puzzle' | 'karten' | 'sport'
+
 export interface GameInfo {
   id: GameId
   title: string
   /** Drei Wörter, wie auf den Spielkacheln der Mockups */
   tagline: string
-  /** Was Fynnox zum Spiel sagt */
+  /** Was die Begleitfigur zum Spiel sagt */
   hint: string
+  /** Figur, die dieses Spiel erklärt (docs/02-charakterbibel.md) */
+  companion: string
+  category: GameCategory
+  /** Welcher Bestwert auf der Kachel steht */
+  bestLabel: 'Bestes Level' | 'Bestzeit'
   /** Tailwind-Token aus src/index.css */
   colorVar: string
   available: boolean
@@ -27,7 +35,10 @@ export const GAMES: GameInfo[] = [
     id: 'blockfall',
     title: 'Blockfall',
     tagline: 'Klassisch. Schnell. Endloser Spaß.',
-    hint: 'Räume Reihen ab und verhindere, dass die Blöcke den Himmel erreichen!',
+    hint: 'Oh nein! Die Kisten stapeln sich bis in den Himmel! Hilf mir, Reihen zu entfernen!',
+    companion: 'Fynnox',
+    category: 'puzzle',
+    bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-blockfall)',
     available: false,
   },
@@ -35,7 +46,10 @@ export const GAMES: GameInfo[] = [
     id: 'waldbloecke',
     title: 'Waldblöcke',
     tagline: 'Plane klug. Fülle das Raster.',
-    hint: 'Fülle das Raster mit Blöcken und sammle Sterne!',
+    hint: 'Die Tiere brauchen Platz! Fülle das Spielfeld möglichst geschickt.',
+    companion: 'Mira',
+    category: 'puzzle',
+    bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-waldbloecke)',
     available: false,
   },
@@ -43,7 +57,10 @@ export const GAMES: GameInfo[] = [
     id: 'tempelpaare',
     title: 'Tempelpaare',
     tagline: 'Finde die Paare. Räume den Tempel.',
-    hint: 'Finde alle passenden Paare und räume den Tempel!',
+    hint: 'Diese uralten Tempel bergen viele Geheimnisse. Finde alle passenden Steine.',
+    companion: 'Finn',
+    category: 'puzzle',
+    bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-tempelpaare)',
     available: false,
   },
@@ -51,7 +68,10 @@ export const GAMES: GameInfo[] = [
     id: 'kristallmix',
     title: 'Kristallmix',
     tagline: 'Kombiniere. Sammle. Gewinne!',
-    hint: 'Kombiniere Kristalle und erzeuge mächtige Explosionen!',
+    hint: 'Wow! Diese Kristalle versorgen unser Dorf mit Energie!',
+    companion: 'Lumo',
+    category: 'puzzle',
+    bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-kristallmix)',
     available: false,
   },
@@ -59,7 +79,10 @@ export const GAMES: GameInfo[] = [
     id: 'solitaire',
     title: 'Fynnox Solitaire',
     tagline: 'Klassisch. Entspannt. Zeitlos.',
-    hint: 'Sortiere alle Karten auf die Stapel und gewinne das Spiel!',
+    hint: 'Zeit für eine kleine Pause. Lass uns gemeinsam Karten sortieren.',
+    companion: 'Fynnox',
+    category: 'karten',
+    bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-solitaire)',
     available: false,
   },
@@ -67,7 +90,10 @@ export const GAMES: GameInfo[] = [
     id: 'minigolf',
     title: 'Fynnox Minigolf',
     tagline: 'Ziele. Schlage. Meistere den Kurs.',
-    hint: 'Ziele, schlage und loch ein! Hole in One für extra Sterne!',
+    hint: 'Das schaffen wir mit einem perfekten Schlag!',
+    companion: 'Pip',
+    category: 'sport',
+    bestLabel: 'Bestes Level',
     colorVar: 'var(--color-game-minigolf)',
     available: false,
   },

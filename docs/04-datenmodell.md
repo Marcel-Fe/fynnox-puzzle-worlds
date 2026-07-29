@@ -113,11 +113,29 @@ export interface Achievement {
 
 ### Abenteuerpfad
 
+Nach Entwurf B aus dem [Gamedesign](01-gamedesign.md): Kapitel mit nummerierten Knoten,
+je Knoten null bis drei Sterne.
+
 ```ts
 export interface AdventurePath {
-  currentLevel: number                      // 1..100 laut Mockup
-  starsPerSection: Record<string, number>   // Abschnitts-ID -> gesammelte Sterne
-  claimedRewards: number[]                  // Level-Nummern bereits abgeholter Truhen
+  chapter: number                    // z. B. 4 = "Kristallhöhle"
+  nodeInChapter: number              // z. B. 8 von 15
+  /** Sterne je abgeschlossenem Knoten, Schlüssel "kapitel:knoten" */
+  stars: Record<string, 0 | 1 | 2 | 3>
+  claimedChests: string[]            // bereits abgeholte Truhen
+}
+```
+
+### Einstellungen
+
+```ts
+export interface Settings {
+  music: boolean
+  sound: boolean
+  vibration: boolean
+  powerSaving: boolean
+  language: 'de'
+  notifications: boolean
 }
 ```
 
@@ -132,8 +150,11 @@ export interface SaveData {
   achievements: Achievement[]
   adventure: AdventurePath
   stats: GlobalStats
+  settings: Settings
   lastDailyRewardAt: number | null
   dailyRewardStreak: number
+  /** zuletzt gespielte Spiele für die "Weiterspielen"-Reihe auf dem Dashboard */
+  recentGames: GameId[]
 }
 
 export interface GlobalStats {

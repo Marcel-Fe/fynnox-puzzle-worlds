@@ -68,6 +68,38 @@ im Gegensatz zu den neun Figuren in der Charakterleiste, die alle eine Rolle tra
 
 ---
 
+## Wer welches Spiel begleitet
+
+Die neueren Mockups ordnen jedem Spiel eine feste Figur zu, die es in einer Sprechblase erklärt:
+
+| Spiel | Figur | Was sie sagt |
+|---|---|---|
+| Blockfall | Fynnox | „Oh nein! Die Kisten stapeln sich bis in den Himmel! Hilf mir, Reihen zu entfernen!" |
+| Waldblöcke | Mira | „Die Tiere brauchen Platz! Fülle das Spielfeld möglichst geschickt." |
+| Tempelpaare | Finn | „Diese uralten Tempel bergen viele Geheimnisse. Finde alle passenden Steine." |
+| Kristallmix | Lumo | „Wow! Diese Kristalle versorgen unser Dorf mit Energie!" |
+| Fynnox Solitaire | Fynnox | „Zeit für eine kleine Pause. Lass uns gemeinsam Karten sortieren." |
+| Fynnox Minigolf | Pip | „Das schaffen wir mit einem perfekten Schlag!" |
+
+Das ist der Grund, warum die Rollen der Figuren wichtiger sind als ihr Aussehen:
+Sie hängen an konkreten Bildschirmen.
+
+---
+
+## Der Spieler selbst
+
+Der Spieler ist **nicht** Fynnox — Fynnox ist der Begleiter. Angesprochen wird der Spieler
+als **„Abenteurer"**:
+
+> „Willkommen zurück, **Abenteurer!**"
+> „Wähle ein Spiel und lass uns Spaß haben!"
+
+Ein Mockup zeigt zusätzlich eine persönliche Anrede („Hey Marcel!"), ein anderes trägt
+im Profil den Namen „Fynnox". Festlegung: Der **Profilname ist frei wählbar**,
+Voreinstellung ist „Fynnox". Wo kein Name vorliegt, wird „Abenteurer" verwendet.
+
+---
+
 ## Freunde-Liste und Rangliste
 
 Solange es kein Backend gibt, treten die Begleiter als Platzhalter-Freunde auf.

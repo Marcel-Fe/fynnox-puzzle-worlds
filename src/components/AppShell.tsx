@@ -62,6 +62,20 @@ export function AppShell() {
               {item.label}
             </NavLink>
           ))}
+          <NavLink
+            to="/mehr"
+            className={({ isActive }) =>
+              [
+                'flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold transition',
+                isActive ? 'text-gold' : 'text-ink-muted',
+              ].join(' ')
+            }
+          >
+            <span className="text-lg" aria-hidden>
+              ☰
+            </span>
+            Mehr
+          </NavLink>
         </nav>
       </div>
     </div>

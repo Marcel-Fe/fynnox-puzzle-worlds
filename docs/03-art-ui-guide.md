@@ -87,7 +87,10 @@ Immer direkt neben dem Charakter, der spricht.
 
 **Währungs-Pillen** — dunkle abgerundete Kapsel, links das Symbol, dann der Wert,
 rechts ein `+`-Knopf, der in den Shop führt. Reihenfolge auf allen Bildschirmen gleich:
-**Energie → Münzen → Kristalle**.
+**Münzen → Kristalle → Energie**.
+
+> Die älteren Desktop-Mockups zeigen die umgekehrte Reihenfolge (Energie zuerst).
+> Verbindlich ist die neuere Handy-Fassung, weil das Handy der Hauptfall ist.
 
 ---
 
@@ -97,33 +100,54 @@ rechts ein `+`-Knopf, der in den Shop führt. Reihenfolge auf allen Bildschirmen
 
 ```
 ┌──────────────────────────────┐
-│  ⚡5/5   🪙12.580   💎320  ⚙ │  Kopfzeile: Währungen, feststehend
+│ 🦊 Fynnox      LEVEL 12   ☰ │  Profilkopf: Bild, Name, XP-Balken
+│    ▓▓▓▓▓▓░░ 2.450/3.500      │
+│ 🪙12.580  💎320  ⚡5/5        │  Währungen
 ├──────────────────────────────┤
+│   Fynnox + „Willkommen       │
+│   zurück, Abenteurer!"       │
 │                              │
-│   Fynnox + Begrüßung         │
-│   Level-Karte mit XP-Balken  │
-│                              │
-│   Spiele-Kacheln (2 je Reihe)│  scrollbarer Bereich
-│   Tägliche Missionen         │
-│   Abenteuerpfad              │
-│   Aktuelles Event            │
-│                              │
+│   [Tägl.] [Event] [Abent.]   │  drei Schnellzugriff-Kacheln
+│   WEITERSPIELEN  🎮🎮🎮🎮     │  zuletzt gespielte Spiele
 ├──────────────────────────────┤
-│ 🏠   🎮   🗺   🎯   🛒      │  Tab-Leiste, feststehend
-│ Start Spiele Abenteuer …     │
+│ 🏠     🎮     🎯    🛒    ☰ │  Tab-Leiste, feststehend
+│ Start Spiele Missionen Shop  │
+│                        Mehr  │
 └──────────────────────────────┘
 ```
 
+Die Tab-Leiste hat genau **fünf** Punkte: **Start · Spiele · Missionen · Shop · Mehr**.
+Hinter „Mehr" liegen Abenteuerpfad, Events, Freunde, Rangliste, Profil, Erfolge und
+Einstellungen. Grund: Mehr als fünf Symbole sind auf einem Handy nicht mehr treffsicher tippbar.
+
 ### Desktop
 
-Seitenleiste links mit denselben Punkten plus Profilkarte unten
-(Dashboard · Spiele · Abenteuerpfad · Missionen · Events · Shop · Freunde · Rangliste ·
-Erfolge · Einstellungen), Inhalt rechts in mehreren Spalten.
+Seitenleiste links mit Profilkarte unten
+(Dashboard · Spiele · Abenteuer · Missionen · Shop · Freunde · Rangliste · Events ·
+Einstellungen), Inhalt rechts in mehreren Spalten.
 Der aktive Punkt ist goldgefüllt, die übrigen sind einfarbig hell.
+
+### Die Bildschirme im Einzelnen
+
+Aus dem Handy-Design belegt — das ist die Liste der zu bauenden Ansichten:
+
+| # | Bildschirm | Kern |
+|---|---|---|
+| 1 | Laden | Logo, Fynnox mit Sprechblase, Fortschrittsbalken mit Prozentzahl |
+| 2 | Dashboard | Profilkopf, Begrüßung, drei Schnellzugriff-Kacheln, „Weiterspielen"-Reihe |
+| 3 | Spiele | Filterleiste (Alle · Puzzle · Karten · Sport), Kacheln mit Bestwert |
+| 4 | Spiel läuft | Sprechblase der Begleitfigur, Spielfeld, HUD, Power-Ups, Pause |
+| 5 | Missionen | Reiter Täglich · Wöchentlich · Event, Liste mit Balken, „Alle Belohnungen" |
+| 6 | Abenteuerpfad | Kapitelname, Fortschritt, senkrechter Pfad mit nummerierten Knoten |
+| 7 | Shop | Reiter Empfohlen · Outfits · Helfer · Booster, Sonderangebot, Gratis-Angebote |
+| 8 | Events | laufendes Hauptevent, aktive Events, kommende Events |
+| 9 | Freunde | Reiter Freunde · Anfragen · Bestenliste, Online-Gruppe, „Freunden einladen" |
+| 10 | Profil | Bild, Name, Level, Statistik, Erfolgsstand, „Anpassen" |
+| 11 | Einstellungen | Allgemein, Spiel, Support — mit Schaltern |
 
 ### Feste Regeln
 
-1. Währungsleiste **immer** oben rechts, in gleicher Reihenfolge, auf jedem Bildschirm.
+1. Währungsleiste **immer** oben, in gleicher Reihenfolge, auf jedem Bildschirm.
 2. Navigation ist immer erreichbar — Tab-Leiste unten am Handy, Seitenleiste am Desktop.
 3. Fynnox ist auf jedem Hauptbildschirm sichtbar.
 4. Jede Spielkarte zeigt: Bild, Name, Kurzbeschreibung in drei Wörtern
