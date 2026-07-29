@@ -98,7 +98,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/kristallmix.jpg'),
     bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'solitaire',

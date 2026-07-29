@@ -5,6 +5,25 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-07-29 — Tailwind v4 wirft ungenutzte Design-Tokens weg
+
+**Was passiert ist**: Die Kristalle in Kristallmix waren unsichtbar — nur die Glanzkanten
+waren zu sehen. Die Farbvariablen `--color-gem-0` bis `--color-gem-5` standen in
+`index.css`, fehlten aber im gebauten CSS vollständig.
+
+**Ursache**: Tailwind v4 entfernt aus einem `@theme`-Block jede Variable, deren Name
+nicht **wörtlich** im Quelltext vorkommt. Der Name wurde hier zur Laufzeit
+zusammengesetzt (`var(--color-gem-${farbe})`), also hat Tailwind ihn nie gesehen.
+Bei den Blockfall-Steinen fiel es nicht auf, weil dort die vollen Namen als Zeichenketten
+in `pieces.ts` stehen — reiner Zufall, der jederzeit hätte kippen können.
+
+**Konsequenz**: Tokens, deren Namen zur Laufzeit gebildet werden, gehören in einen
+normalen `:root`-Block, nicht in `@theme`. Nach jeder neuen Token-Gruppe im gebauten
+CSS prüfen, ob sie tatsächlich angekommen ist:
+`grep -o '\-\-color-xyz[^;]*' dist/assets/*.css`
+
+---
+
 ## 2026-07-29 — Mockups sind Bildmaterial, nicht nur Vorlage
 
 **Was passiert ist**: Die Oberfläche wurde als reines CSS nachgebaut — flache Farbflächen

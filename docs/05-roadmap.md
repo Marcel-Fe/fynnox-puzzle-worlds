@@ -137,10 +137,32 @@ Paare finden nach Mahjong-Regeln, 36 Steine in drei Schichten, drei Minuten Zeit
 Zugfolge bei 40 verschiedenen Startzahlen regelkonform zum Sieg führt, und dass nach
 dem Mischen wieder eine solche Folge existiert.
 
+### ✅ Kristallmix
+
+Match-3 auf 8 × 8 mit sechs Farben, 25 Zügen und einem Sammelziel.
+Die festgelegten Regeln stehen im [Gamedesign](01-gamedesign.md).
+
+- **Startfeld ohne fertige Reihen und mit garantiertem Zug.** Ein zufällig gefülltes Feld
+  löst sich sonst beim ersten Blick von selbst auf — der Spieler bekäme Punkte, ohne
+  etwas getan zu haben.
+- **L- und T-Formen** werden als *ein* Treffer erkannt, nicht als zwei Reihen. Dafür
+  werden überlappende Läufe verschmolzen; daraus entsteht die Bombe.
+- **Kettenreaktionen**: Jede Folgeauflösung zählt einen Faktor höher.
+- **Wirkungslose Tausche kosten keinen Zug** — sonst wären die 25 Züge mit Fehlversuchen
+  verbraucht.
+- Gibt es keinen Zug mehr, wird automatisch neu gemischt.
+
+**Nachgewiesen**: 32 Tests, darunter Startfeld-Garantien über 30 Startzahlen und der
+Nachweis, dass nach jedem Zug wieder ein Zug möglich ist.
+
+Dabei gefunden: Tailwind v4 entfernt aus `@theme` alle Variablen, deren Namen nicht
+wörtlich im Quelltext stehen. Weil die Kristallfarben zur Laufzeit zusammengesetzt werden
+(`var(--color-gem-${farbe})`), fehlten sie im gebauten CSS und die Kristalle waren
+unsichtbar. Solche Tokens stehen jetzt in einem normalen `:root`-Block.
+
 ### Noch offen
 
-1. **Kristallmix** — Match-3 mit Nachrücken und Power-Ups
-2. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
+1. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
 3. **Bubble Shooter** — erste Schussbahn, versetztes Raster
 4. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
 5. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind

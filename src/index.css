@@ -26,8 +26,24 @@
   --color-game-sudoku: #0b7a6a;
   --color-game-bubbleshooter: #a02ba8;
 
-  /* Blockfall-Steine — Farben aus dem Spielfeld im Mockup
-     (docs/referenzen/dashboard-hauptansicht.png, Blockfall-Kachel) */
+  --color-ink: #e8eef6;
+  --color-ink-muted: #8ea3bd;
+}
+
+/*
+ * Spielsteinfarben — bewusst NICHT in @theme.
+ *
+ * Tailwind v4 wirft aus @theme jede Variable weg, deren Name nicht wörtlich
+ * irgendwo im Quelltext steht. Diese Namen werden aber zur Laufzeit
+ * zusammengesetzt (`var(--color-gem-${farbe})`), also sieht Tailwind sie nie
+ * und entfernt sie — die Kristalle waren dadurch unsichtbar.
+ * In einem normalen :root-Block bleiben sie erhalten.
+ *
+ * Werte aus den Spielfeldern der Mockups
+ * (docs/referenzen/dashboard-hauptansicht.png).
+ */
+:root {
+  /* Blockfall-Steine */
   --color-piece-i: #22b8d4;
   --color-piece-o: #e8b923;
   --color-piece-t: #a855c7;
@@ -36,8 +52,13 @@
   --color-piece-j: #2f6fd0;
   --color-piece-l: #e08424;
 
-  --color-ink: #e8eef6;
-  --color-ink-muted: #8ea3bd;
+  /* Kristallmix — sechs Farben */
+  --color-gem-0: #e8443a;
+  --color-gem-1: #2f8fe0;
+  --color-gem-2: #f0c020;
+  --color-gem-3: #4caf50;
+  --color-gem-4: #a855c7;
+  --color-gem-5: #f08030;
 }
 
 html,

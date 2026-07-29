@@ -78,7 +78,33 @@ Match-3. *"Kombiniere Kristalle und erzeuge mächtige Explosionen!"*
 - **Extras**: Regenbogenstein als stärkstes Power-Up, Lob-Einblendungen (`Sweet!`)
 - **Missionsbeispiele**: „Sammle 100 blaue Kristalle" (100), „Erzeuge 5 Regenbogensteine" (150),
   „Schaffe 20 Explosionen" (100)
-- **OFFEN**: Feldgröße, Kristallfarben und ihre Anzahl, genaue Power-Up-Regeln (4er/5er/L/T)
+
+**Festgelegt am 29.07.2026** (war offen: Feldgröße, Farben, Power-Up-Regeln):
+
+| Punkt | Festlegung | Begründung |
+|---|---|---|
+| Feldgröße | 8 × 8 | Passt hochkant aufs Handy; bei 44 px Zielfläche bleiben die Kristalle gut treffbar |
+| Farben | 6 | Bei 5 räumt sich das Feld fast von allein, bei 7 wird das Sammelziel zäh |
+| Züge je Runde | 25 | |
+| Sammelziel | 20 Kristalle einer Farbe | Die Farbe wird zu Rundenbeginn ausgelost |
+
+**Power-Ups**:
+
+| Entsteht aus | Power-Up | Wirkung |
+|---|---|---|
+| 4 in einer Reihe | Streifenkristall | Räumt die ganze Zeile bzw. Spalte |
+| 5 in einer Reihe | **Regenbogenstein** | Räumt alle Kristalle einer Farbe |
+| L- oder T-Form (5 über Eck) | Bombe | Räumt das 3 × 3-Feld ringsum |
+
+Ein Power-Up entsteht auf dem Feld, das zuletzt bewegt wurde, und löst aus, sobald es
+selbst Teil eines Zuges wird.
+
+**Punkte**: 30 für drei Kristalle, 60 für vier, 100 für fünf, 20 je Kristall, den ein
+Power-Up räumt. Jede Folgeauflösung derselben Kette zählt einen Multiplikator höher
+(erste Auflösung × 1, zweite × 2, dritte × 3 …).
+
+**Startfeld**: enthält nie bereits fertige Dreierreihen und immer mindestens einen
+möglichen Zug. Gibt es später keinen Zug mehr, wird automatisch neu gemischt.
 
 ### 5. Fynnox Solitaire — `solitaire`
 
