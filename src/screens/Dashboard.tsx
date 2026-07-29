@@ -26,7 +26,7 @@ export function Dashboard() {
             {PLACEHOLDER.xpGoal.toLocaleString('de-DE')} XP
           </span>
         </div>
-        <ProgressBar value={PLACEHOLDER.xp} goal={PLACEHOLDER.xpGoal} />
+        <ProgressBar value={PLACEHOLDER.xp} goal={PLACEHOLDER.xpGoal} showValue={false} />
       </Card>
 
       <Card title="Spiele Welten">

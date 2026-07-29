@@ -20,15 +20,20 @@ export function Card({
   )
 }
 
-/** Fortschritt wird immer als Balken UND als Zahl gezeigt. */
+/**
+ * Fortschritt wird immer als Balken UND als Zahl gezeigt (docs/03-art-ui-guide.md).
+ * `showValue={false}`, wenn die Zahl direkt darüber schon steht — sonst doppelt.
+ */
 export function ProgressBar({
   value,
   goal,
   color = 'var(--color-purple)',
+  showValue = true,
 }: {
   value: number
   goal: number
   color?: string
+  showValue?: boolean
 }) {
   const percent = goal > 0 ? Math.min(100, (value / goal) * 100) : 0
   return (
@@ -36,9 +41,11 @@ export function ProgressBar({
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-deep">
         <div className="h-full rounded-full" style={{ width: `${percent}%`, background: color }} />
       </div>
-      <span className="tabular text-xs font-semibold text-ink-muted">
-        {value.toLocaleString('de-DE')} / {goal.toLocaleString('de-DE')}
-      </span>
+      {showValue && (
+        <span className="tabular text-xs font-semibold text-ink-muted">
+          {value.toLocaleString('de-DE')} / {goal.toLocaleString('de-DE')}
+        </span>
+      )}
     </div>
   )
 }
