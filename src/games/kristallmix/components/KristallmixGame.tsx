@@ -9,7 +9,6 @@ import { areNeighbours } from '../logic/board'
 import {
   createGame,
   GOAL_AMOUNT,
-  indexOf,
   SIZE,
   starsFor,
   swap,
