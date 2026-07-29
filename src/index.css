@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+/*
+ * Design-Tokens aus docs/03-art-ui-guide.md.
+ * Die Werte wurden pixelgenau aus den Konzeptbildern gemessen — nicht ändern,
+ * ohne den Art-Guide mitzuändern.
+ */
+@theme {
+  --color-deep: #020c17;
+  --color-sidebar: #010f1e;
+  --color-card: #0a1626;
+  --color-elevated: #112b44;
+  --color-edge: #1f2838;
+
+  --color-gold: #f9b316;
+  --color-gold-deep: #8c540d;
+  --color-purple: #712db7;
+  --color-purple-panel: #1c0f42;
+
+  --color-game-blockfall: #552abe;
+  --color-game-waldbloecke: #2c7b0e;
+  --color-game-tempelpaare: #d26a03;
+  --color-game-kristallmix: #ca314d;
+  --color-game-solitaire: #135eb0;
+  --color-game-minigolf: #057336;
+
+  --color-ink: #e8eef6;
+  --color-ink-muted: #8ea3bd;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-deep);
+  color: var(--color-ink);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  /* Doppeltipp-Zoom und Gummiband-Scrollen stören auf dem Handy beim Spielen. */
+  touch-action: manipulation;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Zahlen dürfen beim Hochzählen nicht springen (Punkte, Münzen, Timer). */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
