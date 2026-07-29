@@ -42,6 +42,13 @@ Bewusst identisch zu **`fynnox-adventure`**, damit alle Fynnox-Projekte gleich f
 - **Speicher**: startet lokal (localStorage) hinter der Schnittstelle aus dem Datenmodell.
   Supabase kommt später dahinter. Spielcode ruft niemals direkt `localStorage` auf.
 
+**Bewusste Abweichung vom Masterprompt**: Dort steht *Next.js*. Verwendet wird *Vite*,
+weil `fynnox-adventure` bereits so gebaut ist und beide Projekte gleich funktionieren sollen.
+Für ein Spiel ohne Server bringt Next.js keinen Vorteil — serverseitiges Rendern und
+API-Routen werden hier nicht gebraucht, dafür wäre das Deployment auf GitHub Pages umständlicher.
+Alles andere aus dem Masterprompt (TypeScript, TailwindCSS, Framer Motion, PWA, Cloud-Save,
+Offline-Modus) bleibt unverändert.
+
 ## Deployment
 
 Push auf `main` → GitHub Action baut → GitHub Pages. Nichts manuell hochladen.
