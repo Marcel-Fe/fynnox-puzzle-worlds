@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
+import { TempelpaareGame } from './games/tempelpaare/components/TempelpaareGame'
 import { WaldbloeckeGame } from './games/waldbloecke/components/WaldbloeckeGame'
 import { Dashboard } from './screens/Dashboard'
 import { Games } from './screens/Games'
@@ -35,6 +37,8 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="spiele" element={<Games />} />
           <Route path="spiel/waldbloecke" element={<WaldbloeckeGame />} />
+          <Route path="spiel/blockfall" element={<BlockfallGame />} />
+          <Route path="spiel/tempelpaare" element={<TempelpaareGame />} />
           <Route path="missionen" element={<Missions />} />
           <Route path="profil" element={<Profile />} />
           <Route path="mehr" element={<More />} />

@@ -26,6 +26,16 @@
   --color-game-sudoku: #0b7a6a;
   --color-game-bubbleshooter: #a02ba8;
 
+  /* Blockfall-Steine — Farben aus dem Spielfeld im Mockup
+     (docs/referenzen/dashboard-hauptansicht.png, Blockfall-Kachel) */
+  --color-piece-i: #22b8d4;
+  --color-piece-o: #e8b923;
+  --color-piece-t: #a855c7;
+  --color-piece-s: #4caf2f;
+  --color-piece-z: #e0453f;
+  --color-piece-j: #2f6fd0;
+  --color-piece-l: #e08424;
+
   --color-ink: #e8eef6;
   --color-ink-muted: #8ea3bd;
 }

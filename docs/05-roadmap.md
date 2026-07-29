@@ -98,15 +98,52 @@ eigene Lichtquellen.
 
 ## Phase 6 — Die weiteren sieben Spiele
 
-In dieser Reihenfolge, jedes nach dem Muster von Waldblöcke:
+Jedes nach dem Muster von Waldblöcke: reine Logik in `logic/`, Darstellung in
+`components/`, Zufall über einen Seed, Rundenergebnis über `applyRoundResult`.
 
-1. **Tempelpaare** — feste Layouts, keine Physik, keine Fallgeschwindigkeit
-2. **Kristallmix** — Match-3 mit Nachrücken und Power-Ups
-3. **Blockfall** — braucht als erstes eine Spielschleife mit Zeittakt
-4. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
-5. **Bubble Shooter** — erste Schussbahn, versetztes Raster
-6. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
-7. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+### ✅ Blockfall
+
+Das klassische Fallspiel. Erstes Spiel mit **Zeittakt** — die Logik kennt keine Uhr,
+der Takt liegt in der Komponente.
+
+- Sieben Steine mit je vier Drehungen, als fertige Feldlisten hinterlegt statt zur
+  Laufzeit gedreht: Beim Rechnen mit Drehmatrizen verrutscht besonders das I-Stück.
+- **7er-Beutel**: Jeder Stein kommt einmal vor, bevor sich einer wiederholt. Rein
+  zufällig kann das gebrauchte lange Stück minutenlang ausbleiben — das empfindet
+  niemand als fair.
+- **Ausweichen beim Drehen**: Passt die Drehung nicht, wird sie um bis zu zwei Felder
+  seitlich versetzt versucht. Ohne das ließe sich an der Wand nicht drehen.
+- **Landepunkt-Anzeige** als Schatten — auf einem kleinen Bildschirm sonst kaum zu treffen.
+- Punkte klassisch gestaffelt (40 / 100 / 300 / 1200 je nach Reihenzahl, mal Level),
+  alle zehn Reihen ein Level höher.
+- Bedienung über Knöpfe statt Wischgesten: Ein Stein muss oft mehrmals schnell
+  hintereinander bewegt werden, dafür sind Knöpfe treffsicherer.
+
+### ✅ Tempelpaare
+
+Paare finden nach Mahjong-Regeln, 36 Steine in drei Schichten, drei Minuten Zeit.
+
+- Ganzzahliges Raster **ohne** den halben Versatz des klassischen Mahjong: Versetzte
+  Steine wären auf dem Handy zu klein zum Treffen.
+- **Garantiert lösbar**: Das Rätsel wird rückwärts gebaut — es werden wiederholt zwei
+  gleichzeitig freie Plätze gewählt und mit demselben Symbol belegt. Die dabei
+  entstehende Zugfolge wird mitgeführt und räumt den Tempel sicher leer.
+- Der **Hinweis** greift auf diese Zugfolge zurück statt auf ein beliebiges Paar.
+  Ein Hinweis, der in eine Sackgasse führt, wäre keine Hilfe.
+- **Mischen** verteilt die übrigen Symbole neu, und zwar nach demselben Verfahren —
+  das Rätsel bleibt danach lösbar.
+
+**Nachgewiesen**: 48 Tests für beide Spiele. Darunter der Beweis, dass die mitgelieferte
+Zugfolge bei 40 verschiedenen Startzahlen regelkonform zum Sieg führt, und dass nach
+dem Mischen wieder eine solche Folge existiert.
+
+### Noch offen
+
+1. **Kristallmix** — Match-3 mit Nachrücken und Power-Ups
+2. **Sudoku** — reine Logik, aber die Rätselerzeugung will durchdacht sein
+3. **Bubble Shooter** — erste Schussbahn, versetztes Raster
+4. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
+5. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
 
 **Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
 

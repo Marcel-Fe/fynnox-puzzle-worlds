@@ -56,7 +56,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/blockfall.jpg'),
     bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'waldbloecke',
@@ -84,7 +84,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/tempelpaare.jpg'),
     bg: asset('bg/tempel.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'kristallmix',

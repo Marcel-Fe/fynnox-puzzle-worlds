@@ -31,14 +31,15 @@ npm run preview  # gebauten Stand lokal ansehen
 | 3 | Profil und Speicherung | ✅ |
 | 4 | **Waldblöcke — spielbar** | ✅ |
 | 5 | Spieleauswahl, Profil, Ergebnisbildschirm, Laden | ✅ |
-| 6 | Die weiteren sieben Spiele | offen |
+| 5b | Echte Spielgrafik aus den Konzeptbildern, Fynnox in 3D | ✅ |
+| 6 | Die weiteren sieben Spiele | 2 von 7 |
 | 7 | Abenteuerpfad, Events, Shop | offen |
 | 8 | Cloud-Save, Ranglisten, Einstellungen, Ton | offen |
 
-**Spielbar**: Waldblöcke. Eine Runde kostet 1 Energie, bringt XP und Münzen,
-lässt Tagesmissionen hochzählen und wird lokal gespeichert.
-Danach zeigt ein Ergebnisbildschirm Sterne und Belohnungen.
-Die übrigen sieben Spiele stehen als „Bald" auf dem Dashboard.
+**Spielbar**: Waldblöcke, Blockfall und Tempelpaare.
+Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt Tagesmissionen hochzählen
+und wird lokal gespeichert. Danach zeigt ein Ergebnisbildschirm Sterne und Belohnungen.
+Die übrigen fünf Spiele stehen als „Bald" auf dem Dashboard.
 
 **Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · Waldblöcke · Missionen · Profil · Mehr.
 Shop, Events, Freunde, Rangliste und Einstellungen sind noch Platzhalter.
