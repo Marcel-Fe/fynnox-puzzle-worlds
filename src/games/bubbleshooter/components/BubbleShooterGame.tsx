@@ -132,17 +132,19 @@ export function BubbleShooterGame() {
   }
 
   /*
-   * Bewegen und Loslassen werden am Fenster behandelt, nicht am Feld.
+   * Bewegen und Loslassen werden am Fenster behandelt, nicht am Feld, und die
+   * Listener hängen dauerhaft dort — nicht nur während des Zielens.
    *
-   * Zwei Gründe:
-   * 1. Nach jedem Schuss baut React das Feld neu auf. Chromium schickt dem
-   *    ursprünglichen Element dann `pointercancel` statt `pointerup` — der
-   *    zweite und jeder weitere Schuss ging dadurch verloren.
-   * 2. Die Listener hängen dauerhaft am Fenster, nicht nur während des Zielens.
-   *    Würden sie erst beim Zielbeginn registriert, entstünde zwischen dem
-   *    Antippen und dem fertigen Neuaufbau ein Zeitfenster, in dem ein
-   *    schnelles Loslassen ins Leere läuft. Ob gerade gezielt wird, steht in
-   *    einer Referenz — die ist sofort aktuell, anders als der Zustandswert.
+   * Hintergrund: Chromium bindet einen Zeigervorgang an das Element, auf dem
+   * er begonnen hat. Verschwindet dieses Element, bricht der Vorgang mit
+   * `pointercancel` ab und `pointerup` kommt nie. Weil das Feld nach jedem
+   * Schuss neu gezeichnet wird, traf das ab dem zweiten Schuss jedes Mal zu —
+   * gemessen: erster Schuss `up`, danach nur noch `cancel`.
+   *
+   * Zwei Maßnahmen zusammen lösen das: Alle Kinder des Feldes sind für den
+   * Zeiger durchlässig (`[&_*]:pointer-events-none`), sodass die Berührung
+   * immer am Container beginnt, der bestehen bleibt — und die Listener am
+   * Fenster fangen das Loslassen unabhängig vom Neuaufbau ab.
    */
   useEffect(() => {
     function winkelAusEvent(event: PointerEvent): number {
@@ -276,7 +278,7 @@ export function BubbleShooterGame() {
       <div
         ref={feldRef}
         onPointerDown={onPointerDown}
-        className="relative touch-none overflow-hidden rounded-2xl border border-edge shadow-xl shadow-black/40"
+        className="relative touch-none overflow-hidden rounded-2xl border border-edge shadow-xl shadow-black/40 [&_*]:pointer-events-none"
         style={{ aspectRatio: `${FIELD_WIDTH} / ${VIEW_HEIGHT}` }}
         role="application"
         aria-label="Spielfeld — ziehen zum Zielen, loslassen zum Schießen"
