@@ -214,10 +214,36 @@ Zwei Fehler dabei gefunden:
 2. Beim Nachrücken verschwanden Blasen, die unten aus dem Feld geschoben wurden,
    stillschweigend — das Feld leerte sich heimlich. Jetzt ist die Runde damit verloren.
 
+### ✅ Fynnox Solitaire
+
+Klondike mit einer gezogenen Karte, unbegrenztem Nachziehen, drei Hinweisen und
+unbegrenztem Rückgängig. Die festgelegten Regeln stehen im [Gamedesign](01-gamedesign.md).
+
+- **Keine Lösbarkeitsgarantie** — als einziges der bisherigen Spiele. Klondike lebt
+  davon, dass nicht jedes Blatt aufgeht. Gegen den Frust helfen unbegrenztes
+  Rückgängig und ein Aufgeben-Knopf; die Runde zählt dann als gespielt, aber ohne Sterne.
+- **Rückgängig sichert den ganzen Zustand**, nicht nur den letzten Zug. Dadurch werden
+  Punkte, Züge und aufgedeckte Karten gemeinsam zurückgenommen — ein Strafabzug als
+  zweite Regel entfällt.
+- **Punkte können nicht ins Minus rutschen.** Wer Karten zwischen Ablagestapel und
+  Spalten hin und her schiebt, verliert 15 Punkte je Rückweg, kommt aber nie unter null.
+- Der **Hinweis** schlägt nur Züge vor, die etwas bewirken: eine verdeckte Karte
+  aufdecken, eine Spalte leeren oder ablegen. Karten zwischen zwei Spalten hin und her
+  zu schieben ist erlaubt, aber keine Hilfe.
+- **Stapel ohne Messung**: Karten überlappen über negative Prozent-Außenabstände.
+  Prozentwerte bei `margin-top` rechnen gegen die Breite des Umfelds, nicht gegen die
+  Höhe — dadurch skaliert der Stapel mit der Bildschirmbreite, ohne dass die
+  Kartengröße im Code gemessen werden muss.
+
+**Nachgewiesen**: 48 Tests. Im Browser bei 390 × 844 gespielt: sieben Spalten passen
+ohne waagerechtes Scrollen nebeneinander (Kartenfläche 46 × 64 px), das Austeilen ergibt
+1 bis 7 Karten je Spalte und 24 im Ziehstapel, vier Karten wurden auf die Ablagestapel
+sortiert (50 Punkte), Rückgängig nahm die letzte Ablage zurück (4/52 → 3/52),
+Hinweis und Talon-Umdrehen funktionieren, keine Konsolenfehler.
+
 ### Noch offen
 
-1. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
-2. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+1. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
 
 **Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
 

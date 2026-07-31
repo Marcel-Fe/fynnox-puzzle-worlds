@@ -1,6 +1,6 @@
 # Fynnox Puzzle Worlds
 
-Sechs Puzzle-Spiele mit dem Fuchs **Fynnox** — ein gemeinsames Profil, XP, Münzen, Kristalle,
+Acht Puzzle- und Kartenspiele mit dem Fuchs **Fynnox** — ein gemeinsames Profil, XP, Münzen, Kristalle,
 Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut fürs Smartphone.
 
 **Live:** https://marcel-fe.github.io/fynnox-puzzle-worlds/
@@ -17,7 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
-npm test         # Logik-Tests (186 Stück) — müssen grün sein
+npm test         # Logik-Tests (234 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -32,14 +32,15 @@ npm run preview  # gebauten Stand lokal ansehen
 | 4 | **Waldblöcke — spielbar** | ✅ |
 | 5 | Spieleauswahl, Profil, Ergebnisbildschirm, Laden | ✅ |
 | 5b | Echte Spielgrafik aus den Konzeptbildern, Fynnox in 3D | ✅ |
-| 6 | Die weiteren sieben Spiele | 5 von 7 |
+| 6 | Die weiteren sieben Spiele | 6 von 7 |
 | 7 | Abenteuerpfad, Events, Shop | offen |
 | 8 | Cloud-Save, Ranglisten, Einstellungen, Ton | offen |
 
-**Spielbar**: Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku und Bubble Shooter.
-Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt Tagesmissionen hochzählen
-und wird lokal gespeichert. Danach zeigt ein Ergebnisbildschirm Sterne und Belohnungen.
-Solitaire und Minigolf stehen noch als „Bald" auf dem Dashboard.
+**Spielbar**: Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku, Bubble Shooter
+und Fynnox Solitaire. Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt
+Tagesmissionen hochzählen und wird lokal gespeichert. Danach zeigt ein
+Ergebnisbildschirm Sterne und Belohnungen.
+Minigolf steht noch als „Bald" auf dem Dashboard.
 
 **Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · Waldblöcke · Missionen · Profil · Mehr.
 Shop, Events, Freunde, Rangliste und Einstellungen sind noch Platzhalter.
