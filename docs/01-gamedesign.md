@@ -118,7 +118,46 @@ Klondike-Solitaire. *"Sortiere alle Karten auf die Stapel und gewinne das Spiel!
 - **Hilfen**: Hinweis, Rückgängig, Neu mischen
 - **Missionsbeispiele**: „Gewinne 3 Spiele" (150), „Unter 5 Minuten gewinnen" (150),
   „Ohne Rückgängig gewinnen" (200)
-- **OFFEN**: Punktesystem, ob eine oder drei Karten gezogen werden, Anzahl der Hilfen
+
+**Festgelegt am 31.07.2026** (war offen: Punktesystem, eine oder drei Karten ziehen,
+Anzahl der Hilfen):
+
+| Punkt | Festlegung | Begründung |
+|---|---|---|
+| Karten ziehen | **eine** je Tipp | Bei drei Karten ist jede dritte Talonkarte nur über mehrere Durchläufe erreichbar. Auf dem Handy ist das viel Tippen für wenig Spiel |
+| Talon-Durchläufe | **unbegrenzt** | Mit einer Karte und unbegrenzten Durchläufen ist der weitaus größte Teil der Blätter gewinnbar. Eine Begrenzung würde Partien beenden, die noch lösbar sind |
+| Hinweise | **3** je Runde | Gleiche Zahl wie bei Tempelpaare und Sudoku — der Spieler soll nicht je Spiel neu lernen, wie viel Hilfe er hat |
+| Rückgängig | **unbegrenzt** | Solitaire lebt vom Ausprobieren. Ein Zug, der eine Sackgasse erzeugt, ist sonst das Ende der Runde |
+| Zeitlimit | **keins** | Die Kachel verspricht „Klassisch. Entspannt. Zeitlos." Die Zeit zählt nur für Punkte und Sterne, sie beendet nichts |
+
+**„Neu mischen"** aus der Hilfenliste ist bei Klondike das Umdrehen des Talons: Ist der
+Ziehstapel leer, wandern die abgelegten Karten in der ursprünglichen Reihenfolge zurück.
+Ein Neumischen des ganzen Blattes gibt es nicht — das wäre eine neue Partie, kein Zug.
+
+**Punkte** — je Aktion, sichtbar während der Partie:
+
+| Aktion | Punkte |
+|---|---|
+| Karte auf einen Ablagestapel | +10 |
+| verdeckte Spaltenkarte aufgedeckt | +5 |
+| Karte vom Talon in eine Spalte | +5 |
+| Karte vom Ablagestapel zurück in eine Spalte | −15 |
+
+Der Abzug für den Rückweg vom Ablagestapel verhindert, dass sich durch Hin- und
+Herlegen beliebig viele Punkte sammeln lassen. **Rückgängig nimmt auch die Punkte
+zurück** — es wird der komplette vorige Zustand wiederhergestellt. Das ist ehrlicher
+als ein Strafabzug und braucht keine zweite Regel.
+
+Bei Sieg zusätzlich **500 Punkte** plus einen Zeitbonus von `900 − verbrauchte Sekunden`
+(mindestens 0). Nach 15 Minuten gibt es also keinen Bonus mehr.
+
+**Sterne**: drei bei einem Sieg unter 5 Minuten, zwei unter 10 Minuten, sonst einer.
+Wer aufgibt, bekommt keinen.
+
+**Keine Lösbarkeitsgarantie** — bewusst anders als bei Tempelpaare, Kristallmix und
+Sudoku. Klondike ist gerade deshalb ein Klassiker, weil nicht jedes Blatt aufgeht; ein
+Spiel, das man immer gewinnt, verliert seinen Reiz. Gegen den Frust helfen das
+unbegrenzte Rückgängig und ein **Aufgeben**-Knopf, der die Runde ohne Sterne beendet.
 
 ### 6. Fynnox Minigolf — `minigolf`
 
