@@ -202,9 +202,15 @@ kommen an, Blasen platzen.
 
 Zwei Fehler dabei gefunden:
 
-1. Nach jedem Schuss baut React das Feld neu auf. Chromium schickt dem ursprünglichen
-   Element dann `pointercancel` statt `pointerup` — **der zweite und jeder weitere Schuss
-   ging verloren**. Loslassen wird jetzt am Fenster behandelt.
+1. **Nur jeder dritte Schuss kam an.** Chromium bindet einen Zeigervorgang an das Element,
+   auf dem er begonnen hat; verschwindet dieses Element, bricht der Vorgang mit
+   `pointercancel` ab und `pointerup` kommt nie. Weil das Feld nach jedem Schuss neu
+   gezeichnet wird, traf das ab dem zweiten Schuss immer zu.
+   Behoben durch zwei Maßnahmen zusammen: Alle Kinder des Feldes sind für den Zeiger
+   durchlässig, sodass die Berührung am stabilen Container beginnt — und `pointerup`
+   wird dauerhaft am Fenster abgefangen.
+   Gemessen vorher: erster Zug `up`, danach nur `cancel`. Nachher: `cancel` bleibt bei
+   null, jeder Schuss zählt.
 2. Beim Nachrücken verschwanden Blasen, die unten aus dem Feld geschoben wurden,
    stillschweigend — das Feld leerte sich heimlich. Jetzt ist die Runde damit verloren.
 

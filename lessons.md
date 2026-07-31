@@ -5,6 +5,29 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-07-29 — Ziehen auf Flächen, die sich neu zeichnen
+
+**Was passiert ist**: In Bubble Shooter kam nur jeder dritte Schuss an. Zwei Anläufe zur
+Behebung gingen daneben, weil ich die Ursache vermutet statt gemessen habe.
+
+**Ursache** (durch Zählen der Zeigerereignisse im Browser gefunden): Chromium bindet einen
+Zeigervorgang an das Element, auf dem er begonnen hat. Verschwindet dieses Element, bricht
+der Vorgang mit `pointercancel` ab — `pointerup` kommt nie. Weil das Spielfeld nach jedem
+Schuss neu gezeichnet wird, traf das ab dem zweiten Schuss immer zu.
+
+**Konsequenz**: Bei Zieh-Gesten auf Flächen, die sich während der Geste neu aufbauen:
+
+1. Alle Kinder der Fläche für den Zeiger durchlässig machen
+   (`[&_*]:pointer-events-none`), damit die Berührung am stabilen Container beginnt.
+2. `pointermove` und `pointerup` am **Fenster** behandeln, dauerhaft registriert, mit dem
+   Zielzustand in einer Referenz statt im React-Zustand.
+
+**Und methodisch**: Bei einem Fehler, der nach dem ersten Fix bestehen bleibt, nicht den
+zweiten Fix raten — messen. Ein Zähler für die tatsächlich eintreffenden Ereignisse hat
+die Ursache in einem Durchlauf gezeigt.
+
+---
+
 ## 2026-07-29 — Browsertests gegen den Service Worker sind wertlos
 
 **Was passiert ist**: Ein Fehler in Bubble Shooter blieb nach dem Fix scheinbar bestehen.
