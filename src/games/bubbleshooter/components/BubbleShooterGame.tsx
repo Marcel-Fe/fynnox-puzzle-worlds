@@ -51,11 +51,11 @@ export function BubbleShooterGame() {
 
   const [game, setGame] = useState<GameState | null>(null)
   const [angle, setAngle] = useState(0)
-  const [aiming, setAiming] = useState(false)
   const [flash, setFlash] = useState<string | null>(null)
   const feldRef = useRef<HTMLDivElement>(null)
-  /** Aktueller Winkel auch ausserhalb des Renderzyklus lesbar */
+  /** Winkel und Zielzustand auch ausserhalb des Renderzyklus lesbar */
   const angleRef = useRef(0)
+  const aimingRef = useRef(false)
   const settled = useRef(false)
 
   const start = useCallback(() => {
@@ -67,7 +67,7 @@ export function BubbleShooterGame() {
     clearRewards()
     settled.current = false
     setAngle(0)
-    setAiming(false)
+    aimingRef.current = false
     setFlash(null)
     setGame(createGame(now, now))
   }, [clearRewards, spendEnergy])
@@ -127,21 +127,24 @@ export function BubbleShooterGame() {
 
   function onPointerDown(event: React.PointerEvent) {
     if (!game || game.won || game.lost) return
-    setAiming(true)
+    aimingRef.current = true
     setAngle(winkelAus(event))
   }
 
   /*
    * Bewegen und Loslassen werden am Fenster behandelt, nicht am Feld.
    *
-   * Grund: Nach jedem Schuss baut React das Feld neu auf. Chromium schickt dem
-   * ursprünglichen Element dann `pointercancel` statt `pointerup` — der zweite
-   * und jeder weitere Schuss ging dadurch verloren. Am Fenster kommt das
-   * Loslassen unabhängig davon an, was im Feld gerade neu gezeichnet wird.
+   * Zwei Gründe:
+   * 1. Nach jedem Schuss baut React das Feld neu auf. Chromium schickt dem
+   *    ursprünglichen Element dann `pointercancel` statt `pointerup` — der
+   *    zweite und jeder weitere Schuss ging dadurch verloren.
+   * 2. Die Listener hängen dauerhaft am Fenster, nicht nur während des Zielens.
+   *    Würden sie erst beim Zielbeginn registriert, entstünde zwischen dem
+   *    Antippen und dem fertigen Neuaufbau ein Zeitfenster, in dem ein
+   *    schnelles Loslassen ins Leere läuft. Ob gerade gezielt wird, steht in
+   *    einer Referenz — die ist sofort aktuell, anders als der Zustandswert.
    */
   useEffect(() => {
-    if (!aiming) return
-
     function winkelAusEvent(event: PointerEvent): number {
       const box = feldRef.current?.getBoundingClientRect()
       if (!box) return angleRef.current
@@ -155,21 +158,23 @@ export function BubbleShooterGame() {
     }
 
     function onMove(event: PointerEvent) {
+      if (!aimingRef.current) return
       const w = winkelAusEvent(event)
       angleRef.current = w
       setAngle(w)
     }
 
     function onUp(event: PointerEvent) {
+      if (!aimingRef.current) return
+      aimingRef.current = false
       const w = winkelAusEvent(event)
       angleRef.current = w
       setAngle(w)
-      setAiming(false)
       feuern(w)
     }
 
     function onCancel() {
-      setAiming(false)
+      aimingRef.current = false
     }
 
     window.addEventListener('pointermove', onMove)
@@ -180,7 +185,7 @@ export function BubbleShooterGame() {
       window.removeEventListener('pointerup', onUp)
       window.removeEventListener('pointercancel', onCancel)
     }
-  }, [aiming, feuern])
+  }, [feuern])
 
   if (!game) {
     return (
