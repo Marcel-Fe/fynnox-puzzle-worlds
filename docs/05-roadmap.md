@@ -180,11 +180,38 @@ Startzahlen. Vier Messungen halten die Erzeugungsdauer fest, damit der Rundensta
 unbemerkt langsam wird. Im Browser geprüft: genau 42 Vorgaben auf „leicht" wie
 dokumentiert, Hinweis füllt ein Feld, Fehlerzähler und Notizmodus reagieren.
 
+### ✅ Bubble Shooter
+
+Versetztes Raster mit 11 Spalten, fünf Farben, Zielhilfe mit Abprallern.
+Die festgelegten Regeln stehen im [Gamedesign](01-gamedesign.md).
+
+- **Versetztes Raster**: Gerade Reihen haben 11 Plätze, ungerade 10. Welche Felder
+  aneinandergrenzen, hängt von der Reihennummer ab — dort gehen die meisten Fehler in
+  Bubble-Shooter-Umsetzungen ein. Ein Test rechnet für **jedes** Feld nach, dass jeder
+  Nachbar genau einen Durchmesser entfernt liegt.
+- **Zielhilfe**: Die Bahn wird vollständig in der Logik berechnet, inklusive der
+  Abpraller an den Seitenwänden, und als gepunktete Linie samt Landepunkt gezeigt.
+  Ohne sie ist auf einem Handybildschirm kaum zu zielen.
+- **Halt verlieren**: Gesucht wird umgekehrt — von der Decke aus wird markiert, was
+  erreichbar ist; was übrig bleibt, fällt. Abgetrennte Blasen zählen doppelt.
+- Es werden nur Farben ausgegeben, die auf dem Feld noch vorkommen. Eine Farbe, die es
+  nicht mehr gibt, wäre ein sicherer Fehlschuss.
+
+**Nachgewiesen**: 39 Tests. Im Browser gespielt: Zielhilfe folgt dem Finger, Schüsse
+kommen an, Blasen platzen.
+
+Zwei Fehler dabei gefunden:
+
+1. Nach jedem Schuss baut React das Feld neu auf. Chromium schickt dem ursprünglichen
+   Element dann `pointercancel` statt `pointerup` — **der zweite und jeder weitere Schuss
+   ging verloren**. Loslassen wird jetzt am Fenster behandelt.
+2. Beim Nachrücken verschwanden Blasen, die unten aus dem Feld geschoben wurden,
+   stillschweigend — das Feld leerte sich heimlich. Jetzt ist die Runde damit verloren.
+
 ### Noch offen
 
-1. **Bubble Shooter** — erste Schussbahn, versetztes Raster
-2. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
-3. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+1. **Solitaire** — umfangreichste Regeln, aber keine Animation nötig
+2. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
 
 **Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
 

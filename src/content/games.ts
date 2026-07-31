@@ -154,7 +154,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/bubbleshooter.jpg'),
     bg: asset('bg/kristallhoehle.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
 ]
 

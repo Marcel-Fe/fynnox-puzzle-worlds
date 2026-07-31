@@ -5,6 +5,23 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-07-29 — Browsertests gegen den Service Worker sind wertlos
+
+**Was passiert ist**: Ein Fehler in Bubble Shooter blieb nach dem Fix scheinbar bestehen.
+Zwei Runden Fehlersuche gingen in eine falsche Richtung, weil der Testbrowser gar nicht
+den neuen Stand ausführte.
+
+**Ursache**: Die App registriert einen Service Worker. Der lieferte im Testbrowser die
+zwischengespeicherte alte JavaScript-Datei aus — der frisch gebaute Code kam nie zur
+Ausführung.
+
+**Konsequenz**: In jedem Playwright-Skript den Service Worker abschalten:
+`browser.new_context(..., service_workers="block")`. Zusätzlich vor dem Test prüfen, dass
+der Vorschauserver wirklich neu gestartet ist — ein alter Prozess auf demselben Port
+lässt den neuen mit „Port already in use" scheitern, ohne dass es auffällt.
+
+---
+
 ## 2026-07-29 — Tailwind v4 wirft ungenutzte Design-Tokens weg
 
 **Was passiert ist**: Die Kristalle in Kristallmix waren unsichtbar — nur die Glanzkanten

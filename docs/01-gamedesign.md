@@ -193,7 +193,25 @@ Blasen abschießen. Begleitfigur: **Juno** (Musiker, fröhlich-leicht).
   gleichfarbige, die sich berühren, platzen; Blasen, die dadurch den Halt verlieren,
   fallen herunter; verloren, wenn die Blasen die untere Linie erreichen
 - **HUD**: Punkte, verbleibende Schüsse oder Reihen, nächste Blase
-- **OFFEN**: Feldgröße, Farbanzahl, Punkteformel
+
+**Festgelegt am 29.07.2026** (war offen: Feldgröße, Farbanzahl, Punkteformel):
+
+| Punkt | Festlegung | Begründung |
+|---|---|---|
+| Raster | 11 Spalten, versetzte Reihen mit 10 | Versetztes Raster wie beim Original; hochkant gut treffbar |
+| Sichtbare Reihen | 13 | Darunter die Verlustlinie |
+| Startreihen | 5 gefüllt | |
+| Farben | 5 | Bei 6 wird das Aufräumen zäh, bei 4 zu leicht |
+| Nachrücken | alle 6 Schüsse eine neue Reihe von oben | Erzeugt Druck, ohne zu hetzen |
+
+- **Verloren**, wenn eine Blase die Verlustlinie erreicht.
+- **Gewonnen**, wenn das Feld leer ist.
+- **Punkte**: 10 je geplatzter Blase, zusätzlich 20 je Blase, die dadurch den Halt
+  verliert und herunterfällt. Abgetrennte Blasen zu belohnen ist der Reiz des Spiels —
+  ein guter Schuss räumt mehr weg, als er trifft.
+
+**Zielhilfe**: Die Schussbahn wird als gepunktete Linie angezeigt, inklusive der
+Abpraller an den Seitenwänden. Ohne sie ist auf einem Handybildschirm kaum zu zielen.
 
 ### „Mehr Spiele"
 
