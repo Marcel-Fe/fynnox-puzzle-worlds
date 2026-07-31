@@ -112,7 +112,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/solitaire.jpg'),
     bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'minigolf',

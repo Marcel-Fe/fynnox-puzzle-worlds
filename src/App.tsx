@@ -4,6 +4,7 @@ import { AppShell } from './components/AppShell'
 import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
 import { BubbleShooterGame } from './games/bubbleshooter/components/BubbleShooterGame'
 import { KristallmixGame } from './games/kristallmix/components/KristallmixGame'
+import { SolitaireGame } from './games/solitaire/components/SolitaireGame'
 import { SudokuGame } from './games/sudoku/components/SudokuGame'
 import { TempelpaareGame } from './games/tempelpaare/components/TempelpaareGame'
 import { WaldbloeckeGame } from './games/waldbloecke/components/WaldbloeckeGame'
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="spiel/kristallmix" element={<KristallmixGame />} />
           <Route path="spiel/sudoku" element={<SudokuGame />} />
           <Route path="spiel/bubbleshooter" element={<BubbleShooterGame />} />
+          <Route path="spiel/solitaire" element={<SolitaireGame />} />
           <Route path="missionen" element={<Missions />} />
           <Route path="profil" element={<Profile />} />
           <Route path="mehr" element={<More />} />
