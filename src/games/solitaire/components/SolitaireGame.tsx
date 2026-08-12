@@ -16,11 +16,13 @@ import {
   type Card,
 } from '../logic/cards'
 import {
+  configOf,
   createGame,
   drawFromStock,
   finalScore,
   moveTo,
   placedCards,
+  redealsLeft,
   select,
   starsFor,
   undo,
@@ -29,6 +31,7 @@ import {
   type Hint,
   type Selection,
 } from '../logic/game'
+import { LEVEL_COUNT, LEVELS, levelAt, levelRules, unlockedLevels } from '../logic/levels'
 
 const INFO = GAMES_BY_ID.solitaire
 
@@ -57,29 +60,40 @@ export function SolitaireGame() {
   const progress = useGameStore((s) => s.save?.progress.solitaire ?? null)
   const energy = useGameStore((s) => s.save?.profile.energy ?? 0)
 
+  const highestLevel = progress?.highestLevel ?? 0
+  const unlocked = unlockedLevels(highestLevel)
+
   const [game, setGame] = useState<GameState | null>(null)
+  // Vorausgewählt ist das neueste freigeschaltete Level — dorthin will der
+  // Spieler nach einem Sieg als Nächstes.
+  const [chosen, setChosen] = useState(unlocked)
   const [elapsed, setElapsed] = useState(0)
   const [hint, setHint] = useState<Hint | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
   const [givenUp, setGivenUp] = useState(false)
   const settled = useRef(false)
 
-  const finished = Boolean(game) && (game!.won || givenUp)
+  const finished = Boolean(game) && (game!.won || game!.stuck || givenUp)
+  const chosenLevel = levelAt(chosen)
 
-  const start = useCallback(() => {
-    if (!spendEnergy()) {
-      setFlash('Keine Energie mehr! Sie füllt sich alle 10 Minuten wieder auf.')
-      return
-    }
-    const now = Date.now()
-    clearRewards()
-    settled.current = false
-    setElapsed(0)
-    setHint(null)
-    setFlash(null)
-    setGivenUp(false)
-    setGame(createGame(now, now))
-  }, [clearRewards, spendEnergy])
+  const start = useCallback(
+    (level: number) => {
+      if (!spendEnergy()) {
+        setFlash('Keine Energie mehr! Sie füllt sich alle 10 Minuten wieder auf.')
+        return
+      }
+      const now = Date.now()
+      clearRewards()
+      settled.current = false
+      setElapsed(0)
+      setHint(null)
+      setFlash(null)
+      setGivenUp(false)
+      setChosen(level)
+      setGame(createGame(now, now, level))
+    },
+    [clearRewards, spendEnergy],
+  )
 
   // Sekundentakt für die Uhr — die Logik selbst kennt keine Zeit
   useEffect(() => {
@@ -99,10 +113,13 @@ export function SolitaireGame() {
       won: game.won,
       score: finalScore(game, durationMs),
       durationMs,
+      // Nur ein Sieg schaltet frei. Würde hier immer das gespielte Level
+      // stehen, käme man durch bloßes Aufgeben bis Level 12.
+      level: game.won ? game.level : undefined,
       counters: {
         moves: game.moves,
         undos: game.undos,
-        stars: starsFor(durationMs, game.won),
+        stars: starsFor(durationMs, game.won, game.level),
       },
     })
   }, [finishRound, finished, game])
@@ -140,7 +157,14 @@ export function SolitaireGame() {
     setHint(null)
     const out = drawFromStock(game)
     setGame(out.state)
-    setFlash(out.outcome === 'redeal' ? 'Talon umgedreht.' : null)
+    if (out.outcome === 'redeal') {
+      const left = redealsLeft(out.state)
+      setFlash(left === null ? 'Talon umgedreht.' : `Talon umgedreht — noch ${left}-mal möglich.`)
+    } else if (out.outcome === 'blocked') {
+      setFlash('Der Talon lässt sich nicht mehr umdrehen.')
+    } else {
+      setFlash(null)
+    }
   }
 
   function onWaste() {
@@ -190,8 +214,50 @@ export function SolitaireGame() {
           </div>
         </section>
 
-        <Panel>
-          <dl className="flex gap-4 text-sm">
+        <Panel title={`Level ${chosenLevel.number} von ${LEVEL_COUNT}`}>
+          <div className="grid grid-cols-6 gap-1.5">
+            {LEVELS.map((level) => {
+              const locked = level.number > unlocked
+              const done = level.number <= highestLevel
+              const active = level.number === chosenLevel.number
+              return (
+                <button
+                  key={level.number}
+                  type="button"
+                  onClick={() => setChosen(level.number)}
+                  disabled={locked}
+                  aria-label={`Level ${level.number}${locked ? ', gesperrt' : done ? ', geschafft' : ''}`}
+                  className="grid min-h-12 place-items-center rounded-xl border text-sm font-black disabled:opacity-30"
+                  style={{
+                    borderColor: active ? INFO.colorVar : 'var(--color-edge)',
+                    borderWidth: active ? 2 : 1,
+                    background: active
+                      ? `color-mix(in srgb, ${INFO.colorVar} 30%, transparent)`
+                      : undefined,
+                    color: done ? 'var(--color-gold)' : 'var(--color-ink)',
+                  }}
+                >
+                  <span>{locked ? '🔒' : level.number}</span>
+                </button>
+              )
+            })}
+          </div>
+
+          <p className="mt-3 text-sm font-bold" style={{ color: INFO.colorVar }}>
+            {chosenLevel.title}
+          </p>
+          <p className="text-xs text-ink-muted">{levelRules(chosenLevel)}</p>
+          <p className="text-xs text-ink-muted">
+            Drei Sterne unter {formatTime(chosenLevel.targetMs)}
+          </p>
+
+          <dl className="mt-3 flex gap-4 text-sm">
+            <div>
+              <dt className="text-xs text-ink-muted">Geschafft</dt>
+              <dd className="tabular font-bold">
+                {highestLevel}/{LEVEL_COUNT}
+              </dd>
+            </div>
             <div>
               <dt className="text-xs text-ink-muted">Bestzeit</dt>
               <dd className="tabular font-bold">
@@ -207,6 +273,7 @@ export function SolitaireGame() {
               <dd className="tabular font-bold">{energy}/5</dd>
             </div>
           </dl>
+
           <p className="mt-3 text-xs text-ink-muted">
             Sortiere alle 52 Karten auf die vier Ablagestapel — je Farbe von Ass bis König.
             In den Spalten wird absteigend und mit wechselnder Farbe gelegt, auf eine leere
@@ -215,11 +282,11 @@ export function SolitaireGame() {
           {flash && <p className="mt-3 text-sm font-semibold text-gold">{flash}</p>}
           <button
             type="button"
-            onClick={start}
+            onClick={() => start(chosenLevel.number)}
             className="mt-4 min-h-12 w-full rounded-xl text-sm font-black text-white uppercase shadow-lg"
             style={{ background: INFO.colorVar }}
           >
-            Spielen (1 ⚡)
+            Level {chosenLevel.number} spielen (1 ⚡)
           </button>
         </Panel>
       </div>
@@ -227,7 +294,14 @@ export function SolitaireGame() {
   }
 
   const selected = game.selected
-  const wasteTop = game.waste[game.waste.length - 1]
+  const config = configOf(game)
+  const redeals = redealsLeft(game)
+  /**
+   * Beim Dreierzug liegen die zuletzt gezogenen Karten aufgefächert — sonst
+   * wäre nicht zu sehen, was noch darunter liegt. Spielbar ist nur die letzte.
+   */
+  const wasteFan = game.waste.slice(Math.max(0, game.waste.length - config.draw))
+  const wasteTop = wasteFan[wasteFan.length - 1]
 
   /** Gehört diese Spaltenkarte zur aufgenommenen Folge? */
   const isPicked = (column: number, index: number) =>
@@ -235,10 +309,22 @@ export function SolitaireGame() {
 
   const hintFrom = hint?.kind === 'move' ? hint.from : null
   const hintTo = hint?.kind === 'move' ? hint.to : null
+  // Nach einem Sieg führt der Knopf weiter statt zurück — außer im letzten Level
+  const nextLevel = game.won && game.level < LEVEL_COUNT ? game.level + 1 : game.level
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-3">
       <Panel>
+        <div className="mb-2 flex items-baseline justify-between gap-2">
+          <p className="text-sm font-black" style={{ color: INFO.colorVar }}>
+            Level {game.level} — {config.title}
+          </p>
+          {redeals !== null && (
+            <p className="text-xs font-semibold text-ink-muted">
+              Talon: noch {redeals}×
+            </p>
+          )}
+        </div>
         <div className="flex items-center justify-between gap-2">
           <div>
             <p className="text-xs tracking-widest text-ink-muted uppercase">Zeit</p>
@@ -260,13 +346,18 @@ export function SolitaireGame() {
         {flash && <p className="mt-1 text-sm font-bold text-gold">{flash}</p>}
       </Panel>
 
-      <div className="relative overflow-hidden rounded-2xl border border-edge shadow-xl shadow-black/40">
+      {/*
+       * Am Handy bis an den Bildschirmrand: Die sieben Spalten teilen sich die
+       * Breite, jeder gesparte Randpixel macht die Karten spürbar größer.
+       * Ab `sm` bleibt der Rahmen wie bei den anderen Spielen.
+       */}
+      <div className="relative -mx-4 overflow-hidden border-y border-edge shadow-xl shadow-black/40 sm:mx-0 sm:rounded-2xl sm:border">
         <img src={INFO.bg} alt="" className="absolute inset-0 size-full object-cover" />
         <div className="absolute inset-0 bg-deep/85" />
 
-        <div className="relative p-1.5">
+        <div className="relative p-1">
           {/* Kopfreihe: Ziehstapel, Talon, vier Ablagestapel */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-[3px]">
             <button
               type="button"
               onClick={onStock}
@@ -292,14 +383,27 @@ export function SolitaireGame() {
                   ? `Talon, ${rankName(wasteTop.rank)} ${SUIT_NAME[wasteTop.suit]}`
                   : 'Talon, leer'
               }
-              className="w-full"
+              className="relative w-full"
             >
               {wasteTop ? (
-                <CardFace
-                  card={wasteTop}
-                  picked={selected?.zone === 'waste'}
-                  hinted={hintFrom?.zone === 'waste'}
-                />
+                wasteFan.map((card, i) => {
+                  const top = i === wasteFan.length - 1
+                  return (
+                    <span
+                      key={card.id}
+                      // Die erste Karte steht im Fluss und gibt dem Feld seine
+                      // Höhe, die weiteren liegen versetzt darüber.
+                      className={i === 0 ? 'block' : 'absolute top-0 w-full'}
+                      style={i === 0 ? undefined : { left: `${i * 34}%`, zIndex: i }}
+                    >
+                      <CardFace
+                        card={card}
+                        picked={top && selected?.zone === 'waste'}
+                        hinted={top && hintFrom?.zone === 'waste'}
+                      />
+                    </span>
+                  )
+                })
               ) : (
                 <EmptySlot />
               )}
@@ -343,7 +447,7 @@ export function SolitaireGame() {
           </div>
 
           {/* Sieben Spalten */}
-          <div className="mt-3 grid grid-cols-7 items-start gap-1 pb-1.5">
+          <div className="mt-2.5 grid grid-cols-7 items-start gap-[3px] pb-1">
             {game.tableau.map((column, c) =>
               column.length === 0 ? (
                 <button
@@ -438,18 +542,23 @@ export function SolitaireGame() {
       {finished && (
         <RoundResultOverlay
           won={game.won}
-          title={game.won ? 'Gewonnen!' : 'Runde beendet'}
-          stars={starsFor(elapsed, game.won)}
+          title={game.won ? 'Gewonnen!' : game.stuck ? 'Keine Züge mehr!' : 'Runde beendet'}
+          stars={starsFor(elapsed, game.won, game.level)}
           facts={[
+            { label: 'Level', value: String(game.level) },
             { label: 'Zeit', value: formatTime(elapsed) },
             { label: 'Abgelegt', value: `${placedCards(game)}/52` },
-            { label: 'Züge', value: String(game.moves) },
           ]}
           rewards={rewards}
           accent={INFO.colorVar}
-          onAgain={start}
+          onAgain={() => start(nextLevel)}
           onLeave={() => navigate('/')}
           againDisabled={energy < 1}
+          againLabel={
+            nextLevel === game.level
+              ? 'Nochmal (1 ⚡)'
+              : `Level ${nextLevel} (1 ⚡)`
+          }
         />
       )}
     </div>
@@ -474,11 +583,11 @@ function CardFace({ card, picked, hinted }: { card: Card; picked?: boolean; hint
     >
       {/* Wert und Farbe liegen oben links — bei überlappten Karten ist nur
           dieser Streifen sichtbar */}
-      <span className="absolute top-[2px] left-[3px] text-[11px] leading-none font-black">
+      <span className="absolute top-[2px] left-[4px] text-[13px] leading-none font-black">
         {rankLabel(card.rank)}
         {SUIT_SYMBOL[card.suit]}
       </span>
-      <span className="absolute inset-0 grid place-items-center pt-2 text-[17px] leading-none">
+      <span className="absolute inset-0 grid place-items-center pt-3 text-[22px] leading-none">
         {SUIT_SYMBOL[card.suit]}
       </span>
     </span>

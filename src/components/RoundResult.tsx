@@ -17,6 +17,7 @@ export function RoundResultOverlay({
   onAgain,
   onLeave,
   againDisabled,
+  againLabel = 'Nochmal (1 ⚡)',
 }: {
   won: boolean
   title: string
@@ -28,6 +29,8 @@ export function RoundResultOverlay({
   onAgain(): void
   onLeave(): void
   againDisabled?: boolean
+  /** Abweichende Beschriftung, z. B. „Level 4" nach einem Sieg mit Freischaltung */
+  againLabel?: string
 }) {
   return (
     <div
@@ -86,7 +89,7 @@ export function RoundResultOverlay({
             className="min-h-12 flex-1 rounded-xl text-sm font-black text-deep uppercase disabled:opacity-40"
             style={{ background: accent }}
           >
-            Nochmal (1 ⚡)
+            {againLabel}
           </button>
           <button
             type="button"
