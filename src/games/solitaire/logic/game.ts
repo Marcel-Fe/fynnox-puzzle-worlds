@@ -7,6 +7,7 @@ import {
   SUITS,
   type Card,
 } from './cards'
+import { levelAt, type Level } from './levels'
 
 /**
  * Spiellogik für Fynnox Solitaire — Klondike (docs/01-gamedesign.md, Abschnitt 5).
@@ -18,14 +19,15 @@ import {
  */
 
 export const COLUMNS = 7
-export const START_HINTS = 3
 
 /** Punkte je Aktion (docs/01-gamedesign.md). */
 export const POINTS_TO_FOUNDATION = 10
 export const POINTS_REVEAL = 5
 export const POINTS_WASTE_TO_TABLEAU = 5
 export const POINTS_FOUNDATION_BACK = -15
-export const WIN_BONUS = 500
+/** Siegbonus: Grundwert plus Zuschlag je Level — schwerere Level zahlen mehr. */
+export const WIN_BONUS_BASE = 300
+export const WIN_BONUS_PER_LEVEL = 100
 /** Ab dieser Sekundenzahl gibt es keinen Zeitbonus mehr. */
 export const TIME_BONUS_SECONDS = 900
 
@@ -47,11 +49,16 @@ interface Snapshot {
   tableau: readonly (readonly Card[])[]
   score: number
   moves: number
+  /** Wie oft der Talon bereits umgedreht wurde */
   redeals: number
   won: boolean
+  /** Kein regelkonformer Zug mehr möglich — die Runde ist verloren */
+  stuck: boolean
 }
 
 export interface GameState extends Snapshot {
+  /** Gespieltes Level, 1 bis 12 (siehe levels.ts) */
+  level: number
   /** Angetippte, noch nicht abgelegte Karte(n) */
   selected: Selection | null
   /** Verbleibende Hinweise */
@@ -61,6 +68,16 @@ export interface GameState extends Snapshot {
   seed: number
   startedAt: number
   history: readonly Snapshot[]
+}
+
+export function configOf(state: GameState): Level {
+  return levelAt(state.level)
+}
+
+/** Wie oft der Talon noch umgedreht werden darf. `null` heißt unbegrenzt. */
+export function redealsLeft(state: GameState): number | null {
+  const { redeals } = configOf(state)
+  return redeals === null ? null : Math.max(0, redeals - state.redeals)
 }
 
 export type Outcome = 'selected' | 'deselected' | 'moved' | 'drawn' | 'redeal' | 'blocked'
@@ -78,34 +95,51 @@ export function foundationFor(card: Card): number {
 /**
  * Teilt aus: Spalte 1 bekommt eine Karte, Spalte 7 sieben — je die oberste
  * offen. Der Rest wird zum Ziehstapel.
+ *
+ * In den ersten beiden Leveln liegen ein oder zwei Asse von vornherein auf den
+ * Ablagestapeln. Sie werden vor dem Austeilen aus dem Blatt genommen, damit
+ * keine Karte doppelt im Spiel ist.
  */
-export function createGame(seed: number, startedAt: number): GameState {
+export function createGame(seed: number, startedAt: number, level = 1): GameState {
+  const config = levelAt(level)
   const { cards, seed: nextSeed } = shuffleDeck(createDeck(), seed)
+
+  const foundations: Card[][] = SUITS.map(() => [])
+  const remaining: Card[] = []
+  for (const card of cards) {
+    if (card.rank === ACE && foundationFor(card) < config.placedAces) {
+      foundations[foundationFor(card)].push({ ...card, faceUp: true })
+    } else {
+      remaining.push(card)
+    }
+  }
 
   const tableau: Card[][] = []
   let dealt = 0
   for (let column = 0; column < COLUMNS; column++) {
     const pile: Card[] = []
     for (let row = 0; row <= column; row++) {
-      pile.push({ ...cards[dealt++], faceUp: row === column })
+      pile.push({ ...remaining[dealt++], faceUp: row === column })
     }
     tableau.push(pile)
   }
 
   return {
-    stock: cards.slice(dealt).map((c) => ({ ...c, faceUp: false })),
+    level: config.number,
+    stock: remaining.slice(dealt).map((c) => ({ ...c, faceUp: false })),
     waste: [],
-    foundations: SUITS.map(() => []),
+    foundations,
     tableau,
     selected: null,
     score: 0,
     moves: 0,
     redeals: 0,
-    hints: START_HINTS,
+    hints: config.hints,
     undos: 0,
     seed: nextSeed,
     startedAt,
     won: false,
+    stuck: false,
     history: [],
   }
 }
@@ -121,6 +155,7 @@ function remember(state: GameState): readonly Snapshot[] {
     moves: state.moves,
     redeals: state.redeals,
     won: state.won,
+    stuck: state.stuck,
   }
   return [...state.history, snapshot].slice(-200)
 }
@@ -160,12 +195,17 @@ export function movingCards(state: GameState, selection: Selection): readonly Ca
 }
 
 export function canPickUp(state: GameState, selection: Selection): boolean {
-  return !state.won && movingCards(state, selection) !== null
+  return !finished(state) && movingCards(state, selection) !== null
+}
+
+/** Runde vorbei — gewonnen oder festgefahren. */
+export function finished(state: GameState): boolean {
+  return state.won || state.stuck
 }
 
 /** Darf die aufgenommene Karte (oder Folge) dort abgelegt werden? */
 export function canDrop(state: GameState, selection: Selection, target: Target): boolean {
-  if (state.won) return false
+  if (finished(state)) return false
   const cards = movingCards(state, selection)
   if (!cards) return false
 
@@ -192,7 +232,7 @@ export function canDrop(state: GameState, selection: Selection, target: Target):
 
 /** Karte antippen: auswählen, abwählen oder abweisen. */
 export function select(state: GameState, selection: Selection): MoveResult {
-  if (state.won) return { state, outcome: 'blocked' }
+  if (finished(state)) return { state, outcome: 'blocked' }
 
   if (state.selected && sameSelection(state.selected, selection)) {
     return { state: { ...state, selected: null }, outcome: 'deselected' }
@@ -258,59 +298,93 @@ export function moveTo(state: GameState, target: Target): MoveResult {
     ]
   }
 
-  return {
-    state: {
-      ...state,
-      waste,
-      foundations,
-      tableau,
-      score: Math.max(0, score),
-      moves: state.moves + 1,
-      selected: null,
-      won: foundations.every((pile) => pile.length === KING),
-      history,
-    },
-    outcome: 'moved',
+  const next: GameState = {
+    ...state,
+    waste,
+    foundations,
+    tableau,
+    score: Math.max(0, score),
+    moves: state.moves + 1,
+    selected: null,
+    won: foundations.every((pile) => pile.length === KING),
+    history,
   }
+  return { state: { ...next, stuck: !next.won && !hasAnyMove(next) }, outcome: 'moved' }
 }
 
 /**
- * Eine Karte vom Ziehstapel aufdecken. Ist er leer, wandert der Ablagestapel
- * in ursprünglicher Reihenfolge zurück — unbegrenzt oft (docs/01-gamedesign.md).
+ * Karten vom Ziehstapel aufdecken — je nach Level eine oder drei. Ist er leer,
+ * wandert der Ablagestapel in ursprünglicher Reihenfolge zurück, sofern das
+ * Level noch einen Durchlauf erlaubt (docs/01-gamedesign.md).
  */
 export function drawFromStock(state: GameState): MoveResult {
-  if (state.won) return { state, outcome: 'blocked' }
+  if (finished(state)) return { state, outcome: 'blocked' }
+  const config = configOf(state)
   const history = remember(state)
 
   if (state.stock.length === 0) {
-    if (state.waste.length === 0) return { state, outcome: 'blocked' }
-    return {
-      state: {
-        ...state,
-        // Umdrehen: Die zuerst gezogene Karte kommt auch als Erste wieder.
-        stock: [...state.waste].reverse().map((c) => ({ ...c, faceUp: false })),
-        waste: [],
-        selected: null,
-        moves: state.moves + 1,
-        redeals: state.redeals + 1,
-        history,
-      },
-      outcome: 'redeal',
+    const left = redealsLeft(state)
+    if (state.waste.length === 0 || left === 0) return { state, outcome: 'blocked' }
+    const next: GameState = {
+      ...state,
+      // Umdrehen: Die zuerst gezogene Karte kommt auch als Erste wieder.
+      stock: [...state.waste].reverse().map((c) => ({ ...c, faceUp: false })),
+      waste: [],
+      selected: null,
+      moves: state.moves + 1,
+      redeals: state.redeals + 1,
+      history,
+    }
+    return { state: { ...next, stuck: !hasAnyMove(next) }, outcome: 'redeal' }
+  }
+
+  // Beim Dreierzug bleibt die zuletzt gezogene Karte obenauf — nur sie ist
+  // spielbar, die beiden darunter kommen erst nach ihr wieder frei.
+  const count = Math.min(config.draw, state.stock.length)
+  const taken = state.stock.slice(state.stock.length - count)
+  const next: GameState = {
+    ...state,
+    stock: state.stock.slice(0, state.stock.length - count),
+    waste: [...state.waste, ...taken.map((c) => ({ ...c, faceUp: true }))],
+    selected: null,
+    moves: state.moves + 1,
+    history,
+  }
+  return { state: { ...next, stuck: !hasAnyMove(next) }, outcome: 'drawn' }
+}
+
+/**
+ * Gibt es überhaupt noch einen regelkonformen Zug?
+ *
+ * Der Rückweg vom Ablagestapel in eine Spalte zählt bewusst **nicht** mit: Er
+ * ist fast immer möglich und würde jede Sackgasse verdecken. Alles andere zählt,
+ * auch Züge, die nichts bringen — lieber einmal zu selten „Schluss" sagen als
+ * eine Runde zu beenden, die noch zu gewinnen wäre.
+ */
+export function hasAnyMove(state: GameState): boolean {
+  if (state.won) return false
+  if (state.stock.length > 0) return true
+  if (state.waste.length > 0 && redealsLeft(state) !== 0) return true
+
+  const sources: Selection[] = []
+  if (state.waste.length > 0) sources.push({ zone: 'waste' })
+  for (let column = 0; column < COLUMNS; column++) {
+    for (let index = 0; index < state.tableau[column].length; index++) {
+      if (state.tableau[column][index].faceUp) sources.push({ zone: 'tableau', column, index })
     }
   }
 
-  const card = state.stock[state.stock.length - 1]
-  return {
-    state: {
-      ...state,
-      stock: state.stock.slice(0, -1),
-      waste: [...state.waste, { ...card, faceUp: true }],
-      selected: null,
-      moves: state.moves + 1,
-      history,
-    },
-    outcome: 'drawn',
+  const open: GameState = { ...state, stuck: false }
+  for (const from of sources) {
+    if (movingCards(open, from) === null) continue
+    for (let pile = 0; pile < SUITS.length; pile++) {
+      if (canDrop(open, from, { zone: 'foundation', pile })) return true
+    }
+    for (let column = 0; column < COLUMNS; column++) {
+      if (canDrop(open, from, { zone: 'tableau', column })) return true
+    }
   }
+  return false
 }
 
 /** Nimmt den letzten Zug zurück — Punkte inklusive. */
@@ -342,7 +416,7 @@ export type Hint =
  * zwischen zwei Spalten hin und her zu schieben bringt den Spieler nicht weiter.
  */
 export function findMove(state: GameState): Hint | null {
-  if (state.won) return null
+  if (finished(state)) return null
 
   const toFoundation = (from: Selection): Hint | null => {
     const cards = movingCards(state, from)
@@ -387,7 +461,10 @@ export function findMove(state: GameState): Hint | null {
     }
   }
 
-  if (state.stock.length > 0 || state.waste.length > 1) return { kind: 'draw' }
+  if (state.stock.length > 0) return { kind: 'draw' }
+  // Umdrehen lohnt nur mit mehr als einer Karte und wenn das Level es hergibt —
+  // sonst käme dieselbe Karte gleich wieder.
+  if (state.waste.length > 1 && redealsLeft(state) !== 0) return { kind: 'draw' }
   return null
 }
 
@@ -403,17 +480,22 @@ export function placedCards(state: GameState): number {
   return state.foundations.reduce((sum, pile) => sum + pile.length, 0)
 }
 
-/** Sterne nach Zeit (docs/01-gamedesign.md). Wer aufgibt, bekommt keinen. */
-export function starsFor(elapsedMs: number, won: boolean): 0 | 1 | 2 | 3 {
+/**
+ * Sterne nach Zeit (docs/01-gamedesign.md). Die Zielzeit steht je Level fest;
+ * bis zum Doppelten gibt es zwei Sterne. Wer aufgibt oder feststeckt, bekommt keinen.
+ */
+export function starsFor(elapsedMs: number, won: boolean, level = 1): 0 | 1 | 2 | 3 {
   if (!won) return 0
-  if (elapsedMs <= 5 * 60_000) return 3
-  if (elapsedMs <= 10 * 60_000) return 2
+  const { targetMs } = levelAt(level)
+  if (elapsedMs <= targetMs) return 3
+  if (elapsedMs <= targetMs * 2) return 2
   return 1
 }
 
-/** Punkte am Rundenende: erspielter Stand, bei Sieg plus Bonus und Tempo. */
+/** Punkte am Rundenende: erspielter Stand, bei Sieg plus Levelbonus und Tempo. */
 export function finalScore(state: GameState, elapsedMs: number): number {
   if (!state.won) return state.score
   const seconds = Math.floor(elapsedMs / 1000)
-  return state.score + WIN_BONUS + Math.max(0, TIME_BONUS_SECONDS - seconds)
+  const winBonus = WIN_BONUS_BASE + state.level * WIN_BONUS_PER_LEVEL
+  return state.score + winBonus + Math.max(0, TIME_BONUS_SECONDS - seconds)
 }

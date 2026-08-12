@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createDeck, KING, shuffleDeck, SUITS, type Card, type Suit } from './cards'
+import { LEVEL_COUNT, LEVELS, levelAt, unlockedLevels } from './levels'
 import {
   canDrop,
   COLUMNS,
@@ -7,10 +8,12 @@ import {
   drawFromStock,
   finalScore,
   findMove,
+  hasAnyMove,
   isRun,
   moveTo,
   movingCards,
   placedCards,
+  redealsLeft,
   POINTS_FOUNDATION_BACK,
   POINTS_REVEAL,
   POINTS_TO_FOUNDATION,
@@ -82,18 +85,23 @@ describe('Austeilen', () => {
   })
 
   it('legt die restlichen 24 Karten verdeckt auf den Ziehstapel', () => {
-    const game = createGame(42, 0)
+    // Level 3 ist die klassische Variante — dort liegt kein Ass vorweg
+    const game = createGame(42, 0, 3)
     expect(game.stock).toHaveLength(24)
     expect(game.stock.every((c) => !c.faceUp)).toBe(true)
     expect(game.waste).toHaveLength(0)
     expect(game.foundations.flat()).toHaveLength(0)
   })
 
-  it('bringt jede der 52 Karten genau einmal ins Spiel', () => {
-    const game = createGame(42, 0)
-    const ids = [...game.tableau.flat(), ...game.stock].map((c) => c.id)
-    expect(ids).toHaveLength(52)
-    expect(new Set(ids).size).toBe(52)
+  it('bringt in jedem Level jede der 52 Karten genau einmal ins Spiel', () => {
+    for (const level of [1, 2, 3, 7, 12]) {
+      const game = createGame(42, 0, level)
+      const ids = [...game.tableau.flat(), ...game.stock, ...game.foundations.flat()].map(
+        (c) => c.id,
+      )
+      expect(ids, `Level ${level}`).toHaveLength(52)
+      expect(new Set(ids).size, `Level ${level}: Karte doppelt`).toBe(52)
+    }
   })
 
   it('gibt bei gleichem Seed dieselbe Partie', () => {
@@ -523,24 +531,214 @@ describe('Hinweis', () => {
   })
 })
 
+describe('Level', () => {
+  it('hat zwölf lückenlos aufsteigend nummerierte Level', () => {
+    expect(LEVELS).toHaveLength(LEVEL_COUNT)
+    expect(LEVEL_COUNT).toBe(12)
+    LEVELS.forEach((level, i) => expect(level.number).toBe(i + 1))
+  })
+
+  it('wird von Stufe zu Stufe nie leichter', () => {
+    for (let i = 1; i < LEVELS.length; i++) {
+      const vorher = LEVELS[i - 1]
+      const jetzt = LEVELS[i]
+      expect(jetzt.hints, `Level ${jetzt.number}: mehr Hinweise als davor`).toBeLessThanOrEqual(
+        vorher.hints,
+      )
+      expect(jetzt.placedAces).toBeLessThanOrEqual(vorher.placedAces)
+      expect(jetzt.draw).toBeGreaterThanOrEqual(vorher.draw)
+    }
+  })
+
+  it('klemmt Level außerhalb des Bereichs auf gültige Werte', () => {
+    expect(levelAt(0).number).toBe(1)
+    expect(levelAt(-5).number).toBe(1)
+    expect(levelAt(99).number).toBe(LEVEL_COUNT)
+  })
+
+  it('schaltet immer genau ein Level über dem höchsten gewonnenen frei', () => {
+    expect(unlockedLevels(0)).toBe(1)
+    expect(unlockedLevels(3)).toBe(4)
+    expect(unlockedLevels(LEVEL_COUNT)).toBe(LEVEL_COUNT)
+  })
+
+  it('legt in den ersten beiden Leveln Asse vor, danach nicht mehr', () => {
+    expect(createGame(9, 0, 1).foundations.flat()).toHaveLength(2)
+    expect(createGame(9, 0, 2).foundations.flat()).toHaveLength(1)
+    expect(createGame(9, 0, 3).foundations.flat()).toHaveLength(0)
+  })
+
+  it('nimmt vorgelegte Asse aus dem Blatt, statt sie zu verdoppeln', () => {
+    const game = createGame(9, 0, 1)
+    const vorgelegt = game.foundations.flat()
+    const imSpiel = [...game.tableau.flat(), ...game.stock].map((c) => c.id)
+    for (const ass of vorgelegt) {
+      expect(ass.rank).toBe(1)
+      expect(imSpiel).not.toContain(ass.id)
+    }
+    expect(game.stock).toHaveLength(24 - vorgelegt.length)
+  })
+
+  it('übernimmt die Hinweiszahl des Levels', () => {
+    expect(createGame(9, 0, 1).hints).toBe(3)
+    expect(createGame(9, 0, 8).hints).toBe(1)
+    expect(createGame(9, 0, 11).hints).toBe(0)
+  })
+
+  it('gibt in Level 11 gar keinen Hinweis mehr aus', () => {
+    const out = useHint(createGame(9, 0, 11))
+    expect(out.hint).toBeNull()
+    expect(out.state.hints).toBe(0)
+  })
+
+  it('deckt ab Level 7 drei Karten auf einmal auf', () => {
+    const einer = drawFromStock(createGame(9, 0, 3)).state
+    const dreier = drawFromStock(createGame(9, 0, 7)).state
+    expect(einer.waste).toHaveLength(1)
+    expect(dreier.waste).toHaveLength(3)
+    expect(dreier.waste.every((c) => c.faceUp)).toBe(true)
+    // Nur die zuletzt gezogene Karte ist spielbar
+    expect(movingCards(dreier, { zone: 'waste' })).toHaveLength(1)
+  })
+
+  it('zieht am Ende des Stapels auch weniger als drei Karten', () => {
+    const state = stateWith({
+      level: 7,
+      stock: [card('hearts', 1, false), card('spades', 2, false)],
+    })
+    const out = drawFromStock(state)
+    expect(out.outcome).toBe('drawn')
+    expect(out.state.waste).toHaveLength(2)
+    expect(out.state.stock).toHaveLength(0)
+  })
+
+  it('begrenzt in höheren Leveln die Talon-Durchläufe', () => {
+    // Level 12 erlaubt genau ein Umdrehen
+    let state = stateWith({
+      level: 12,
+      stock: [card('hearts', 5, false), card('spades', 6, false)],
+    })
+    expect(redealsLeft(state)).toBe(1)
+
+    state = drawFromStock(state).state // zieht beide Karten
+    expect(state.stock).toHaveLength(0)
+
+    const ersterDurchlauf = drawFromStock(state)
+    expect(ersterDurchlauf.outcome).toBe('redeal')
+    expect(redealsLeft(ersterDurchlauf.state)).toBe(0)
+
+    let danach = drawFromStock(ersterDurchlauf.state).state // zieht wieder beide
+    expect(danach.stock).toHaveLength(0)
+    expect(drawFromStock(danach).outcome).toBe('blocked')
+  })
+
+  it('lässt in den unteren Leveln unbegrenzt umdrehen', () => {
+    expect(redealsLeft(createGame(9, 0, 1))).toBeNull()
+    expect(redealsLeft(createGame(9, 0, 12))).toBe(1)
+  })
+})
+
+describe('Sackgasse', () => {
+  /** Sieben Spalten, in denen sich keine Karte bewegen lässt. */
+  const dead = {
+    stock: [],
+    waste: [],
+    tableau: [
+      [card('spades', KING)],
+      [card('hearts', KING)],
+      [card('diamonds', KING)],
+      [card('clubs', KING)],
+      [card('spades', 5)],
+      [card('hearts', 5)],
+      [card('diamonds', 5)],
+    ],
+  }
+
+  it('erkennt eine Lage ohne jeden Zug', () => {
+    expect(hasAnyMove(stateWith(dead))).toBe(false)
+  })
+
+  it('zählt eine freie Spalte als Zug', () => {
+    const state = stateWith({ ...dead, tableau: [...dead.tableau.slice(0, 6), []] })
+    expect(hasAnyMove(state)).toBe(true)
+  })
+
+  it('zählt eine Karte im Ziehstapel als Zug', () => {
+    expect(hasAnyMove(stateWith({ ...dead, stock: [card('clubs', 9, false)] }))).toBe(true)
+  })
+
+  it('zählt den Rückweg vom Ablagestapel nicht mit', () => {
+    // Das Karo-Ass könnte auf die schwarze 2 zurück — das ist kein Fortschritt
+    const state = stateWith({
+      ...dead,
+      foundations: [[], [card('diamonds', 1)], [], []],
+      tableau: [...dead.tableau.slice(0, 6), [card('spades', 2)]],
+    })
+    expect(hasAnyMove(state)).toBe(false)
+  })
+
+  it('meldet die Sackgasse, sobald der letzte Zug hineinführt', () => {
+    const state = stateWith({
+      ...dead,
+      tableau: [...dead.tableau.slice(0, 6), [card('diamonds', 5), card('clubs', 1)]],
+    })
+    expect(state.stuck).toBe(false)
+
+    const out = play(state, { zone: 'tableau', column: 6, index: 1 }, { zone: 'foundation', pile: 3 })
+    expect(out.outcome).toBe('moved')
+    expect(out.state.stuck).toBe(true)
+    expect(out.state.won).toBe(false)
+  })
+
+  it('sperrt nach der Sackgasse jede weitere Eingabe', () => {
+    const stuck = stateWith({ ...dead, stuck: true })
+    expect(select(stuck, { zone: 'tableau', column: 0, index: 0 }).outcome).toBe('blocked')
+    expect(drawFromStock(stuck).outcome).toBe('blocked')
+    expect(findMove(stuck)).toBeNull()
+  })
+
+  it('steckt zu Beginn einer Partie nie fest', () => {
+    for (let level = 1; level <= LEVEL_COUNT; level++) {
+      for (let seed = 1; seed <= 10; seed++) {
+        const game = createGame(seed, 0, level)
+        expect(game.stuck, `Level ${level}, Seed ${seed}`).toBe(false)
+        expect(hasAnyMove(game), `Level ${level}, Seed ${seed}`).toBe(true)
+      }
+    }
+  })
+})
+
 describe('Wertung', () => {
   it('vergibt drei Sterne nur bei einem schnellen Sieg', () => {
-    expect(starsFor(4 * 60_000, true)).toBe(3)
-    expect(starsFor(8 * 60_000, true)).toBe(2)
-    expect(starsFor(20 * 60_000, true)).toBe(1)
+    // Level 1 hat sechs Minuten als Ziel, das Doppelte gibt noch zwei Sterne
+    expect(starsFor(5 * 60_000, true, 1)).toBe(3)
+    expect(starsFor(10 * 60_000, true, 1)).toBe(2)
+    expect(starsFor(20 * 60_000, true, 1)).toBe(1)
+  })
+
+  it('misst jedes Level an seiner eigenen Zielzeit', () => {
+    // Vier Minuten reichen in Level 1 für drei Sterne, in Level 12 nicht mehr
+    expect(starsFor(4 * 60_000, true, 1)).toBe(3)
+    expect(starsFor(4 * 60_000, true, 12)).toBe(2)
   })
 
   it('vergibt beim Aufgeben keine Sterne', () => {
-    expect(starsFor(60_000, false)).toBe(0)
+    expect(starsFor(60_000, false, 1)).toBe(0)
   })
 
   it('gibt Siegbonus und Zeitbonus nur bei Sieg', () => {
-    const base = stateWith({ score: 600 })
+    const base = stateWith({ score: 600, level: 1 })
     const won: GameState = { ...base, won: true }
 
     expect(finalScore(base, 60_000)).toBe(600)
-    expect(finalScore(won, 60_000)).toBe(600 + 500 + (900 - 60))
+    expect(finalScore(won, 60_000)).toBe(600 + 400 + (900 - 60))
     // Nach 15 Minuten bleibt nur der Siegbonus
-    expect(finalScore(won, 20 * 60_000)).toBe(600 + 500)
+    expect(finalScore(won, 20 * 60_000)).toBe(600 + 400)
+  })
+
+  it('zahlt in höheren Leveln einen größeren Siegbonus', () => {
+    const leicht: GameState = { ...stateWith({ score: 0, level: 1 }), won: true }
+    const schwer: GameState = { ...stateWith({ score: 0, level: 12 }), won: true }
+    expect(finalScore(schwer, 60_000) - finalScore(leicht, 60_000)).toBe(11 * 100)
   })
 })
