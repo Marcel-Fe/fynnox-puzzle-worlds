@@ -119,15 +119,15 @@ Klondike-Solitaire. *"Sortiere alle Karten auf die Stapel und gewinne das Spiel!
 - **Missionsbeispiele**: „Gewinne 3 Spiele" (150), „Unter 5 Minuten gewinnen" (150),
   „Ohne Rückgängig gewinnen" (200)
 
-**Festgelegt am 31.07.2026** (war offen: Punktesystem, eine oder drei Karten ziehen,
+**Festgelegt am 12.08.2026** (war offen: Punktesystem, eine oder drei Karten ziehen,
 Anzahl der Hilfen):
 
 | Punkt | Festlegung | Begründung |
 |---|---|---|
-| Karten ziehen | **eine** je Tipp | Bei drei Karten ist jede dritte Talonkarte nur über mehrere Durchläufe erreichbar. Auf dem Handy ist das viel Tippen für wenig Spiel |
-| Talon-Durchläufe | **unbegrenzt** | Mit einer Karte und unbegrenzten Durchläufen ist der weitaus größte Teil der Blätter gewinnbar. Eine Begrenzung würde Partien beenden, die noch lösbar sind |
-| Hinweise | **3** je Runde | Gleiche Zahl wie bei Tempelpaare und Sudoku — der Spieler soll nicht je Spiel neu lernen, wie viel Hilfe er hat |
-| Rückgängig | **unbegrenzt** | Solitaire lebt vom Ausprobieren. Ein Zug, der eine Sackgasse erzeugt, ist sonst das Ende der Runde |
+| Karten ziehen | **eine** im Einstieg, **drei** ab Level 7 | Bei drei Karten ist jede dritte Talonkarte nur über mehrere Durchläufe erreichbar — als Einstieg zu zäh, als Steigerung genau richtig |
+| Talon-Durchläufe | **unbegrenzt**, in hohen Leveln begrenzt | Mit einer Karte und unbegrenzten Durchläufen ist der weitaus größte Teil der Blätter gewinnbar. Die Begrenzung ist die schärfste Schraube und kommt darum zuletzt |
+| Hinweise | **3**, sinkt bis auf 0 | Startwert wie bei Tempelpaare und Sudoku — der Spieler soll nicht je Spiel neu lernen, wie viel Hilfe er hat |
+| Rückgängig | **unbegrenzt**, in jedem Level | Solitaire lebt vom Ausprobieren. Ein Zug, der eine Sackgasse erzeugt, wäre sonst das Ende der Runde |
 | Zeitlimit | **keins** | Die Kachel verspricht „Klassisch. Entspannt. Zeitlos." Die Zeit zählt nur für Punkte und Sterne, sie beendet nichts |
 
 **„Neu mischen"** aus der Hilfenliste ist bei Klondike das Umdrehen des Talons: Ist der
@@ -148,16 +148,55 @@ Herlegen beliebig viele Punkte sammeln lassen. **Rückgängig nimmt auch die Pun
 zurück** — es wird der komplette vorige Zustand wiederhergestellt. Das ist ehrlicher
 als ein Strafabzug und braucht keine zweite Regel.
 
-Bei Sieg zusätzlich **500 Punkte** plus einen Zeitbonus von `900 − verbrauchte Sekunden`
-(mindestens 0). Nach 15 Minuten gibt es also keinen Bonus mehr.
+Bei Sieg zusätzlich einen Siegbonus von `300 + Level × 100` plus einen Zeitbonus von
+`900 − verbrauchte Sekunden` (mindestens 0). Nach 15 Minuten gibt es also keinen
+Zeitbonus mehr. Der Levelanteil sorgt dafür, dass sich die schweren Level lohnen —
+sonst spielt jeder ewig Level 1.
 
-**Sterne**: drei bei einem Sieg unter 5 Minuten, zwei unter 10 Minuten, sonst einer.
-Wer aufgibt, bekommt keinen.
+**Sterne**: drei, wer die Zielzeit seines Levels unterbietet, zwei bis zum Doppelten
+dieser Zeit, sonst einer. Wer aufgibt oder feststeckt, bekommt keinen.
 
 **Keine Lösbarkeitsgarantie** — bewusst anders als bei Tempelpaare, Kristallmix und
 Sudoku. Klondike ist gerade deshalb ein Klassiker, weil nicht jedes Blatt aufgeht; ein
 Spiel, das man immer gewinnt, verliert seinen Reiz. Gegen den Frust helfen das
 unbegrenzte Rückgängig und ein **Aufgeben**-Knopf, der die Runde ohne Sterne beendet.
+
+#### Zwölf Level — festgelegt am 12.08.2026
+
+Eine einzelne Variante war zu wenig; das Spiel braucht einen Fortschritt. Schwerer wird
+**nie das Blatt**, sondern immer nur der Weg an die Karten heran. Vier Dreiergruppen
+über vier Achsen:
+
+| Level | Name | Ziehen | Talon umdrehen | Hinweise | Vorgelegt | 3 Sterne unter |
+|---|---|---|---|---|---|---|
+| 1 | Erste Runde | 1 | beliebig | 3 | 2 Asse | 6:00 |
+| 2 | Aufwärmen | 1 | beliebig | 3 | 1 Ass | 6:00 |
+| 3 | Klassisch | 1 | beliebig | 3 | — | 5:00 |
+| 4 | Weniger Hilfe | 1 | beliebig | 2 | — | 5:00 |
+| 5 | Dreimal durch | 1 | 3× | 2 | — | 5:00 |
+| 6 | Zweimal durch | 1 | 2× | 2 | — | 4:30 |
+| 7 | Dreierzug | 3 | beliebig | 2 | — | 5:00 |
+| 8 | Sparsam | 3 | beliebig | 1 | — | 4:30 |
+| 9 | Enger Talon | 3 | 3× | 1 | — | 4:30 |
+| 10 | Knapp | 3 | 2× | 1 | — | 4:00 |
+| 11 | Ohne Hilfe | 3 | 2× | 0 | — | 4:00 |
+| 12 | Meisterrunde | 3 | 1× | 0 | — | 3:30 |
+
+- **Vorgelegte Asse** (Level 1 und 2) werden vor dem Austeilen aus dem Blatt genommen
+  und liegen von Anfang an auf ihrem Ablagestapel. Der Ziehstapel ist dann entsprechend
+  kleiner; keine Karte ist doppelt im Spiel. Sie nehmen dem Einstieg die Anlaufhürde,
+  ohne eine Regel zu verbiegen.
+- **Level 7 springt bei der Zielzeit zurück** auf 5:00. Der Dreierzug kostet Zeit — die
+  gleiche Vorgabe wie in Level 6 wäre eine versteckte doppelte Verschärfung.
+- **Freigeschaltet wird durch einen Sieg**, nicht durchs Spielen. Sonst käme man durch
+  zwölfmaliges Aufgeben bis ans Ende.
+
+**Sackgasse**: Mit begrenzten Talon-Durchläufen kann eine Partie wirklich feststecken.
+Ist kein regelkonformer Zug mehr möglich, ist die Runde verloren und das Spiel sagt es.
+Der Rückweg vom Ablagestapel in eine Spalte zählt dabei **nicht** als Zug — er ist fast
+immer möglich und würde jede Sackgasse verdecken. Alles andere zählt mit, auch Züge, die
+nichts bringen: Lieber einmal zu selten „Schluss" sagen als eine Runde beenden, die noch
+zu gewinnen wäre.
 
 ### 6. Fynnox Minigolf — `minigolf`
 
