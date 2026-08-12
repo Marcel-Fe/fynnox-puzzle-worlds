@@ -17,7 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
-npm test         # Logik-Tests (234 Stück) — müssen grün sein
+npm test         # Logik-Tests (255 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -37,7 +37,8 @@ npm run preview  # gebauten Stand lokal ansehen
 | 8 | Cloud-Save, Ranglisten, Einstellungen, Ton | offen |
 
 **Spielbar**: Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku, Bubble Shooter
-und Fynnox Solitaire. Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt
+und Fynnox Solitaire (zwölf Level, nacheinander freigeschaltet).
+Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt
 Tagesmissionen hochzählen und wird lokal gespeichert. Danach zeigt ein
 Ergebnisbildschirm Sterne und Belohnungen.
 Minigolf steht noch als „Bald" auf dem Dashboard.

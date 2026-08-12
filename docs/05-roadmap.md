@@ -216,8 +216,9 @@ Zwei Fehler dabei gefunden:
 
 ### ✅ Fynnox Solitaire
 
-Klondike mit einer gezogenen Karte, unbegrenztem Nachziehen, drei Hinweisen und
-unbegrenztem Rückgängig. Die festgelegten Regeln stehen im [Gamedesign](01-gamedesign.md).
+Klondike über **zwölf Level**, die nacheinander freigeschaltet werden. Schwerer wird nie
+das Blatt, sondern nur der Weg an die Karten: eine oder drei gezogene Karten, begrenzte
+Talon-Durchläufe, weniger Hinweise. Die Leveltabelle steht im [Gamedesign](01-gamedesign.md).
 
 - **Keine Lösbarkeitsgarantie** — als einziges der bisherigen Spiele. Klondike lebt
   davon, dass nicht jedes Blatt aufgeht. Gegen den Frust helfen unbegrenztes
@@ -234,12 +235,26 @@ unbegrenztem Rückgängig. Die festgelegten Regeln stehen im [Gamedesign](01-gam
   Prozentwerte bei `margin-top` rechnen gegen die Breite des Umfelds, nicht gegen die
   Höhe — dadurch skaliert der Stapel mit der Bildschirmbreite, ohne dass die
   Kartengröße im Code gemessen werden muss.
+- **Freigeschaltet wird durch einen Sieg**, nicht durchs Spielen: Ans Rundenergebnis
+  wird `level` nur bei Gewinn gemeldet. Sonst käme man durch zwölfmaliges Aufgeben ans
+  Ende der Leiter.
+- **Vorgelegte Asse** in Level 1 und 2 werden vor dem Austeilen aus dem Blatt genommen.
+  Der Ziehstapel ist dann kleiner — keine Karte ist doppelt im Spiel.
+- **Sackgassen-Erkennung**, nötig geworden durch die begrenzten Talon-Durchläufe. Der
+  Rückweg vom Ablagestapel zählt dabei nicht als Zug: Er ist fast immer möglich und
+  würde jede Sackgasse verdecken.
+- **Karten so groß wie möglich**: Sieben Spalten auf 390 px sind die harte Grenze. Das
+  Spielfeld läuft am Handy darum bis an den Bildschirmrand statt im 16-px-Raster der
+  übrigen Bildschirme — das allein bringt 32 px, also gut 4 px je Karte.
 
-**Nachgewiesen**: 48 Tests. Im Browser bei 390 × 844 gespielt: sieben Spalten passen
-ohne waagerechtes Scrollen nebeneinander (Kartenfläche 46 × 64 px), das Austeilen ergibt
-1 bis 7 Karten je Spalte und 24 im Ziehstapel, vier Karten wurden auf die Ablagestapel
-sortiert (50 Punkte), Rückgängig nahm die letzte Ablage zurück (4/52 → 3/52),
-Hinweis und Talon-Umdrehen funktionieren, keine Konsolenfehler.
+**Nachgewiesen**: 69 Tests. Im Browser bei 390 × 844 geprüft: sieben Spalten passen ohne
+waagerechtes Scrollen nebeneinander (Kartenfläche 52 × 73 px), das Austeilen ergibt 1 bis
+7 Karten je Spalte, vier Karten wurden auf die Ablagestapel sortiert (50 Punkte),
+Rückgängig nahm die letzte Ablage zurück (4/52 → 3/52), Hinweis und Talon-Umdrehen
+funktionieren. Zum Levelsystem: Level 1 legt zwei Asse vor (HUD zeigt 2/52), Aufgeben
+lässt Level 2 gesperrt, ein Spielstand mit `highestLevel: 3` öffnet genau Level 1 bis 4,
+Level 12 zieht drei Karten auf einmal, zeigt „Talon: noch 1×" und sperrt den
+Hinweisknopf. Keine Konsolenfehler.
 
 ### Noch offen
 
