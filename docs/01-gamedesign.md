@@ -218,7 +218,65 @@ Minigolf mit Physik. *"Ziele, schlage und loch ein! Hole in One für extra Stern
   | 6 | Wintergipfel | 4 | rutschiger Untergrund |
 
 - **Missionsbeispiele**: „Hole in One" (200), „Unter Par abschließen" (150), „Sammle alle 3 Sterne" (100)
-- **OFFEN**: Physikwerte (Reibung, Windstärke), Sternvergabe je nach Schlagzahl, Bahnlayouts
+
+**Festgelegt am 12.08.2026** (war offen: Physikwerte, Sternvergabe, Bahnlayouts):
+
+**Keine Engine.** CLAUDE.md hält diese Entscheidung bis Minigolf offen — hier ist sie:
+2D-Minigolf braucht Kreis-gegen-Strecke-Kollision, Reflexion und Reibung. Das sind rund
+180 Zeilen Vektormathematik. PixiJS oder Phaser brächten rund ein Megabyte Abhängigkeit,
+arbeiteten gegen die Regel „Spiellogik frei von React und ohne Rendering testbar" und
+lösen kein Problem, das eigener Code teuer machte.
+
+**Eine Bahn ist eine Runde.** Die sechs Bahnen werden nacheinander freigeschaltet, so wie
+die zwölf Solitaire-Level. Sechs Bahnen am Stück wären für eine Energieeinheit eine sehr
+lange Runde, und `games.ts` führt Minigolf ohnehin mit „Bestes Level".
+
+**Spielfeld**: 100 × 160 Einheiten im Hochformat. Ball hat Radius 2, das Loch 3,5.
+
+| Wert | Festlegung | Begründung |
+|---|---|---|
+| Höchste Schlagkraft | 120 Einheiten/s | Ein voller Schlag rollt rund 87 Einheiten weit — gut die halbe Bahn, also nie ein Treffer aus dem Nichts |
+| Reibung | Geschwindigkeit sinkt je Sekunde auf 25 % | Der Ball kommt nach etwa drei Sekunden zur Ruhe. Länger wird das Warten zäh |
+| Abprallverlust | 28 % je Bande | Deutlich spürbar, aber ein Abpraller bleibt ein brauchbarer Zug |
+| Stillstand | unter 1,5 Einheiten/s | Ohne Schwelle zittert der Ball ewig weiter |
+| Einlochen | Mitte im Loch **und** langsamer als 45 Einheiten/s | Ein zu harter Schlag springt über das Loch. Genau das macht die Kraftwahl zur Entscheidung statt zur Formalität |
+| Schlaggrenze | Par + 5 | Darüber ist die Bahn verloren. Ohne Grenze könnte man sich zum Loch schubsen |
+| Rechenschritt | fest 1/240 s | Bei großen Schritten springt ein schneller Ball durch die Bande hindurch |
+
+**Sterne**: drei bei Par oder besser, zwei bei einem Schlag darüber, einer bei zwei
+darüber und bei allem Weiteren. Wer die Schlaggrenze reißt, bekommt keinen.
+
+**Punkte**: 300 Grundwert je eingelochter Bahn, 120 je Schlag, den man unter der
+Schlaggrenze bleibt, 500 für ein Hole in One, dazu 100 je Bahnnummer — sonst lohnt sich
+Bahn 6 nicht mehr als Bahn 1.
+
+**Kein Zufall.** Minigolf ist das einzige der acht Spiele, das keine Zufallszahl braucht:
+Richtung und Kraft des Schlags bestimmen alles. Damit ist jede Partie ohnehin
+reproduzierbar.
+
+**Bahnlayouts** — jede Bahn ist ein geschlossener Linienzug (die Bande), dazu runde
+Hindernisse, Gefahrenflächen und höchstens ein bahnspezifischer Effekt:
+
+| # | Bahn | Par | Form | Kniff |
+|---|---|---|---|---|
+| 1 | Sonnenwald | 3 | leichter Knick | ein Findling in der Mitte, schwacher Seitenwind |
+| 2 | Piratenbucht | 4 | L-förmig | starker Seitenwind, der über die ganze Bahn drückt |
+| 3 | Kristallhöhle | 3 | enger Korridor | drei Kristalle, die den Ball **schneller** zurückwerfen als sie ihn annehmen |
+| 4 | Lavatal | 5 | lang, dreigeteilt | Lavafelder zwischen den Abschnitten; nur schmale Brücken führen hinüber |
+| 5 | Wolkeninsel | 3 | zweistufig | eine Aufwindzone beschleunigt den Ball nach oben |
+| 6 | Wintergipfel | 4 | Zickzack | rutschiges Eis: die Geschwindigkeit sinkt je Sekunde nur auf 60 % |
+
+**Gefahrenflächen** (Lava, Wasser) setzen den Ball an seine letzte Ruheposition zurück
+und kosten einen Strafschlag. Ihn an den Start zurückzuschicken wäre härter, als das
+Spiel sein will.
+
+**Bedienung**: Richtung durch Antippen des Spielfelds, Kraft über eine Farbskala,
+danach der Knopf „Schlagen" — die drei Schritte aus dem Mockup
+(`docs/referenzen/charaktere-spiele-minigolf.png`, Reihe „Minigolf – Gameplay").
+Bewusst **kein Ziehen**: Die Bedienelemente zeichnen sich dadurch nie unter dem Finger
+neu (siehe `lessons.md`). Die Kraftanzeige ist im Mockup ein Halbkreis, hier eine
+waagerechte Skala mit demselben Farbverlauf — auf einem 390 px breiten Bildschirm ist
+eine liegende Skala mit 44 px Höhe treffsicherer als ein Bogen.
 
 ---
 
