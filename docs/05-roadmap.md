@@ -296,7 +296,7 @@ Shop-Oberfläche (ohne Bezahlung), Events.
 
 Der frühere Vorbehalt „Widerspruch zwischen elf Welten und einem Pfad bis Level 100" ist
 seit dem 29.07.2026 erledigt: Das [Gamedesign](01-gamedesign.md) legt Entwurf B verbindlich
-fest — Kapitel zu 15 Leveln, **ein Kapitel je Welt**. Acht Kapitel ergeben 120 Stufen und
+fest — Kapitel zu 15 Leveln, **ein Kapitel je Welt**. Neun Kapitel ergeben 135 Stufen und
 damit mehr als die 100 Level des alten Entwurfs, nur in Kapitel geschnitten.
 
 ### Zuerst entschieden, dann gebaut
@@ -349,17 +349,32 @@ Service Worker geprüft:
   aktives Event mit „Bereit!", drei kommende Events mit Countdown
 - Kein waagerechtes Scrollen auf einem der sechs Bildschirme, keine Konsolenfehler
 
-### Nachtrag: achtes Kapitel aus dem Nachbarprojekt
+### Nachtrag: zwei Kapitel aus den Nachbarprojekten
 
 Auf Hinweis des Auftraggebers wurde das Bildmaterial von `fynnox-adventure` (140 Blätter)
-und `fynnox-city` (533 sortierte Bilder) gesichtet. Ergebnis: **eine** brauchbare Kulisse —
-eine gemalte Über-/Unterwasserszene. Sie wurde nach `docs/referenzen/` kopiert, in
-`build-art.py` zugeschnitten und ist jetzt Kapitel 8 „Unterwasserwelt".
+und `fynnox-city` (533 sortierte Bilder) gesichtet. Brauchbar waren **zwei** Kulissen:
 
-Damit ist der Satz „für Unterwasser gibt es kein Bildmaterial" im Gamedesign hinfällig und
-wurde korrigiert. Candy, Steampunk und Weltraum fehlen weiterhin — was dort danach aussieht,
-sind Rennstrecken aus Pet Cars. Was sonst gesichtet und **nicht** übernommen wurde, steht
-mit Begründung im [Art-Guide](03-art-ui-guide.md), damit niemand ein zweites Mal sucht.
+- **Kapitel 8 „Unterwasserwelt"** — eine gemalte Über-/Unterwasserszene aus
+  `fynnox-adventure`. Damit ist der Satz „für Unterwasser gibt es kein Bildmaterial" im
+  Gamedesign hinfällig und wurde korrigiert.
+- **Kapitel 9 „Fynnox City"** — die Hafenpromenade aus dem Produktionspaket von
+  `fynnox-city`, auf ausdrücklichen Wunsch des Auftraggebers. Sie ist die **erste Welt
+  außerhalb der elf Welten des Masterprompts**; der Widerspruch ist im Gamedesign benannt
+  und entschieden. Sie ist außerdem die einzige 3D-Renderansicht unter lauter gemalten
+  Kulissen — hinter dem dunklen Verlauf des Kapitelkopfs fällt das kaum auf.
+
+Beide Vorlagen liegen jetzt in `docs/referenzen/`, nicht als Pfad ins Nachbarprojekt:
+Ein solcher Pfad wäre auf keinem zweiten Rechner reproduzierbar.
+
+Dabei aufgefallen: Mit neun Kapiteln und acht Spielen **muss** sich eine Startreihenfolge
+wiederholen — Kapitel 9 beginnt wie Kapitel 1. Der Test, der vorher „kein Kapitel beginnt
+wie ein anderes" verlangte, wurde darauf umgestellt, dass erst alle acht Spiele drankommen,
+bevor eines wiederkehrt. Das ist keine Abschwächung, sondern die Obergrenze dessen, was mit
+acht Spielen überhaupt geht.
+
+Candy, Steampunk und Weltraum fehlen weiterhin — was dort danach aussieht, sind Rennstrecken
+aus Pet Cars. Was sonst gesichtet und **nicht** übernommen wurde, steht mit Begründung im
+[Art-Guide](03-art-ui-guide.md), damit niemand ein zweites Mal sucht.
 
 ---
 

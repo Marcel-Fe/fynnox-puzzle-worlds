@@ -122,6 +122,18 @@ save_jpg(ansichten.crop((390, 322, 545, 420)), os.path.join(ART, "bg", "tempel.j
 unterwasser = ref("fynnox-adventure-unterwasser.png")
 save_jpg(unterwasser.crop((0, 200, 820, 856)), os.path.join(ART, "bg", "unterwasser.jpg"), (640, 512))
 
+# Stadt — zweite uebernommene Kulisse, diesmal aus fynnox-city (17.08.2026).
+# Anders als beim Unterwasserbild wird hier NICHT zugeschnitten: Die Vorlage ist
+# eine reine Konzeptansicht ohne fremde Anzeigen und mit 1672x941 bereits genau
+# 16:9. Jeder Ausschnitt wuerde nur etwas wegnehmen — links laeuft Fynnox ueber
+# die Promenade, rechts stehen Leuchtturm und Skyline.
+#
+# 640x360 statt der 640x512 der uebrigen Kulissen: Das Seitenverhaeltnis der
+# Vorlage bleibt damit erhalten. Der Kapitelkopf zeigt das Bild ohnehin als
+# `object-cover`, also entscheidet nicht die Datei ueber den Bildausschnitt.
+stadt = ref("fynnox-city-hafenpromenade.png")
+save_jpg(stadt, os.path.join(ART, "bg", "stadt.jpg"), (640, 360))
+
 # --- Vorschaubilder der Spielkacheln -------------------------------------
 TILES = {
     "blockfall": (247, 410),

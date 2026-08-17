@@ -77,9 +77,20 @@ describe('Kapitel und Knoten', () => {
     }
   })
 
-  it('zwei Kapitel beginnen nicht mit demselben Spiel', () => {
-    const firsts = CHAPTERS.map((c) => nodeGame(c.number, 1))
-    expect(new Set(firsts).size).toBe(CHAPTERS.length)
+  /**
+   * Acht Spiele und mehr als acht Kapitel: Ab dem neunten Kapitel MUSS sich
+   * ein Startspiel wiederholen, daran führt kein Versatz vorbei. Verlangt wird
+   * darum nur, dass erst alle acht drankommen, bevor eines wiederkehrt.
+   */
+  it('die Startspiele laufen einmal durch alle acht, bevor sich eines wiederholt', () => {
+    const firsts = CHAPTERS.slice(0, GAMES.length).map((c) => nodeGame(c.number, 1))
+    expect(new Set(firsts).size).toBe(Math.min(CHAPTERS.length, GAMES.length))
+  })
+
+  it('nach acht Kapiteln beginnt die Reihenfolge von vorn', () => {
+    for (let node = 1; node <= NODES_PER_CHAPTER; node++) {
+      expect(nodeGame(9, node)).toBe(nodeGame(1, node))
+    }
   })
 
   it('ist ohne Zufall — dieselbe Stelle ergibt dasselbe Spiel', () => {

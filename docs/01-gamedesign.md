@@ -600,7 +600,7 @@ auseinanderlaufen könnte. Die Sterne sind bereits pro Spiel geeicht — genau d
 | Frage | Festlegung | Begründung |
 |---|---|---|
 | Knoten je Kapitel | 15 | Aus dem Mockup („8/15") |
-| Welches Spiel | fest je Knoten, reihum durch alle acht: `spiele[(knoten - 1 + (kapitel - 1) * 3) % 8]` | Ohne Zufall und dadurch reproduzierbar. Der Versatz von 3 je Kapitel sorgt dafür, dass zwei Kapitel nicht dieselbe Reihenfolge haben |
+| Welches Spiel | fest je Knoten, reihum durch alle acht: `spiele[(knoten - 1 + (kapitel - 1) * 3) % 8]` | Ohne Zufall und dadurch reproduzierbar. Der Versatz von 3 je Kapitel sorgt dafür, dass die ersten acht Kapitel unterschiedlich beginnen. Ab dem neunten wiederholt sich die Reihenfolge zwangsläufig — acht Spiele geben nicht mehr her |
 | Bestanden ab | 1 Stern | Der Pfad soll führen, nicht blockieren. Die Tiefe liegt im Nachspielen für 3 Sterne, nicht im Wiederholenmüssen |
 | Zurückspringen | nicht möglich | Ein abgeschlossener Knoten behält seine Sterne. Ein Auswahlmodus für alte Knoten bräuchte zusätzlichen Zustand im Spielstand, ohne etwas hinzuzufügen |
 | Energie | ja, wie jede Runde | Ein Knoten *ist* eine normale Runde — er läuft über dieselbe Rundenauswertung |
@@ -619,16 +619,29 @@ auseinanderlaufen könnte. Die Sterne sind bereits pro Spiel geeicht — genau d
 | 6 | Wolkeninsel | `bg/wolkeninsel.jpg` |
 | 7 | Tempelruinen | `bg/tempel.jpg` |
 | 8 | Unterwasserwelt | `bg/unterwasser.jpg` |
+| 9 | Fynnox City | `bg/stadt.jpg` |
 
-Acht Kapitel zu 15 Knoten sind 120 Stufen — mehr als die 100 Level aus Entwurf A, nur in
-Kapitel geschnitten. Jedes Kapitel trägt eine andere der acht Spielfarben, damit sich
+Neun Kapitel zu 15 Knoten sind 135 Stufen — mehr als die 100 Level aus Entwurf A, nur in
+Kapitel geschnitten. Keine zwei Kapitel tragen dieselbe Farbe, damit sich
 Fortschrittsbalken und Knoten zweier Kapitel nie gleich anfühlen.
 
-**Nachtrag vom 17.08.2026**: Kapitel 8 kam am selben Tag dazu. Die Kulisse stammt als
-einzige **nicht** aus den Puzzle-Worlds-Konzeptbildern, sondern aus dem Bildmaterial von
-`fynnox-adventure` (Quelle und Ausschnitt: [Art-Guide](03-art-ui-guide.md)). Der Satz
-„für Unterwasser gibt es kein Bildmaterial" stand hier zuvor und war falsch — im
-Nachbarprojekt lag eine gemalte Über-/Unterwasserszene im passenden Stil.
+**Nachtrag vom 17.08.2026**: Kapitel 8 und 9 kamen am selben Tag dazu. Ihre Kulissen
+stammen als einzige **nicht** aus den Puzzle-Worlds-Konzeptbildern, sondern aus dem
+Bildmaterial der Nachbarprojekte `fynnox-adventure` und `fynnox-city`
+(Quellen und Ausschnitte: [Art-Guide](03-art-ui-guide.md)). Der Satz „für Unterwasser
+gibt es kein Bildmaterial" stand hier zuvor und war falsch — im Nachbarprojekt lag eine
+gemalte Über-/Unterwasserszene im passenden Stil.
+
+**Fynnox City ist eine Erweiterung über den Masterprompt hinaus.** Dessen Weltenliste
+kennt elf Welten, eine Stadt ist nicht darunter. Der Auftraggeber hat sie am 17.08.2026
+ausdrücklich gewünscht: Fynnox City ist das dritte Projekt der Familie und soll hier als
+eigene Welt auftauchen. Damit ist die Stadt die erste Welt, die nicht aus dem Masterprompt
+kommt — der Widerspruch ist benannt und entschieden, nicht übersehen.
+
+Zu beachten: Die Stadtkulisse ist eine 3D-Renderansicht und dadurch sichtbar
+fotorealistischer als die gemalten Welten davor. Auf dem Kapitelkopf liegt sie hinter
+demselben dunklen Verlauf wie alle anderen, deshalb fällt der Unterschied dort kaum auf.
+Sie sollte aber nicht ohne Not an weiteren Stellen auftauchen.
 
 Candy, Steampunk und Weltraum fehlen weiterhin: Dafür gibt es in keinem der Fynnox-Projekte
 eine brauchbare Kulisse. Was in `fynnox-adventure` unter *Zuckerwirbel* und *Neon* liegt,

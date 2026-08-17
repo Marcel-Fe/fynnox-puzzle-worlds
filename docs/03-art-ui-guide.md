@@ -19,7 +19,8 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `chars/fynnox-jubel.jpg` | Fynnox freut sich — Ergebnisbildschirm nach einem Sieg | Start-Pop-up in `handy-flow-start-bis-minigolf.png` |
 | `chars/fynnox-still.jpg` | Fynnox gedämpft — Ergebnisbildschirm nach einer Niederlage | Übergangsbildschirm in `handy-flow-start-bis-minigolf.png` |
 | `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
-| `bg/unterwasser.jpg` | 8. Weltkulisse — **einzige Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
+| `bg/unterwasser.jpg` | 8. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
+| `bg/stadt.jpg` | 9. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-city-hafenpromenade.png` |
 | `games/` | 8 Kachelbilder | Spielkarten in `dashboard-hauptansicht.png` |
 | `hero.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
@@ -47,12 +48,13 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
    Ein Pfad in ein Nachbarprojekt wäre auf keinem zweiten Rechner reproduzierbar und
    würde `python scripts/build-art.py` bei jedem Umbenennen dort brechen.
 
-### Die eine Kulisse, die nicht aus den Mockups stammt
+### Die zwei Kulissen, die nicht aus den Mockups stammen
 
-`bg/unterwasser.jpg` ist die einzige Grafik im Projekt, die **nicht** aus den elf
-Puzzle-Worlds-Konzeptbildern geschnitten ist. Sie stammt aus dem Bildmaterial von
-`fynnox-adventure` und wurde am **17.08.2026** übernommen, als der Abenteuerpfad ein
-achtes Kapitel bekam.
+`bg/unterwasser.jpg` und `bg/stadt.jpg` sind die einzigen Grafiken im Projekt, die
+**nicht** aus den elf Puzzle-Worlds-Konzeptbildern geschnitten sind. Beide kamen am
+**17.08.2026** aus den Nachbarprojekten dazu, als der Abenteuerpfad um zwei Kapitel wuchs.
+
+#### `bg/unterwasser.jpg` — aus `fynnox-adventure`
 
 **Warum die Ausnahme**: Die Konzeptbilder zeigen keine Unterwasserwelt. Die Alternativen
 wären gewesen, das Kapitel wegzulassen oder eine Kulisse zu erfinden — Letzteres ist
@@ -71,6 +73,25 @@ eines fremden Spiels und voller fremder Anzeigen):
 Übrig bleibt reine Kulisse: Steg, Boot, Palmen, Wasserlinie, tauchender Fynnox, Fische,
 Korallen.
 
+#### `bg/stadt.jpg` — aus `fynnox-city`
+
+Quelle ist `03_Bildreferenzen/05_Orte_und_Landschaften/01_Hafenpromenade_Uebersicht.png`
+aus dem Produktionspaket von Fynnox City, ausgewählt unter vier Stadtansichten
+(Hafenpromenade, Altstadt-Markt, Sky Garden, Metro-Hub). Die Promenade gewann, weil sie
+als einzige draußen, weit und hell ist — ein Innenraum wie der Metro-Hub trägt keinen
+Kapitelkopf.
+
+**Hier wird als einzige Kulisse gar nicht zugeschnitten.** Die Vorlage ist eine reine
+Konzeptansicht ohne fremde Anzeigen und mit 1672 × 941 bereits genau 16:9; jeder
+Ausschnitt würde nur etwas wegnehmen — links läuft Fynnox über die Promenade, rechts
+stehen Leuchtturm und Skyline. Sie wird darum auf 640 × 360 gerechnet statt auf die
+640 × 512 der übrigen Kulissen. Den sichtbaren Bildausschnitt bestimmt ohnehin das
+`object-cover` des Kapitelkopfs, nicht die Datei.
+
+**Der Stilbruch ist bekannt**: Die Vorlage ist eine 3D-Renderansicht und dadurch
+fotorealistischer als die gemalten Welten davor. Hinter dem dunklen Verlauf des
+Kapitelkopfs fällt das kaum auf — an weiteren Stellen sollte sie ohne Not nicht auftauchen.
+
 **Was aus den Nachbarprojekten bewusst *nicht* übernommen wurde** (gesichtet am 17.08.2026,
 damit niemand ein zweites Mal danach sucht):
 
@@ -83,9 +104,9 @@ damit niemand ein zweites Mal danach sucht):
 - Freigestellter Fynnox (Turnarounds auf Weiß und auf Magenta). Widerlegt Regel 4 —
   hier *gibt* es eine saubere Freistellung. Bislang nicht gebraucht, weil das
   Begrüßungsbanner mit Landschaft funktioniert.
-- Fynnox City: Tatz-Taler und Stadtfunke als freigestellte 3D-Icons, dazu zwölf UI-Icons
-  und vier Stadtkulissen. Alles in Citys Marineblau/Orange statt unserem Gold/Violett.
-  Für ein späteres Stadt-Kapitel wäre `01_Hafenpromenade_Uebersicht.png` der Kandidat.
+- Fynnox City: Tatz-Taler und Stadtfunke als freigestellte 3D-Icons, dazu zwölf UI-Icons.
+  Alles in Citys Marineblau/Orange statt unserem Gold/Violett. Von dort kam nur die
+  Hafenpromenade (siehe oben).
 - `fynnox-adventure/public/art/previews/` — *Zuckerwirbel*, *Neon*, *Gletscher*, *Vulkan*.
   Sehen nach Candy- und Weltraumwelt aus, sind aber Rennstrecken aus Pet Cars, mit
   Leitplanken und Fahrbahnmarkierung quer durchs Bild.

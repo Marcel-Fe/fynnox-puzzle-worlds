@@ -8,7 +8,7 @@ import { asset } from './assets'
  * weil dazu kein Bildmaterial vorliegt. Erfunden wird hier keins
  * (CLAUDE.md, Abschnitt Grafik).
  *
- * Jedes Kapitel trägt eine andere der acht Spielfarben, damit sich Balken und
+ * Keine zwei Kapitel tragen dieselbe Farbe, damit sich Fortschrittsbalken und
  * Knoten zweier Kapitel nie gleich anfühlen.
  */
 export interface Chapter {
@@ -77,6 +77,15 @@ export const CHAPTERS: Chapter[] = [
     intro: 'Einmal tief einatmen — unter uns liegt ein ganzes Riff voller Geschichten.',
     image: asset('bg/unterwasser.jpg'),
     accent: 'var(--color-game-sudoku)',
+  },
+  {
+    number: 9,
+    world: 'Fynnox City',
+    intro: 'Hier war ich lange nicht mehr. Komm mit an die Promenade — die Stadt schläft nie.',
+    image: asset('bg/stadt.jpg'),
+    // Neunte Farbe: Die acht Spielfarben sind vergeben, Gold gehoert dem
+    // hervorgehobenen Knoten. Bleibt das Violett der Kopfzeile.
+    accent: 'var(--color-purple)',
   },
 ]
 
