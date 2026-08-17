@@ -473,6 +473,34 @@ Knopf zum erneuten Versuch, und der Profilbildschirm bleibt vollständig stehen.
 Ein Konsoleneintrag des GLTF-Laders bleibt — der kommt aus three selbst und ist
 Rauschen, kein unbehandelter Zustand.
 
+### ✅ Feinschliff der Animationen — ohne neue Abhängigkeit
+
+Framer Motion bleibt draußen. Geprüft wurde, was animiert werden soll: Der
+Zahlenanstieg im Ergebnisbildschirm sind 25 Zeilen `requestAnimationFrame`, die
+Truhe im Abenteuerpfad sind CSS-Keyframes. Der Kartenzug bei Solitaire wäre der
+einzige Grund für eine Bibliothek gewesen — er verlangte aber einen Eingriff in
+ein fertiges, im Browser belegtes Spiel. Begründung in
+[docs/01-gamedesign.md](01-gamedesign.md), „Bewegung".
+
+**Der Energiesparmodus wirkt jetzt** — der vierte und letzte Schalter, der „später"
+trug. Zusammen mit der Systemeinstellung `prefers-reduced-motion` setzt er
+`data-motion="off"` auf das Wurzelelement; eine einzige CSS-Regel kürzt daraufhin
+alle Übergänge der App, auch die aus früheren Phasen.
+
+**Nachgewiesen** bei 390 × 844 in einem Lauf:
+
+| Fall | Ergebnis |
+|---|---|
+| Voreinstellung | `data-motion="on"`, 15 Zwischenstände von „⭐ 0 XP · 🪙 0" bis „⭐ 20 XP · 🪙 10" |
+| Energiesparmodus an | `data-motion="off"`, genau **ein** Stand — der Zähler springt sofort |
+| Gerät meldet „Bewegung reduzieren" | `data-motion="off"`, ohne den Schalter im Spielstand zu verändern |
+
+Übergangsdauer im Energiesparmodus gemessen: 1e-05s. Bewusst nicht 0s — bei genau
+null feuert `transitionend` in manchen Browsern nicht mehr.
+
+**Damit trägt kein Schalter im Einstellungsbildschirm mehr die Marke „später"**,
+außer den Benachrichtigungen, die eine Geräteerlaubnis brauchen.
+
 ---
 
 ## Was die Reihenfolge trägt

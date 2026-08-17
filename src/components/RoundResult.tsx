@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { FYNNOX_FACES, fynnoxLine, moodFor } from '../content/reactions'
 import { sfx } from '../core/audio'
 import type { RoundRewards } from '../core/round'
+import { useCountUp } from './motion'
 
 /**
  * Ergebnisbildschirm nach einer Runde — Vorlage für alle Spiele
@@ -70,10 +71,7 @@ export function RoundResultOverlay({
         {rewards && (
           <div className="mt-4 rounded-xl bg-deep/70 p-3">
             <p className="text-xs tracking-wider text-ink-muted uppercase">Erhalten</p>
-            <p className="tabular mt-1 text-sm font-bold">
-              ⭐ {rewards.xp} XP · 🪙 {rewards.coins.toLocaleString('de-DE')}
-              {rewards.crystals > 0 && ` · 💎 ${rewards.crystals}`}
-            </p>
+            <RewardLine rewards={rewards} />
             {rewards.levelsGained > 0 && (
               <p className="mt-1 text-sm font-black text-gold">
                 Level up! {rewards.levelsGained > 1 && `+${rewards.levelsGained} Level`}
@@ -128,5 +126,25 @@ export function RoundResultOverlay({
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * Die erspielte Belohnung läuft hoch, statt einfach dazustehen — der Moment,
+ * in dem die Runde sich auszahlt (docs/01-gamedesign.md, „Bewegung").
+ *
+ * Eigene Komponente, weil Hooks nicht hinter einer Bedingung stehen dürfen:
+ * `rewards` kann null sein, und `useCountUp` liefe dann mal mit, mal nicht.
+ */
+function RewardLine({ rewards }: { rewards: RoundRewards }) {
+  const xp = useCountUp(rewards.xp)
+  const coins = useCountUp(rewards.coins)
+  const crystals = useCountUp(rewards.crystals)
+
+  return (
+    <p className="tabular mt-1 text-sm font-bold">
+      ⭐ {xp} XP · 🪙 {coins.toLocaleString('de-DE')}
+      {rewards.crystals > 0 && ` · 💎 ${crystals}`}
+    </p>
   )
 }

@@ -87,7 +87,12 @@ export function Adventure() {
             complete && !chestClaimed ? 'border-gold bg-gold/15' : 'border-edge bg-deep/60',
           ].join(' ')}
         >
-          <p className="text-3xl" aria-hidden>
+          {/* Die bereitliegende Truhe atmet leicht — die Bewegung hört auf,
+              sobald der Energiesparmodus an ist (src/index.css). */}
+          <p
+            className={`text-3xl ${complete && !chestClaimed ? 'chest-ready inline-block' : ''}`}
+            aria-hidden
+          >
             {chestClaimed ? '📭' : complete ? '🎁' : '🔒'}
           </p>
           <p className="mt-1 text-sm font-bold">Truhe am Kapitelende</p>

@@ -87,3 +87,38 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Energiesparmodus (docs/01-gamedesign.md, „Bewegung").
+ *
+ * Das Attribut setzt App.tsx, sobald der Schalter „Energiesparmodus" an ist
+ * ODER das Gerät „Bewegung reduzieren" meldet. Diese eine Regel erwischt damit
+ * auch alle Übergänge, die schon vorher da waren — Reiter, Navigation, Schalter.
+ *
+ * Nicht 0s, sondern 0.01ms: Bei einer Dauer von genau null feuert `transitionend`
+ * in manchen Browsern nicht mehr, und Code, der darauf wartet, bliebe hängen.
+ */
+[data-motion='off'] *,
+[data-motion='off'] *::before,
+[data-motion='off'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Die abholbereite Truhe im Abenteuerpfad atmet leicht. */
+@keyframes chest-ready {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12) rotate(-4deg);
+  }
+}
+
+.chest-ready {
+  animation: chest-ready 1.6s ease-in-out infinite;
+  transform-origin: 50% 70%;
+}

@@ -459,6 +459,32 @@ Muster wie `requestFullscreenOnFirstTap` in `src/core/fullscreen.ts`.
 
 Beide Schalter im Einstellungsbildschirm wirken damit; die Marke „später" fällt dort weg.
 
+### Bewegung — festgelegt am 17.08.2026 (Phase 8)
+
+**Keine Animationsbibliothek.** CLAUDE.md nennt Framer Motion im Stack mit dem Zusatz
+„erst einbauen, wenn tatsächlich animiert wird". Geprüft wurde, was animiert werden soll:
+
+| Kandidat | Entscheidung |
+|---|---|
+| Zahlenanstieg im Ergebnisbildschirm | **ja** — 25 Zeilen `requestAnimationFrame` |
+| Truhe im Abenteuerpfad, wenn sie bereitliegt | **ja** — reine CSS-Keyframes |
+| Kartenzug bei Solitaire | **nein** |
+
+Der Kartenzug bliebe der einzige Grund für eine Bibliothek — und er verlangte einen
+Eingriff in die Darstellung eines fertigen, im Browser belegten Spiels. Der Nutzen
+rechtfertigt das nicht. Damit löst Framer Motion kein Problem, das eigener Code teuer
+machen würde, und bleibt draußen.
+
+**Der Energiesparmodus wirkt ab jetzt** (`settings.powerSaving`). Er setzt zusammen mit
+der Systemeinstellung `prefers-reduced-motion` das Attribut `data-motion="off"` auf das
+Wurzelelement. Eine einzige CSS-Regel kürzt daraufhin **alle** Übergänge und Animationen
+der App auf nahezu null — auch die, die schon vorher da waren (Reiter, Navigation,
+Schalter). Der Zähler springt dann sofort auf seinen Endwert, statt hochzulaufen.
+
+Die Systemeinstellung wird **mitgelesen, nicht überschrieben**: Wer auf dem Gerät
+„Bewegung reduzieren" eingeschaltet hat, hat das aus einem Grund getan — oft wegen
+Schwindel oder Migräne. Ein Spiel darf sich darüber nicht hinwegsetzen.
+
 ---
 
 ## Start der App

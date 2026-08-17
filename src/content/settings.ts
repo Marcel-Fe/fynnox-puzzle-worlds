@@ -36,8 +36,8 @@ export const GENERAL_SETTINGS: SettingRow[] = [
   {
     key: 'powerSaving',
     label: 'Energiesparmodus',
-    hint: 'Weniger Bewegung auf dem Bildschirm. Greift, sobald animiert wird.',
-    effective: false,
+    hint: 'Hält alles auf dem Bildschirm still. Zahlen springen sofort auf ihren Wert, statt hochzulaufen.',
+    effective: true,
   },
 ]
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { useMotionAllowed } from './components/motion'
 import { applyAudioSettings, armAudioOnFirstGesture } from './core/audio'
 import { requestFullscreenOnFirstTap } from './core/fullscreen'
 import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
@@ -37,6 +38,7 @@ export default function App() {
   const loaded = useGameStore((s) => s.loaded)
   const sound = useGameStore((s) => s.save?.settings.sound ?? false)
   const music = useGameStore((s) => s.save?.settings.music ?? false)
+  const motion = useMotionAllowed()
   const [percent, setPercent] = useState(10)
 
   useEffect(() => {
@@ -56,6 +58,15 @@ export default function App() {
   useEffect(() => {
     applyAudioSettings({ sound, music })
   }, [sound, music])
+
+  /*
+   * Ein Attribut am Wurzelelement statt einer Klasse an jeder Stelle: Damit
+   * greift die Regel in index.css auf alles, was sich bewegt — auch auf die
+   * Übergänge, die es schon vor Phase 8 gab.
+   */
+  useEffect(() => {
+    document.documentElement.dataset.motion = motion ? 'on' : 'off'
+  }, [motion])
 
   /*
    * Der Weg in die Cloud ist entprellt, damit nach einer Runde nicht drei
