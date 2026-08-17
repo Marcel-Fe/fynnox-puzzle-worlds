@@ -36,6 +36,42 @@ Belegte Zeilen aus den Mockups:
 > „Es gibt so viele Abenteuer zu erleben! Welches Spiel wählen wir heute?"
 > „Gemeinsam sind wir stark!"
 
+### Reaktion nach einer Runde — festgelegt am 17.08.2026
+
+Fynnox meldet sich auf dem Ergebnisbildschirm zu Wort, in **allen acht Spielen gleich**.
+Er kommentiert nie die Regeln des einzelnen Spiels — das bleibt Sache der jeweiligen
+Begleitfigur — sondern nur, wie die Runde ausgegangen ist.
+
+**Zwei Stimmungen**, mehr nicht. Ein feineres Raster wäre nicht zu belegen:
+
+| Stimmung | Wann | Porträt |
+|---|---|---|
+| `jubel` | Runde gewonnen | `chars/fynnox-jubel.jpg` |
+| `still` | Runde verloren oder aufgegeben | `chars/fynnox-still.jpg` |
+
+**Wichtig zum Bildmaterial**: In **keinem** der elf Konzeptbilder gibt es einen traurigen
+oder enttäuschten Fynnox — er lächelt auf jedem einzelnen. `fynnox-still` ist deshalb
+dieselbe Figur in der Dämmerungsszene des Übergangsbildschirms: gedämpftes Licht, ruhige
+Haltung. **Die Enttäuschung trägt der Text, nicht das Gesicht.** Ein wirklich trauriger
+Fynnox bräuchte ein neues Konzeptbild — nachbearbeitet wird das vorhandene nicht.
+
+Belegte Zeilen gibt es dafür keine, also gelten diese als Festlegung. Sie folgen dem
+Sprechstil: Wir-Form, geduzt, begeistert beim Sieg, ermutigend statt bedauernd bei der
+Niederlage. Fynnox macht dem Spieler **nie** einen Vorwurf.
+
+*Sieg:*
+> „Das war stark! Ich wusste, dass wir das schaffen."
+> „Geschafft! Auf dich ist Verlass, Abenteurer."
+> „Sauber gespielt! Mit dir macht das richtig Spaß."
+
+*Niederlage:*
+> „Knapp daneben. Beim nächsten Mal holen wir uns das."
+> „Kopf hoch! Auch ich brauche manchmal mehrere Anläufe — das schaffen wir."
+> „Das war eine harte Runde. Einmal durchatmen, dann nehmen wir sie uns nochmal vor."
+
+Welche Zeile erscheint, wird **aus dem Rundenergebnis abgeleitet**, nicht ausgelost —
+sonst wechselte der Satz bei jedem Neuzeichnen des Bildschirms.
+
 ---
 
 ## Die Begleiter

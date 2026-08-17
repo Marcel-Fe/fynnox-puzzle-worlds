@@ -1,3 +1,4 @@
+import { FYNNOX_FACES, fynnoxLine, moodFor } from '../content/reactions'
 import type { RoundRewards } from '../core/round'
 
 /**
@@ -32,6 +33,8 @@ export function RoundResultOverlay({
   /** Abweichende Beschriftung, z. B. „Level 4" nach einem Sieg mit Freischaltung */
   againLabel?: string
 }) {
+  const mood = moodFor(won)
+
   return (
     <div
       className="fixed inset-0 z-20 grid place-items-center bg-deep/90 p-4 backdrop-blur"
@@ -80,6 +83,22 @@ export function RoundResultOverlay({
             )}
           </div>
         )}
+
+        {/* Fynnox meldet sich zu Wort (docs/02-charakterbibel.md). Die Zeile
+            hängt am Ergebnis, damit sie beim Neuzeichnen stehen bleibt. */}
+        <div className="mt-4 flex items-center gap-3 text-left">
+          <img
+            src={FYNNOX_FACES[mood]}
+            alt="Fynnox"
+            width={56}
+            height={56}
+            className="size-14 shrink-0 rounded-full bg-elevated object-cover"
+            style={{ boxShadow: `0 0 0 2px ${won ? 'var(--color-gold)' : 'var(--color-edge)'}` }}
+          />
+          <p className="flex-1 rounded-xl rounded-tl-none bg-[#f5ead2] p-2.5 text-sm font-medium text-[#2b1d10] shadow-lg">
+            {fynnoxLine(mood, stars * 7 + facts.length)}
+          </p>
+        </div>
 
         <div className="mt-5 flex gap-2">
           <button

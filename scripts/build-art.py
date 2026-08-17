@@ -12,7 +12,7 @@ die App rund viermal so schwer zu laden.
 """
 
 import os
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REF = os.path.join(ROOT, "docs", "referenzen")
@@ -36,6 +36,7 @@ dash = ref("dashboard-hauptansicht.png")
 icon_src = ref("app-icon.png").convert("RGB")
 charsheet = ref("charaktere-spiele-minigolf.png")
 ansichten = ref("spiele-ansichten-und-charaktere.png")
+flow = ref("handy-flow-start-bis-minigolf.png")
 
 # --- Charakterportraets --------------------------------------------------
 # Neun beschriftete Karten in der Leiste unten im Gameplay-Blatt.
@@ -52,6 +53,28 @@ for i, name in enumerate(NAMES):
 
 # Fynnox aus dem App-Icon — mit Abstand die hoechste Aufloesung
 save_jpg(icon_src.crop((330, 40, 950, 660)), os.path.join(ART, "chars", "fynnox.jpg"), (256, 256), 86)
+
+# --- Fynnox in zwei Stimmungen ------------------------------------------
+# Fuer die Rueckmeldung nach einer Runde. Beide Ausschnitte stammen aus dem
+# Flow-Blatt und sind komplett textfrei.
+#
+# WICHTIG, damit spaeter niemand mehr sucht: In KEINEM der elf Konzeptbilder
+# gibt es einen traurigen oder enttaeuschten Fynnox — er laechelt auf jedem
+# einzelnen. "fynnox-still" ist darum dieselbe Figur in der Daemmerungsszene
+# des Uebergangsbildschirms: geduempftes Licht, ruhige Haltung. Die Enttaeuschung
+# traegt der Text, nicht das Gesicht. Ein echtes trauriges Gesicht braucht ein
+# neues Konzeptbild, kein Nachbearbeiten dieses hier.
+save_jpg(flow.crop((45, 85, 175, 215)), os.path.join(ART, "chars", "fynnox-jubel.jpg"), (256, 256), 86)
+
+# Die Daemmerungsszene ist im Original sehr dunkel: mittlere Helligkeit 35 bei
+# einer Streuung von 16. Auf der dunklen Ergebniskarte waere davon bei 56 px
+# nichts mehr zu erkennen. Belichtung und Kontrast werden darum angehoben --
+# hier im Skript, damit der Stand reproduzierbar bleibt. Das Motiv selbst wird
+# nicht veraendert; es bleibt sichtbar gedaempfter als "fynnox-jubel".
+still = flow.crop((500, 95, 630, 225))
+still = ImageEnhance.Brightness(still).enhance(1.55)
+still = ImageEnhance.Contrast(still).enhance(1.35)
+save_jpg(still, os.path.join(ART, "chars", "fynnox-still.jpg"), (256, 256), 86)
 
 # --- Begruessungsbanner --------------------------------------------------
 # Fynnox samt Landschaft als ganzer Ausschnitt. Eine freigestellte Figur ist

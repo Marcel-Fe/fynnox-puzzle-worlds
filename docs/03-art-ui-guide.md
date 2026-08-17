@@ -16,6 +16,8 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | Ordner | Inhalt | Quelle im Referenzordner |
 |---|---|---|
 | `chars/` | 10 runde Porträts (Fynnox + 9 Begleiter) | Charakterleiste unten in `gameplay-regeln-und-missionen.png` |
+| `chars/fynnox-jubel.jpg` | Fynnox freut sich — Ergebnisbildschirm nach einem Sieg | Start-Pop-up in `handy-flow-start-bis-minigolf.png` |
+| `chars/fynnox-still.jpg` | Fynnox gedämpft — Ergebnisbildschirm nach einer Niederlage | Übergangsbildschirm in `handy-flow-start-bis-minigolf.png` |
 | `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
 | `games/` | 8 Kachelbilder | Spielkarten in `dashboard-hauptansicht.png` |
 | `hero.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
@@ -34,6 +36,21 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 4. **Freistellen ist nicht möglich.** Eine Figur sauber aus einem KI-Bild zu lösen gelingt
    nicht — deshalb wird Fynnox samt Landschaft als ganzer Bildausschnitt gezeigt.
    Auf den Mockups steht er ohnehin mitten in der Kulisse.
+5. **Belichtung darf angehoben werden, das Motiv nicht verändert.** `fynnox-still` stammt
+   aus einer Dämmerungsszene und kam mit einer mittleren Helligkeit von 35 bei einer
+   Streuung von 16 heraus — auf der dunklen Ergebniskarte war bei 56 px nichts mehr zu
+   erkennen. Helligkeit und Kontrast werden darum **im Skript** angehoben (auf 54 bzw. 33)
+   und bleiben damit reproduzierbar. Er ist weiterhin sichtbar gedämpfter als
+   `fynnox-jubel` mit 84.
+
+### Es gibt keinen traurigen Fynnox
+
+In **keinem** der elf Konzeptbilder ist Fynnox traurig, enttäuscht oder ärgerlich — er
+lächelt auf jedem einzelnen. Wer eine solche Miene braucht, findet sie hier nicht und
+darf sie auch nicht aus einem vorhandenen Bild herausretuschieren. Der
+Ergebnisbildschirm löst das über **Licht und Text**: dieselbe Figur in gedämpfter
+Beleuchtung, dazu eine ermutigende Zeile (docs/02-charakterbibel.md). Ein wirklich
+trauriger Fynnox bräuchte ein neues Konzeptbild.
 
 ### Fynnox in 3D
 
