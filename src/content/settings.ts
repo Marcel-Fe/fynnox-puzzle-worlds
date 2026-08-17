@@ -57,10 +57,36 @@ export const ABOUT_TEXT = [
 ]
 
 export const PRIVACY_TEXT = [
-  'Dein Spielstand liegt allein auf diesem Gerät, im Speicher deines Browsers.',
-  'Es werden keine Daten an einen Server gesendet, weil es keinen gibt. Niemand außer dir sieht deinen Fortschritt.',
-  'Löschst du die Websitedaten oder tippst unten auf „Spielstand zurücksetzen", ist der Stand endgültig weg.',
+  'Dein Spielstand liegt auf diesem Gerät, im Speicher deines Browsers.',
+  'Schaltest du die Cloud-Speicherung ein, liegt zusätzlich eine Kopie auf einem Server — nur der Spielstand selbst, ohne Name, E-Mail oder Konto. Er hängt an einer zufälligen Nummer, die dieses Gerät für sich erzeugt hat.',
+  'Es gibt keine Werbung, keine Verfolgung und keine Weitergabe an Dritte. Niemand außer dir sieht deinen Fortschritt.',
+  'Löschst du die Websitedaten oder tippst unten auf „Spielstand zurücksetzen", ist der Stand auf diesem Gerät endgültig weg.',
 ]
+
+/** Texte der Cloud-Karte (docs/04-datenmodell.md, „Cloud-Speicher"). */
+export const CLOUD_TEXT = {
+  title: 'Cloud-Speicherung',
+  offHint:
+    'Der Spielstand liegt nur auf diesem Gerät. Für den Abgleich mit einem zweiten Gerät fehlen die Zugangsdaten des Servers — siehe .env.example im Projekt.',
+  offValue: 'Nicht eingerichtet',
+  loading: 'Wird abgeglichen …',
+  connected: 'Verbunden',
+  failed: 'Kein Zugriff',
+  soloHint:
+    'Dein Spielstand wird gesichert. Um ihn auf einem zweiten Gerät weiterzuspielen, lass dir hier einen Code geben und gib ihn dort ein.',
+  pairedHint:
+    'Dieses Gerät teilt sich den Spielstand mit einem anderen. Gespielt wird immer auf dem Stand mit den meisten Runden.',
+  showCode: 'Code für ein zweites Gerät',
+  enterCode: 'Code von einem anderen Gerät eingeben',
+  codeHint: 'Gib diesen Code innerhalb von 15 Minuten auf dem anderen Gerät ein.',
+  codePlaceholder: 'z. B. K7QM2P',
+  submit: 'Koppeln',
+  unlink: 'Kopplung lösen',
+  linked: 'Gekoppelt. Der Spielstand wird jetzt abgeglichen.',
+  badCode: 'Dieser Code ist falsch oder abgelaufen.',
+  noAccount:
+    'Es gibt kein Konto und kein Passwort. Verlierst du dieses Gerät ohne gekoppeltes zweites, ist der Spielstand weg.',
+} as const
 
 export const HELP_TEXT = [
   'Eine Runde kostet eine Energie. Energie füllt sich alle zehn Minuten um eine Einheit auf, auch wenn die App geschlossen ist.',

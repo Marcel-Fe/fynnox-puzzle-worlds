@@ -25,7 +25,8 @@ import { Profile } from './screens/Profile'
 import { Ranking } from './screens/Ranking'
 import { Settings } from './screens/Settings'
 import { Shop } from './screens/Shop'
-import { useGameStore } from './store/gameStore'
+import { CloudSaveAdapter } from './save/cloudAdapter'
+import { adapter, useGameStore } from './store/gameStore'
 
 /*
  * HashRouter statt BrowserRouter: Auf GitHub Pages gibt es keinen Server, der
@@ -55,6 +56,24 @@ export default function App() {
   useEffect(() => {
     applyAudioSettings({ sound, music })
   }, [sound, music])
+
+  /*
+   * Der Weg in die Cloud ist entprellt, damit nach einer Runde nicht drei
+   * Aufrufe hintereinander gehen. Wer die App vorher schließt, würde den
+   * letzten Stoß verlieren — `visibilitychange` schickt ihn sofort los
+   * (docs/04-datenmodell.md, „Speicherzeitpunkte").
+   */
+  useEffect(() => {
+    // Eigene Bindung: In der Rückrufschleife weiß TypeScript sonst nicht mehr,
+    // dass es der Cloud-Adapter ist.
+    const cloud = adapter instanceof CloudSaveAdapter ? adapter : null
+    if (!cloud) return
+    const flush = () => {
+      if (document.visibilityState === 'hidden') void cloud.flush()
+    }
+    document.addEventListener('visibilitychange', flush)
+    return () => document.removeEventListener('visibilitychange', flush)
+  }, [])
 
   if (!loaded) return <Loading percent={percent} />
 

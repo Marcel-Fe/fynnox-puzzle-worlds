@@ -159,6 +159,8 @@ export interface SaveData {
   recentGames: GameId[]
   /** IDs gekaufter Shop-Waren (ab Version 2) */
   ownedItems: string[]
+  /** Zeitpunkt des letzten Speicherns — entscheidet beim Cloud-Abgleich (ab Version 3) */
+  updatedAt: number
 }
 
 export interface GlobalStats {
@@ -237,11 +239,104 @@ Wären sie synchron, müsste später jeder Aufruf im Projekt angefasst werden.
 - `LocalSaveAdapter` — Schlüssel `fynnox-puzzle-worlds:save`.
   Der Schlüssel trägt den Projektnamen, weil alle Fynnox-Apps unter derselben Domain
   `marcel-fe.github.io` liegen und sich sonst gegenseitig überschreiben würden.
-- `SupabaseSaveAdapter` — später, gleiche Schnittstelle.
+- `CloudSaveAdapter` — legt sich **über** den lokalen Adapter, siehe unten.
 
 **Speicherzeitpunkte**: nach jeder beendeten Runde, nach dem Abholen einer Belohnung,
 nach einem Kauf und beim Verlassen der Seite (`visibilitychange`).
 Nicht bei jedem einzelnen Zug — das würde bei Blockfall hunderte Schreibvorgänge auslösen.
+
+---
+
+## Cloud-Speicher — festgelegt am 17.08.2026 (Phase 8)
+
+### Der Widerspruch, der zuerst zu klären war
+
+CLAUDE.md sagt **„keine Accounts"**. Das Abschlusskriterium von Phase 8 verlangt
+**„derselbe Spielstand erscheint auf Handy und Desktop"**. Ohne irgendeine Identität
+kann ein Server aber nicht wissen, welcher Stand zu welchem Spieler gehört.
+
+**Entschieden**: anonyme **Geräte-ID plus Kopplungscode** — kein Konto, keine E-Mail,
+kein Passwort, kein Anmeldebildschirm.
+
+| | Geräte-ID + Kopplungscode | Echtes Login |
+|---|---|---|
+| Konto nötig | nein | ja |
+| Persönliche Daten | keine | E-Mail |
+| Gerät verloren | Stand weg, wenn der Code nicht notiert ist | wiederherstellbar |
+| Widerspruch zu CLAUDE.md | keiner | direkter |
+
+Der Preis ist offen zu nennen: **Wer sein einziges Gerät verliert und keinen Kopplungscode
+notiert hat, verliert den Spielstand.** Für ein Familienprojekt ohne Echtgeld ist das
+tragbar; ein Konto samt Passwortrücksetzung wäre für diesen Fall unverhältnismäßig.
+
+### Wie es funktioniert
+
+1. Jedes Gerät legt beim ersten Start eine `deviceId` an (`crypto.randomUUID()`),
+   lokal unter `fynnox-puzzle-worlds:device`.
+2. Der Spielstand hängt an einer `cloudId`. Anfangs ist sie gleich der `deviceId`.
+3. **Koppeln**: Gerät A lässt sich einen sechsstelligen Code geben (gültig 15 Minuten).
+   Gerät B gibt ihn ein und übernimmt damit A's `cloudId`. Ab da schreiben beide
+   in dieselbe Zeile.
+4. Die `cloudId` steht **nicht** im Spielstand — sie ist gerätelokal. Sonst würde sie
+   beim Abgleich mitwandern und sich selbst überschreiben.
+
+### Zusammenführen zweier Stände
+
+Beim Start hält das Gerät zwei Stände in der Hand: den lokalen und den aus der Cloud.
+Die Regel steht in `src/save/merge.ts` und ist rein (ohne Uhr, ohne Netz, testbar):
+
+1. **Mehr gespielte Runden gewinnt** (`stats.totalGames`).
+2. Bei Gleichstand gewinnt der **neuere `updatedAt`**.
+
+Warum nicht einfach „neuer gewinnt"? Weil ein Zeitstempel von der Geräteuhr kommt und
+eine falsch gestellte Uhr damit echten Fortschritt löschen könnte. Die Zahl gespielter
+Runden kann dagegen nur wachsen — sie ist der verlässlichere Maßstab.
+
+Die bewusste Lücke: Wird auf dem zurückliegenden Gerät **nur** eine Einstellung geändert
+und keine Runde gespielt, geht diese Änderung beim nächsten Abgleich verloren. Das ist
+der Preis dafür, dass niemals Spielfortschritt verschwindet — die falsche Richtung wäre
+teurer.
+
+### Warum kein `@supabase/supabase-js`
+
+Gebraucht werden vier Aufrufe. Supabase stellt sie als REST-Endpunkte bereit
+(`POST /rest/v1/rpc/<name>` mit dem `apikey`-Kopf) — das sind rund 30 Zeilen `fetch`.
+Die Bibliothek bringt zusätzlich Auth, Realtime, Storage und Postgrest-Abfragebau mit,
+also gut 100 KB für Dinge, die dieses Projekt nicht benutzt. CLAUDE.md verlangt für jede
+Abhängigkeit ein echtes Problem, das eigener Code teuer machen würde. Das liegt hier
+nicht vor.
+
+### Sicherheit: warum vier Funktionen statt zweier Tabellen
+
+Der `anon key` steht im ausgelieferten JavaScript und ist damit öffentlich. Läge auf
+`saves` eine gewöhnliche Lesefreigabe, könnte jeder **alle** Spielstände abrufen.
+
+Darum: Beide Tabellen sind für `anon` vollständig gesperrt (RLS an, keine Policy).
+Erreichbar sind ausschließlich vier `security definer`-Funktionen, die jeweils **genau
+eine** Zeile über ihren Schlüssel anfassen:
+
+| Funktion | Zweck |
+|---|---|
+| `save_load(p_cloud_id)` | Stand dieser einen ID lesen |
+| `save_store(p_cloud_id, p_data)` | Stand dieser einen ID schreiben |
+| `pair_create(p_cloud_id)` | sechsstelligen Code erzeugen, 15 Minuten gültig |
+| `pair_redeem(p_code)` | Code einlösen, gibt die zugehörige `cloud_id` zurück |
+
+Eine `cloudId` ist eine UUID; sie zu erraten ist praktisch ausgeschlossen. Der
+Kopplungscode ist dagegen kurz — deshalb läuft er nach 15 Minuten ab und wird beim
+Einlösen sofort gelöscht.
+
+Das vollständige SQL liegt in [`supabase/schema.sql`](../supabase/schema.sql).
+
+### Einrichtung
+
+`VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` kommen in eine lokale `.env`
+(Vorlage: `.env.example`). Sie gehören **nie** ins Repo — `.gitignore` sperrt `.env`.
+
+**Fehlt eine der beiden Angaben, bleibt alles beim lokalen Speicher.** Der Store baut
+den Cloud-Adapter dann gar nicht erst; die App läuft unverändert weiter, und der
+Einstellungsbildschirm sagt „Nicht eingerichtet". Damit ist kein Zwischenzustand
+möglich, in dem die App eine Cloud vortäuscht, die es nicht gibt.
 
 ---
 
@@ -258,6 +353,12 @@ Nicht bei jedem einzelnen Zug — das würde bei Blockfall hunderte Schreibvorg�
 Shop im Spielstand landet. Alte Stände bekommen eine leere Liste. Andere Felder blieben
 unverändert — Missionen, Erfolge und Abenteuerpfad waren von Anfang an vollständig
 angelegt und mussten für Phase 7 nur gefüllt werden.
+
+**Version 3** (17.08.2026, Phase 8): `updatedAt: number` kam für den Cloud-Abgleich dazu.
+Alte Stände bekommen `0` — der niedrigstmögliche Wert. Das ist Absicht: Ein Stand ohne
+Zeitstempel darf im Zweifel nicht gegen einen mit Zeitstempel gewinnen. Die erste Regel
+(mehr gespielte Runden) greift ohnehin zuerst, sodass echter Fortschritt auch dann nicht
+verlorengeht.
 
 Fehlt eine Migration oder schlägt das Laden fehl, wird ein frischer Spielstand angelegt —
 aber der defekte vorher unter `fynnox-puzzle-worlds:save-backup` weggesichert,

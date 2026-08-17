@@ -21,6 +21,18 @@ export interface SaveAdapter {
 const KEY = 'fynnox-puzzle-worlds:save'
 const BACKUP_KEY = 'fynnox-puzzle-worlds:save-backup'
 
+/**
+ * Setzt den Zeitstempel, der beim Cloud-Abgleich den Gleichstand entscheidet.
+ *
+ * Bewusst **eine** Stelle statt in jedem Adapter: Stempelte der lokale Adapter
+ * eigenständig und der Cloud-Adapter noch einmal, unterschieden sich beide
+ * Kopien desselben Spielstands um ein paar Millisekunden — und der Abgleich
+ * hielte sie für zwei verschiedene Stände.
+ */
+export function stampSave(data: SaveData, now: number): SaveData {
+  return { ...data, updatedAt: now }
+}
+
 export class LocalSaveAdapter implements SaveAdapter {
   async load(): Promise<SaveData | null> {
     let raw: string | null
@@ -71,13 +83,17 @@ export class LocalSaveAdapter implements SaveAdapter {
  * Ein Stand aus der Zukunft wird abgelehnt statt geraten: Er kann Felder
  * enthalten, die diese Fassung nicht kennt, und würde beim nächsten Speichern
  * stillschweigend beschnitten.
+ *
+ * Exportiert, damit sie ohne Browser prüfbar ist: „Alte Spielstände dürfen
+ * nicht kaputtgehen" (CLAUDE.md) ist eine Zusage, die einen Test verdient.
  */
-function migrate(data: SaveData): SaveData | null {
+export function migrate(data: SaveData): SaveData | null {
   if (typeof data?.version !== 'number') return null
   if (data.version > SAVE_VERSION) return null
 
   let save = data
   if (save.version < 2) save = toV2(save)
+  if (save.version < 3) save = toV3(save)
 
   return { ...save, version: SAVE_VERSION }
 }
@@ -85,4 +101,15 @@ function migrate(data: SaveData): SaveData | null {
 /** 1 → 2: Der Shop kam dazu, gekaufte Waren stehen seither in `ownedItems`. */
 function toV2(data: SaveData): SaveData {
   return { ...data, ownedItems: data.ownedItems ?? [] }
+}
+
+/**
+ * 2 → 3: Der Cloud-Abgleich kam dazu und braucht einen Zeitstempel.
+ *
+ * Alte Stände bekommen `0`, nicht die aktuelle Uhrzeit: Ein Stand ohne
+ * Zeitstempel soll im Zweifel nicht gegen einen mit gewinnen. Die erste
+ * Abgleichsregel (mehr gespielte Runden) greift ohnehin zuerst.
+ */
+function toV3(data: SaveData): SaveData {
+  return { ...data, updatedAt: data.updatedAt ?? 0 }
 }

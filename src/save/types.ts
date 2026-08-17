@@ -102,6 +102,12 @@ export interface SaveData {
   recentGames: GameId[]
   /** IDs gekaufter Shop-Waren (ab Version 2) */
   ownedItems: string[]
+  /**
+   * Zeitpunkt des letzten Speicherns (ab Version 3). Setzt der Adapter, nicht
+   * der Store — er entscheidet beim Cloud-Abgleich den Gleichstand
+   * (docs/04-datenmodell.md, „Zusammenführen zweier Stände").
+   */
+  updatedAt: number
 }
 
 /**

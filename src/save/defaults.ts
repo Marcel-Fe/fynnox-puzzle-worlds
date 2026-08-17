@@ -7,8 +7,9 @@ import type { GameProgress, SaveData } from './types'
  * Aktuelle Version der Datenstruktur. Bei Änderungen erhöhen + Migration ergänzen.
  *
  * 2 (17.08.2026): `ownedItems` kam für den Shop dazu.
+ * 3 (17.08.2026): `updatedAt` kam für den Cloud-Abgleich dazu.
  */
-export const SAVE_VERSION = 2
+export const SAVE_VERSION = 3
 
 /** Startwerte für ein neues Profil (docs/01-gamedesign.md). */
 export const START_COINS = 500
@@ -71,5 +72,6 @@ export function createNewSave(now: number): SaveData {
     dailyRewardStreak: 0,
     recentGames: [],
     ownedItems: [],
+    updatedAt: now,
   }
 }

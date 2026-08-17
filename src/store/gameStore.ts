@@ -8,8 +8,10 @@ import { refillEnergy } from '../core/energy'
 import { refreshMissions } from '../core/missions'
 import { applyRoundResult, type RoundRewards } from '../core/round'
 import { buyItem as applyPurchase } from '../core/shop'
-import { LocalSaveAdapter, type SaveAdapter } from '../save/adapter'
+import { LocalSaveAdapter, stampSave, type SaveAdapter } from '../save/adapter'
+import { CloudSaveAdapter } from '../save/cloudAdapter'
 import { createNewSave } from '../save/defaults'
+import { cloudConfigured } from '../save/supabase'
 import type { RoundResult, SaveData } from '../save/types'
 
 /**
@@ -45,11 +47,25 @@ interface GameState {
   resetSave(): Promise<void>
 }
 
-const adapter: SaveAdapter = new LocalSaveAdapter()
+/**
+ * Die eine Stelle, an der entschieden wird, wohin der Spielstand geht.
+ *
+ * Ohne Zugangsdaten in der `.env` bleibt es beim lokalen Speicher — die App
+ * läuft dann exakt wie vorher, statt eine Cloud vorzutäuschen, die es nicht gibt
+ * (docs/04-datenmodell.md, „Einrichtung").
+ */
+export const adapter: SaveAdapter = cloudConfigured()
+  ? new CloudSaveAdapter()
+  : new LocalSaveAdapter()
 
-/** Nach schreibenden Aktionen sichern — nicht bei jedem einzelnen Zug. */
+/**
+ * Nach schreibenden Aktionen sichern — nicht bei jedem einzelnen Zug.
+ *
+ * Hier steht der Zeitstempel für den Cloud-Abgleich: an einer Stelle, damit die
+ * lokale und die entfernte Kopie desselben Stands dieselbe Zahl tragen.
+ */
 function persist(save: SaveData) {
-  void adapter.save(save)
+  void adapter.save(stampSave(save, Date.now()))
 }
 
 /**

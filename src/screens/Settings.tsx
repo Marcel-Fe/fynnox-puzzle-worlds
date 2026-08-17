@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Card } from '../components/Card'
+import { CloudCard } from '../components/CloudCard'
 import {
   ABOUT_TEXT,
   GAME_SETTINGS,
@@ -59,13 +60,10 @@ export function Settings() {
             />
           ))}
           <InfoRow label="Sprache" value="Deutsch" hint="Weitere Sprachen sind nicht geplant." />
-          <InfoRow
-            label="Cloud-Speicherung"
-            value="Nicht verbunden"
-            hint="Der Spielstand liegt auf diesem Gerät. Die Cloud kommt in Phase 8."
-          />
         </ul>
       </Card>
+
+      <CloudCard />
 
       <Card title="Datenschutz">
         <Prose lines={PRIVACY_TEXT} />
