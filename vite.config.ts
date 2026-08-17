@@ -57,10 +57,19 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2}'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         /*
-         * Stattdessen holt die Musik sich beim ersten Einschalten selbst und liegt
-         * danach dauerhaft im Cache. `rangeRequests`, weil Browser Audiodateien
-         * stückweise anfordern — ohne das antwortet der Service Worker auf eine
-         * Teilanfrage mit der ganzen Datei, und das Element spielt nicht ab.
+         * Zwei große Dateien holen sich stattdessen selbst, wenn sie zum ersten
+         * Mal gebraucht werden, und liegen danach dauerhaft im Cache:
+         *
+         * - die Musikschleife (3,97 MB), sobald der Schalter „Musik" an ist
+         * - das 3D-Modell von Fynnox (2,4 MB), sobald jemand es öffnet
+         *
+         * Zusammen wären das 6,4 MB im Vorab-Cache — mehr als das Dreifache der
+         * heutigen 2,58 MB, für zwei Dinge, die die meisten Spieler nie
+         * anfassen (docs/01-gamedesign.md, „Ton und Musik").
+         *
+         * `rangeRequests` bei der Musik, weil Browser Audiodateien stückweise
+         * anfordern — ohne das antwortet der Service Worker auf eine Teilanfrage
+         * mit der ganzen Datei, und das Element spielt nicht ab.
          */
         runtimeCaching: [
           {
@@ -69,6 +78,15 @@ export default defineConfig({
             options: {
               cacheName: 'fynnox-puzzle-worlds-musik',
               rangeRequests: true,
+              expiration: { maxEntries: 4 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.glb'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fynnox-puzzle-worlds-modelle',
               expiration: { maxEntries: 4 },
               cacheableResponse: { statuses: [0, 200] },
             },

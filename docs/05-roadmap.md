@@ -401,7 +401,77 @@ Die Vibration wirkt bereits: Beim Einschalten rüttelt das Gerät kurz, sofern e
 Zeilenhöhe 73 px, kein waagerechtes Scrollen, keine Konsolenfehler.
 
 **Es bleiben Platzhalter**: Freunde und Rangliste. Beide brauchen einen Server,
-sonst wären ihre Zahlen erfunden.
+sonst wären ihre Zahlen erfunden. *(Erledigt am 17.08.2026 — siehe unten.)*
+
+### ✅ Ton und Musik
+
+Klangeffekte prozedural über WebAudio (`src/core/audio.ts`), fünf Anlässe: Sieg,
+Niederlage, Belohnung, Truhe, Kauf. Keine Dateien, keine Lizenzfrage, kein Byte
+im Vorab-Cache. Die Musikschleife aus `fynnox-adventure` kommt mit, bleibt aber
+aus dem Vorab-Cache heraus — Begründung mit gemessenen Zahlen in
+[docs/01-gamedesign.md](01-gamedesign.md), „Ton und Musik".
+
+**Nachgewiesen** bei 390 × 844: vor jeder Nutzergeste 0 AudioContext (Autoplay-Sperre
+eingehalten), nach dem Abholen der Tagesbelohnung 1 Context und 3 Oszillatoren.
+Frisches Profil mit ausgeschalteten Soundeffekten: 0 und 0.
+
+### ✅ Freunde und Rangliste
+
+Die letzten beiden Platzhalter sind weg. Neun Begleitfiguren mit **gesäten** Werten,
+eigene Zeile aus echten Werten des Spielstands, eine Trophäenformel für alle.
+Beide Bildschirme schreiben sichtbar hin, dass die Gegner Spielfiguren sind.
+Festlegung samt Begründung in [docs/01-gamedesign.md](01-gamedesign.md).
+
+**Nachgewiesen** bei 390 × 844: neun Freunde mit Porträt, Rolle und Zustand,
+vier davon online; Rangliste mit zehn Zeilen und der eigenen auf Platz 10.
+19 neue Tests.
+
+### ✅ Cloud-Speicher
+
+Anonyme Geräte-ID plus sechsstelliger Kopplungscode — kein Konto, kein Passwort.
+Der Widerspruch zwischen „keine Accounts" (CLAUDE.md) und „derselbe Spielstand auf
+Handy und Desktop" ist in [docs/04-datenmodell.md](04-datenmodell.md) aufgelöst und
+begründet, ebenso die Regel zum Zusammenführen zweier Stände.
+
+**Nachgewiesen** bei 390 × 844 und 1280 × 800, gegen einen im Test nachgebildeten
+Server: Handy mit Level 9 und 123 Runden koppelt, Desktop mit frischem Profil
+übernimmt Name, Level, Münzen und Runden; danach spielt der Desktop weiter und das
+Handy holt es ab. Ein Stand der Version 2 überlebt die Migration vollständig.
+
+**Noch offen**: `supabase/schema.sql` ist nie gegen ein echtes Supabase-Projekt
+gelaufen — es gibt keins. Geprüft ist alles, was im Browser läuft; ungeprüft ist
+das SQL selbst. Damit ist das Abschlusskriterium der Phase auf der Client-Seite
+erfüllt, aber nicht im Betrieb.
+
+### ✅ Offline-Verhalten — zum ersten Mal gemessen
+
+Gemessen am 17.08.2026 mit **gestopptem Vorschau-Server**, nicht mit Playwrights
+`set_offline()`: Das blockiert nur Anfragen der Seite, nicht die des Service Workers —
+eine nachgeladene Datei käme trotz „offline" durch, und das Ergebnis wäre geschönt.
+
+| Frage | Ergebnis |
+|---|---|
+| Startet die App ohne Netz? | ja |
+| Fehlen Kulissen? | nein — 31 JPEG im Vorab-Cache, 0 kaputte Bilder |
+| Läuft eine Runde durch? | ja — Tempelpaare gestartet, 38 Felder, 6 Züge, keine Fehler |
+| Bleibt der Spielstand? | ja — Energie 5 → 4 abgezogen und über zwei Neuladungen gehalten |
+| Wiederverbinden? | unauffällig, der Stand bleibt unverändert |
+
+**Zwei Dateien fehlen offline bewusst**, weil beide zu groß für den Vorab-Cache sind
+(zusammen 6,4 MB gegenüber heute 2,58 MB insgesamt):
+
+- `musik.mp3` (3,97 MB) — der einzige fehlgeschlagene Netzaufruf im ganzen Offline-Lauf
+- `models/fynnox.glb` (2,4 MB) — die 3D-Ansicht von Fynnox
+
+Beide holen sich ihre Datei beim ersten Gebrauch über eine `CacheFirst`-Regel und
+sind danach dauerhaft offline verfügbar.
+
+**Dabei gefunden und behoben**: Die 3D-Ansicht riss ohne Netz den Ladezustand mit —
+`useGLTF` wirft, und unter `Suspense` braucht ein geworfener Fehler eine Fehlergrenze.
+Sie zeigt jetzt „Fynnox in 3D braucht beim ersten Mal eine Internetverbindung" samt
+Knopf zum erneuten Versuch, und der Profilbildschirm bleibt vollständig stehen.
+Ein Konsoleneintrag des GLTF-Laders bleibt — der kommt aus three selbst und ist
+Rauschen, kein unbehandelter Zustand.
 
 ---
 
