@@ -114,9 +114,18 @@ export const REST_SPEED = 1.5
 export function step(ball: Ball, field: Field, dt: number): Ball {
   let velocity = ball.velocity
 
-  velocity = add(velocity, scale(field.wind, dt))
-  for (const zone of field.updrafts) {
-    if (insideRect(ball.position, zone)) velocity = add(velocity, scale(zone.force, dt))
+  /*
+   * Wind und Aufwind wirken nur auf einen rollenden Ball. Ohne diese Bedingung
+   * beschleunigt der Wind auch einen liegenden Ball immer weiter: Die Reibung
+   * bremst anteilig, der Wind schiebt absolut, und beide finden sich bei rund
+   * 10 Einheiten/s — deutlich über der Ruhegrenze. Der Ball käme nie zum Stehen
+   * und würde nach jedem Schlag über die Bahn davonwandern.
+   */
+  if (length(velocity) >= REST_SPEED) {
+    velocity = add(velocity, scale(field.wind, dt))
+    for (const zone of field.updrafts) {
+      if (insideRect(ball.position, zone)) velocity = add(velocity, scale(zone.force, dt))
+    }
   }
 
   // Reibung als Zerfall statt als fester Abzug — sonst hinge die Bremswirkung

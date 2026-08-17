@@ -61,22 +61,15 @@ export const COURSES: readonly Course[] = [
     par: 4,
     bg: asset('bg/piratenbucht.jpg'),
     hint: 'Hier weht der Wind stark! Plane gut!',
-    boundary: [
-      vec(15, 150),
-      vec(15, 95),
-      vec(85, 95),
-      vec(85, 20),
-      vec(55, 20),
-      vec(55, 65),
-      vec(45, 65),
-      vec(45, 150),
-    ],
+    // L-Form: unten quer nach rechts, dann rechts hinauf. Die Bande bei y = 110
+    // reicht nur bis x = 55, sonst wäre der Startbereich ein geschlossener Kasten.
+    boundary: [vec(15, 150), vec(15, 110), vec(55, 110), vec(55, 20), vec(85, 20), vec(85, 150)],
     start: vec(30, 138),
-    hole: vec(70, 35),
-    obstacles: [{ center: vec(68, 78), radius: 6 }],
+    hole: vec(70, 38),
+    obstacles: [{ center: vec(70, 80), radius: 6 }],
     hazards: [],
     // Der Wind drückt nach links, das Ziel liegt rechts — genau das ist der Kniff
-    wind: vec(-14, 0),
+    wind: vec(-9, 0),
     updrafts: [],
     friction: DEFAULT_FRICTION,
   },
