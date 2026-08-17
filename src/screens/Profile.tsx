@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { Card, ProgressBar } from '../components/Card'
 import { Fynnox3DPanel } from '../components/Fynnox3DPanel'
@@ -19,6 +20,11 @@ export function Profile() {
   if (!save) return null
   const { profile, stats, achievements } = save
   const unlocked = achievements.filter((a) => a.unlockedAt !== null).length
+  // Die drei, bei denen am wenigsten fehlt — das ist die nützliche Auswahl.
+  const nextUp = [...achievements]
+    .filter((a) => a.unlockedAt === null)
+    .sort((a, b) => b.progress / b.goal - a.progress / a.goal)
+    .slice(0, 3)
 
   function startEditing() {
     setDraft(profile.name)
@@ -104,9 +110,12 @@ export function Profile() {
         </dl>
       </Card>
 
+      {/* Nur der Auszug: Die ganze Liste steht unter /erfolge, sonst wäre der
+          Profilbildschirm ab Phase 7 zur Hälfte eine Erfolgsliste. */}
       <Card title={`Erfolge ${unlocked} / ${achievements.length}`}>
-        <ul className="flex flex-col gap-4">
-          {achievements.map((a) => (
+        <ProgressBar value={unlocked} goal={achievements.length} color="var(--color-gold)" />
+        <ul className="mt-3 flex flex-col gap-3">
+          {nextUp.map((a) => (
             <li key={a.id}>
               <div className="mb-1.5 flex items-baseline justify-between gap-2">
                 <span className="text-sm font-semibold">
@@ -123,6 +132,12 @@ export function Profile() {
             </li>
           ))}
         </ul>
+        <Link
+          to="/erfolge"
+          className="mt-3 flex min-h-11 items-center justify-center rounded-xl border border-edge text-sm font-bold text-ink uppercase"
+        >
+          Alle Erfolge
+        </Link>
       </Card>
 
       <Card title="Bestwerte je Spiel">

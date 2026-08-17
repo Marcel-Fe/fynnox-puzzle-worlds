@@ -1,4 +1,5 @@
 import { GAMES, type GameId } from '../content/games'
+import { createAchievements } from '../core/achievements'
 import { createMissions } from '../core/missions'
 import type { GameProgress, SaveData } from './types'
 
@@ -48,32 +49,7 @@ export function createNewSave(now: number): SaveData {
     },
     progress,
     missions: createMissions(now),
-    achievements: [
-      {
-        id: 'adventurer',
-        title: 'Abenteurer',
-        description: 'Spiele 100 Spiele',
-        goal: 100,
-        progress: 0,
-        unlockedAt: null,
-      },
-      {
-        id: 'collector',
-        title: 'Sammler',
-        description: 'Sammle 10.000 Münzen',
-        goal: 10000,
-        progress: 0,
-        unlockedAt: null,
-      },
-      {
-        id: 'master',
-        title: 'Meister',
-        description: 'Erreiche Level 50',
-        goal: 50,
-        progress: 1,
-        unlockedAt: null,
-      },
-    ],
+    achievements: createAchievements(),
     adventure: { chapter: 1, nodeInChapter: 1, stars: {}, claimedChests: [] },
     settings: {
       music: true,

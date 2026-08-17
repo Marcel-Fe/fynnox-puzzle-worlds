@@ -10,6 +10,7 @@ import { SolitaireGame } from './games/solitaire/components/SolitaireGame'
 import { SudokuGame } from './games/sudoku/components/SudokuGame'
 import { TempelpaareGame } from './games/tempelpaare/components/TempelpaareGame'
 import { WaldbloeckeGame } from './games/waldbloecke/components/WaldbloeckeGame'
+import { Achievements } from './screens/Achievements'
 import { Adventure } from './screens/Adventure'
 import { Dashboard } from './screens/Dashboard'
 import { Events } from './screens/Events'
@@ -63,7 +64,7 @@ export default function App() {
           <Route path="events" element={<Events />} />
           <Route path="freunde" element={<Placeholder title="Freunde" phase="Phase 8" />} />
           <Route path="rangliste" element={<Placeholder title="Rangliste" phase="Phase 8" />} />
-          <Route path="erfolge" element={<Profile />} />
+          <Route path="erfolge" element={<Achievements />} />
           <Route
             path="einstellungen"
             element={<Placeholder title="Einstellungen" phase="Phase 8" />}

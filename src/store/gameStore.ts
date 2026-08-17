@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { GameId } from '../content/games'
 // Umbenannt, damit die Aufrufe in den gleichnamigen Store-Aktionen eindeutig bleiben.
+import { syncAchievements } from '../core/achievements'
 import { applyRoundToAdventure, claimChest as applyChestClaim } from '../core/adventure'
 import { claimDailyReward as applyDailyClaim } from '../core/dailyReward'
 import { refillEnergy } from '../core/energy'
@@ -51,6 +52,17 @@ function persist(save: SaveData) {
   void adapter.save(save)
 }
 
+/**
+ * Erfolge messen sich an Statistik, Fortschritt, Pfad, Serie und Besitz —
+ * also an fast allem. Statt in jeder Aktion einzeln nachzurechnen, läuft der
+ * Abgleich an dieser einen Stelle, kurz bevor gespeichert wird.
+ *
+ * Hier steht auch die Uhr: `syncAchievements` bleibt wie `round.ts` ohne.
+ */
+function withAchievements(save: SaveData): SaveData {
+  return { ...save, achievements: syncAchievements(save, Date.now()) }
+}
+
 export const useGameStore = create<GameState>((set, get) => ({
   save: null,
   loaded: false,
@@ -59,9 +71,12 @@ export const useGameStore = create<GameState>((set, get) => ({
   async init() {
     const now = Date.now()
     const loaded = await adapter.load()
-    const save = loaded ?? createNewSave(now)
-    save.profile = refillEnergy(save.profile, now)
-    save.missions = refreshMissions(save.missions, now)
+    const base = loaded ?? createNewSave(now)
+    base.profile = refillEnergy(base.profile, now)
+    base.missions = refreshMissions(base.missions, now)
+    // Der Abgleich holt auch Erfolge nach, die ein älterer Spielstand noch
+    // nicht kannte — dafür braucht es keine eigene Migration.
+    const save = withAchievements(base)
     set({ save, loaded: true })
     persist(save)
   },
@@ -113,17 +128,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     // Der Abenteuerpfad hängt am selben Rundenergebnis, steht aber bewusst
     // neben applyRoundResult: Die Rundenauswertung soll nicht wissen, wo der
     // Spieler auf dem Pfad gerade steht.
-    const { save: next } = applyRoundToAdventure(applied, result)
+    const { save: advanced } = applyRoundToAdventure(applied, result)
 
-    // Erfolge freischalten: applyRoundResult bleibt bewusst ohne Uhr,
-    // also wird der Zeitstempel hier gesetzt.
-    const now = Date.now()
-    for (const achievement of next.achievements) {
-      if (achievement.unlockedAt === null && achievement.progress >= achievement.goal) {
-        achievement.unlockedAt = now
-      }
-    }
-
+    const next = withAchievements(advanced)
     set({ save: next, lastRewards: rewards })
     persist(next)
     return rewards
@@ -136,7 +143,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const mission = save.missions.find((m) => m.id === id)
     if (!mission || mission.claimed || mission.progress < mission.goal) return
 
-    const next: SaveData = {
+    const next = withAchievements({
       ...save,
       missions: save.missions.map((m) => (m.id === id ? { ...m, claimed: true } : m)),
       profile: {
@@ -149,7 +156,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         coinsEarnedTotal: save.stats.coinsEarnedTotal + mission.rewardCoins,
         crystalsEarnedTotal: save.stats.crystalsEarnedTotal + (mission.rewardCrystals ?? 0),
       },
-    }
+    })
     set({ save: next })
     persist(next)
   },
@@ -158,8 +165,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     const save = get().save
     if (!save) return
 
-    const next = applyDailyClaim(save, Date.now())
-    if (next === save) return // lag nichts bereit
+    const claimed = applyDailyClaim(save, Date.now())
+    if (claimed === save) return // lag nichts bereit
+
+    const next = withAchievements(claimed)
     set({ save: next })
     persist(next)
   },
@@ -168,8 +177,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     const save = get().save
     if (!save) return
 
-    const next = applyChestClaim(save, chapter)
-    if (next === save) return // Kapitel noch nicht voll oder Truhe schon geholt
+    const claimed = applyChestClaim(save, chapter)
+    if (claimed === save) return // Kapitel noch nicht voll oder Truhe schon geholt
+
+    const next = withAchievements(claimed)
     set({ save: next })
     persist(next)
   },
@@ -178,8 +189,10 @@ export const useGameStore = create<GameState>((set, get) => ({
     const save = get().save
     if (!save) return
 
-    const next = applyPurchase(save, id)
-    if (next === save) return // zu teuer, schon vorhanden oder nicht käuflich
+    const bought = applyPurchase(save, id)
+    if (bought === save) return // zu teuer, schon vorhanden oder nicht käuflich
+
+    const next = withAchievements(bought)
     set({ save: next })
     persist(next)
   },
