@@ -5,7 +5,7 @@ import { Card } from '../../../components/Card'
 import { RoundResultOverlay } from '../../../components/RoundResult'
 import { GAMES_BY_ID } from '../../../content/games'
 import { useGameStore } from '../../../store/gameStore'
-import { COURSE_COUNT, COURSES, courseAt, FIELD_HEIGHT, FIELD_WIDTH, unlockedCourses } from '../logic/courses'
+import { COURSE_COUNT, COURSES, courseAt, unlockedCourses } from '../logic/courses'
 import {
   advance,
   courseOf,
@@ -125,14 +125,16 @@ export function MinigolfGame() {
     })
   }, [finishRound, finished, game])
 
-  /** Tippen aufs Feld setzt die Zielrichtung. */
-  function onField(event: React.PointerEvent<SVGSVGElement>) {
+  /**
+   * Tippen aufs Feld setzt die Zielrichtung.
+   *
+   * Die Umrechnung von Bildschirm- in Weltkoordinaten macht `CourseView`
+   * selbst — nur dort steht die Projektion, und nur so bleiben Sicht und
+   * Zielpunkt zwangsläufig deckungsgleich.
+   */
+  function onAim(point: Vec) {
     if (!game || finished || game.moving) return
-    const box = event.currentTarget.getBoundingClientRect()
-    setAim({
-      x: ((event.clientX - box.left) / box.width) * FIELD_WIDTH,
-      y: ((event.clientY - box.top) / box.height) * FIELD_HEIGHT,
-    })
+    setAim(point)
     setFlash(null)
   }
 
@@ -270,23 +272,20 @@ export function MinigolfGame() {
       </Card>
 
       {/*
-        Die Kulisse liegt unscharf dahinter: Sie soll die Stimmung der Welt
-        tragen, aber nicht mit dem Spielfeld um Aufmerksamkeit ringen.
+        Die Kulisse steht scharf dahinter — sie ist aus den Konzeptbildern
+        geschnitten und soll die Welt zeigen. Die Bahn hebt sich von ihr durch
+        ihre eigene Höhe und ihren Schlagschatten ab, nicht durch Unschärfe.
       */}
       <div className="relative -mx-4 overflow-hidden border-y border-edge shadow-xl shadow-black/40 sm:mx-0 sm:rounded-2xl sm:border">
-        <img
-          src={course.bg}
-          alt=""
-          className="absolute inset-0 size-full scale-110 object-cover blur-[3px]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-deep/45 via-deep/65 to-deep/80" />
+        <img src={course.bg} alt="" className="absolute inset-0 size-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-deep/25 via-deep/40 to-deep/60" />
 
         <CourseView
           course={course}
           ball={game.ball.position}
           aimTarget={!game.moving && !finished ? target : null}
           moving={game.moving}
-          onPointerDown={onField}
+          onAim={onAim}
         />
       </div>
 

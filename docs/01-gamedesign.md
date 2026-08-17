@@ -310,6 +310,37 @@ neu (siehe `lessons.md`). Die Kraftanzeige ist im Mockup ein Halbkreis, hier ein
 waagerechte Skala mit demselben Farbverlauf — auf einem 390 px breiten Bildschirm ist
 eine liegende Skala mit 44 px Höhe treffsicherer als ein Bogen.
 
+**Ansicht: 2,5D** — festgelegt am 17.08.2026, nachdem die flache Draufsicht im Betrieb
+durchgefallen war. Sie war ein grünes Polygon mit beigem Strich, ein grauer Kreis als
+Hindernis und zwei Striche als Fahne; das sah nach Skizze aus, nicht nach Spiel.
+
+Die Bahn ist nach hinten gekippt. Gerechnet wird unverändert flach — nur gezeichnet wird
+projiziert (`src/games/minigolf/components/CourseView.tsx`):
+
+```
+Bildschirm-X = Welt-X
+Bildschirm-Y = Welt-Y × 0,72 − Höhe
+```
+
+Eine **schiefe Parallelprojektion**, keine Fluchtpunktperspektive. Bei einem Fluchtpunkt
+hinge die Ballgröße von der Tiefe ab, und derselbe Schlag sähe am oberen Feldende
+schwächer aus als unten. Diese Projektion hält Längen über das ganze Feld gleich — und
+sie ist umkehrbar, weshalb das Zielen per Antippen punktgenau bleibt.
+
+Aus jeder Kante des Bahnpolygons wird ein Stück Bande mit Außenwand, Krone und Innenwand,
+darunter eine Platte, die der Bahn Dicke gibt. Gezeichnet wird von hinten nach vorn;
+sichtbar ist je Kante nur die dem Betrachter zugewandte Seite. Der Rasen ist Kunstrasen
+mit Filzstruktur, Halmen und Mähbahnen.
+
+**Die Physik bleibt unangetastet.** Die Kollisionslinie ist weiterhin exakt das
+`boundary`-Polygon aus `courses.ts`; die Bande wächst nach außen und oben, nie in die
+Spielfläche. Was sich ändert, ist ausschließlich, was man sieht.
+
+Der Rahmen wird je Bahn aus ihrer Ausdehnung berechnet statt fest auf 100 × 160 gesetzt:
+Bahn 1 liegt nur zwischen x = 20 und x = 80 und stand sonst als Spielzeug in einer zu
+großen Kiste. Ein festes Seitenverhältnis von 4 : 5 sorgt dafür, dass der Rahmen beim
+Bahnwechsel nicht springt.
+
 ---
 
 ## Spiele 7 und 8 — entschieden am 29.07.2026
