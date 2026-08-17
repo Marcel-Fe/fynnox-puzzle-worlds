@@ -65,11 +65,24 @@ export class LocalSaveAdapter implements SaveAdapter {
 }
 
 /**
- * Wendet alle Migrationen der Reihe nach an. Noch gibt es nur Version 1;
- * ein unbekannter oder fehlender Versionsstand gilt als unbrauchbar.
+ * Wendet alle Migrationen der Reihe nach an. Ein unbekannter oder fehlender
+ * Versionsstand gilt als unbrauchbar.
+ *
+ * Ein Stand aus der Zukunft wird abgelehnt statt geraten: Er kann Felder
+ * enthalten, die diese Fassung nicht kennt, und würde beim nächsten Speichern
+ * stillschweigend beschnitten.
  */
 function migrate(data: SaveData): SaveData | null {
   if (typeof data?.version !== 'number') return null
   if (data.version > SAVE_VERSION) return null
-  return data
+
+  let save = data
+  if (save.version < 2) save = toV2(save)
+
+  return { ...save, version: SAVE_VERSION }
+}
+
+/** 1 → 2: Der Shop kam dazu, gekaufte Waren stehen seither in `ownedItems`. */
+function toV2(data: SaveData): SaveData {
+  return { ...data, ownedItems: data.ownedItems ?? [] }
 }

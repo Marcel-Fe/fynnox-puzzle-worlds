@@ -100,6 +100,8 @@ export interface SaveData {
   dailyRewardStreak: number
   /** Für die "Weiterspielen"-Reihe, zuletzt gespieltes zuerst */
   recentGames: GameId[]
+  /** IDs gekaufter Shop-Waren (ab Version 2) */
+  ownedItems: string[]
 }
 
 /**

@@ -12,12 +12,14 @@ import { TempelpaareGame } from './games/tempelpaare/components/TempelpaareGame'
 import { WaldbloeckeGame } from './games/waldbloecke/components/WaldbloeckeGame'
 import { Adventure } from './screens/Adventure'
 import { Dashboard } from './screens/Dashboard'
+import { Events } from './screens/Events'
 import { Games } from './screens/Games'
 import { Loading } from './screens/Loading'
 import { Missions } from './screens/Missions'
 import { More } from './screens/More'
 import { Placeholder } from './screens/Placeholder'
 import { Profile } from './screens/Profile'
+import { Shop } from './screens/Shop'
 import { useGameStore } from './store/gameStore'
 
 /*
@@ -57,8 +59,8 @@ export default function App() {
           <Route path="profil" element={<Profile />} />
           <Route path="mehr" element={<More />} />
           <Route path="abenteuer" element={<Adventure />} />
-          <Route path="shop" element={<Placeholder title="Shop" phase="Phase 7" />} />
-          <Route path="events" element={<Placeholder title="Events" phase="Phase 7" />} />
+          <Route path="shop" element={<Shop />} />
+          <Route path="events" element={<Events />} />
           <Route path="freunde" element={<Placeholder title="Freunde" phase="Phase 8" />} />
           <Route path="rangliste" element={<Placeholder title="Rangliste" phase="Phase 8" />} />
           <Route path="erfolge" element={<Profile />} />

@@ -6,6 +6,7 @@ import { claimDailyReward as applyDailyClaim } from '../core/dailyReward'
 import { refillEnergy } from '../core/energy'
 import { refreshMissions } from '../core/missions'
 import { applyRoundResult, type RoundRewards } from '../core/round'
+import { buyItem as applyPurchase } from '../core/shop'
 import { LocalSaveAdapter, type SaveAdapter } from '../save/adapter'
 import { createNewSave } from '../save/defaults'
 import type { RoundResult, SaveData } from '../save/types'
@@ -35,6 +36,8 @@ interface GameState {
   claimDailyReward(): void
   /** Holt die Truhe am Ende eines vollständigen Kapitels ab. */
   claimChest(chapter: number): void
+  /** Kauft eine Ware mit Kristallen. Tut nichts, wenn der Kauf nicht geht. */
+  buyItem(id: string): void
   clearRewards(): void
   renameProfile(name: string): void
   updateSettings(patch: Partial<SaveData['settings']>): void
@@ -167,6 +170,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const next = applyChestClaim(save, chapter)
     if (next === save) return // Kapitel noch nicht voll oder Truhe schon geholt
+    set({ save: next })
+    persist(next)
+  },
+
+  buyItem(id) {
+    const save = get().save
+    if (!save) return
+
+    const next = applyPurchase(save, id)
+    if (next === save) return // zu teuer, schon vorhanden oder nicht käuflich
     set({ save: next })
     persist(next)
   },

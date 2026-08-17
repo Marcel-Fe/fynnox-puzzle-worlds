@@ -2,8 +2,12 @@ import { GAMES, type GameId } from '../content/games'
 import { createMissions } from '../core/missions'
 import type { GameProgress, SaveData } from './types'
 
-/** Aktuelle Version der Datenstruktur. Bei Änderungen erhöhen + Migration ergänzen. */
-export const SAVE_VERSION = 1
+/**
+ * Aktuelle Version der Datenstruktur. Bei Änderungen erhöhen + Migration ergänzen.
+ *
+ * 2 (17.08.2026): `ownedItems` kam für den Shop dazu.
+ */
+export const SAVE_VERSION = 2
 
 /** Startwerte für ein neues Profil (docs/01-gamedesign.md). */
 export const START_COINS = 500
@@ -90,5 +94,6 @@ export function createNewSave(now: number): SaveData {
     lastDailyRewardAt: null,
     dailyRewardStreak: 0,
     recentGames: [],
+    ownedItems: [],
   }
 }
