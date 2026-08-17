@@ -29,6 +29,7 @@ import {
   insideRect,
   length,
   polygonSegments,
+  REST_SPEED,
   reflect,
   step,
   vec,
@@ -171,6 +172,27 @@ describe('Ballbewegung', () => {
   it('lässt einen liegenden Ball vom Wind nicht davontragen', () => {
     const out = roll({ position: vec(50, 50), velocity: vec(0, 0) }, plainField({ wind: vec(20, 0) }), 5)
     expect(out.position).toEqual(vec(50, 50))
+  })
+
+  it('kommt auch bei Wind zur Ruhe, statt an die Bande zu kriechen', () => {
+    // Der Wind darf den Ball nicht dauerhaft über der Ruhegrenze halten —
+    // sonst endet jeder Schlag an der Bande in Windrichtung.
+    for (const staerke of [6, 9, 14, 20]) {
+      const out = roll(
+        { position: vec(50, 50), velocity: vec(0, -60) },
+        plainField({ wind: vec(staerke, 0) }),
+        8,
+      )
+      expect(length(out.velocity), `Windstärke ${staerke}`).toBeLessThan(REST_SPEED)
+      expect(out.position.x, `Windstärke ${staerke}: an der Bande gelandet`).toBeLessThan(95)
+    }
+  })
+
+  it('treibt einen schnellen Ball weiterhin sichtbar ab', () => {
+    const start = { position: vec(50, 90), velocity: vec(0, -80) }
+    const ohne = roll(start, plainField(), 2)
+    const mit = roll(start, plainField({ wind: vec(14, 0) }), 2)
+    expect(mit.position.x - ohne.position.x).toBeGreaterThan(3)
   })
 
   it('prallt an einem runden Hindernis ab', () => {

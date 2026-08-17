@@ -105,6 +105,17 @@ export interface Field {
 export const BALL_RADIUS = 2
 /** Unter dieser Geschwindigkeit gilt der Ball als liegend */
 export const REST_SPEED = 1.5
+/**
+ * Ab dieser Geschwindigkeit greift der Wind voll an; darunter anteilig.
+ *
+ * Ohne diese Abschwächung findet sich der Wind mit der Reibung bei einer festen
+ * Geschwindigkeit — bei Windstärke 6 sind das rund 4,3 Einheiten/s und damit
+ * über der Ruhegrenze. Der Ball käme nie zum Stehen, sondern kröche bis an die
+ * Bande in Windrichtung und bliebe dort kleben. Mit dem Anteil gewinnt die
+ * Reibung immer, sobald der Ball langsam wird: Ein schneller Ball wird vom Wind
+ * abgetrieben, ein auslaufender bleibt liegen.
+ */
+export const WIND_FULL_SPEED = 25
 
 /**
  * Ein Rechenschritt. `dt` ist bewusst klein und fest (siehe `STEP_SECONDS`):
@@ -114,15 +125,14 @@ export const REST_SPEED = 1.5
 export function step(ball: Ball, field: Field, dt: number): Ball {
   let velocity = ball.velocity
 
-  /*
-   * Wind und Aufwind wirken nur auf einen rollenden Ball. Ohne diese Bedingung
-   * beschleunigt der Wind auch einen liegenden Ball immer weiter: Die Reibung
-   * bremst anteilig, der Wind schiebt absolut, und beide finden sich bei rund
-   * 10 Einheiten/s — deutlich über der Ruhegrenze. Der Ball käme nie zum Stehen
-   * und würde nach jedem Schlag über die Bahn davonwandern.
-   */
-  if (length(velocity) >= REST_SPEED) {
-    velocity = add(velocity, scale(field.wind, dt))
+  const speed = length(velocity)
+  if (speed >= REST_SPEED) {
+    // Anteilig, siehe WIND_FULL_SPEED: sonst hält der Wind den Ball ewig in Fahrt.
+    const windShare = Math.min(1, speed / WIND_FULL_SPEED)
+    velocity = add(velocity, scale(field.wind, dt * windShare))
+
+    // Der Aufwind wirkt voll — er endet ohnehin an der Zonengrenze und kann den
+    // Ball darum nicht endlos treiben. Genau darauf beruht die Wolkeninsel.
     for (const zone of field.updrafts) {
       if (insideRect(ball.position, zone)) velocity = add(velocity, scale(zone.force, dt))
     }
