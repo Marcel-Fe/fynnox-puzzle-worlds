@@ -378,12 +378,22 @@ aus Pet Cars. Was sonst gesichtet und **nicht** übernommen wurde, steht mit Beg
 
 ---
 
-## Phase 8 — Cloud und Feinschliff
+## Phase 8 — Cloud und Feinschliff ✅ (17.08.2026)
 
 Supabase hinter dem bestehenden `SaveAdapter`, Cloud-Save, echte Ranglisten, Freunde.
 Ton und Musik, Feinschliff der Animationen, Offline-Verhalten prüfen.
 
 **Fertig, wenn**: Derselbe Spielstand erscheint auf Handy und Desktop.
+
+**Erreicht — mit einer offenen Stelle.** Der Abgleich zwischen zwei Geräten ist im Browser
+nachgewiesen (Handy 390 × 844, Desktop 1280 × 800), allerdings gegen einen im Test
+nachgebildeten Server. `supabase/schema.sql` ist nie gegen ein echtes Supabase-Projekt
+gelaufen, weil es keins gibt. Alles, was im Browser läuft, ist geprüft; das SQL selbst
+nicht. Sobald ein Projekt angelegt und die `.env` gefüllt ist, entscheidet sich dort der
+letzte Schritt.
+
+Sechs Platzhalter-Bildschirme gab es zu Beginn von Phase 7, zwei zu Beginn von Phase 8 —
+jetzt keinen mehr.
 
 ### ✅ Einstellungen — vorgezogen am 17.08.2026
 

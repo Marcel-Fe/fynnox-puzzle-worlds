@@ -17,7 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
-npm test         # Logik-Tests (399 Stück) — müssen grün sein
+npm test         # Logik-Tests (442 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -34,7 +34,7 @@ npm run preview  # gebauten Stand lokal ansehen
 | 5b | Echte Spielgrafik aus den Konzeptbildern, Fynnox in 3D | ✅ |
 | 6 | Die weiteren sieben Spiele | ✅ 7 von 7 |
 | 7 | **Meta-Systeme: Abenteuerpfad, Missionen, Tagesbelohnung, Shop, Events, Erfolge** | ✅ |
-| 8 | Cloud-Save, Ranglisten, Freunde, Ton | offen · Einstellungen ✅ |
+| 8 | **Ton, Freunde, Rangliste, Cloud-Save, Offline, Feinschliff** | ✅ · Cloud noch ohne Server |
 
 **Spielbar: alle acht** — Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku,
 Bubble Shooter, Fynnox Solitaire (zwölf Level) und Fynnox Minigolf (sechs Bahnen),
@@ -54,10 +54,27 @@ Ergebnisbildschirm Sterne und Belohnungen.
   es gibt keine Bezahlung.
 - **Events** — vier Events im Wochenwechsel, jedes mit eigener Mission.
 - **Erfolge** — 24 Stück, alle aus dem Spielstand messbar.
+- **Freunde und Rangliste** — neun Begleitfiguren als Gegner, mit festen Werten aus einem
+  gesäten Generator. Beide Bildschirme schreiben hin, dass es Spielfiguren sind und keine
+  echten Menschen.
 
-**Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · acht Spiele · Missionen ·
-Abenteuerpfad · Shop · Events · Erfolge · Profil · Einstellungen · Mehr.
-Nur Freunde und Rangliste sind noch Platzhalter — beide brauchen einen Server (Phase 8).
+**Alle Bildschirme sind gebaut**: Laden · Dashboard · Spieleauswahl · acht Spiele ·
+Missionen · Abenteuerpfad · Shop · Events · Erfolge · Freunde · Rangliste · Profil ·
+Einstellungen · Mehr. Es gibt keinen Platzhalter mehr.
+
+**Ton**: Klänge bei Sieg, Niederlage, Belohnung, Truhe und Kauf — prozedural über WebAudio
+erzeugt, ohne Audiodateien. Hintergrundmusik lässt sich zuschalten; sie wird beim ersten
+Einschalten geladen und ist danach auch offline da.
+
+**Offline**: Ohne Netz startet die App, alle Kulissen sind da, eine Runde läuft durch und
+der Spielstand bleibt erhalten. Zwei große Dateien laden erst beim ersten Gebrauch nach —
+die Musik und das 3D-Modell von Fynnox.
+
+**Cloud-Speicherung**: Zwei Geräte teilen sich einen Spielstand über einen sechsstelligen
+Kopplungscode — ohne Konto, ohne E-Mail, ohne Passwort. Der Code steht in den Einstellungen.
+Dafür braucht es ein eigenes Supabase-Projekt; siehe [`.env.example`](.env.example) und
+[`supabase/schema.sql`](supabase/schema.sql). **Ohne diese Zugangsdaten bleibt der
+Spielstand rein lokal, und die App läuft unverändert weiter.**
 
 ## Dokumentation
 
@@ -68,6 +85,10 @@ Datenstrukturen werden dort nachgelesen, nicht erfunden. Einstieg: [CLAUDE.md](C
 
 Vite · React 19 · TypeScript · TailwindCSS v4 · zustand · vite-plugin-pwa ·
 Deployment über GitHub Actions nach GitHub Pages.
+
+Bewusst **ohne** Animationsbibliothek und **ohne** Supabase-Client: Beides wäre für das,
+was hier gebraucht wird, mehr Gewicht als eigener Code — die Begründungen stehen in
+[docs/01-gamedesign.md](docs/01-gamedesign.md) und [docs/04-datenmodell.md](docs/04-datenmodell.md).
 
 ---
 
