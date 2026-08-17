@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { Card, ProgressBar } from '../components/Card'
+import { DailyRewardCard } from '../components/DailyRewardCard'
 import { GameTile } from '../components/GameTile'
 import { asset, HERO_WIDE } from '../content/assets'
 import { GAMES, GAMES_BY_ID } from '../content/games'
@@ -82,6 +83,8 @@ export function Dashboard() {
           accent="var(--color-game-kristallmix)"
         />
       </div>
+
+      <DailyRewardCard />
 
       {save.recentGames.length > 0 && (
         <Card title="Weiterspielen">

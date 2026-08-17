@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import type { GameId } from '../content/games'
+// Umbenannt, damit der Aufruf in der gleichnamigen Store-Aktion eindeutig bleibt.
+import { claimDailyReward as applyDailyClaim } from '../core/dailyReward'
 import { refillEnergy } from '../core/energy'
 import { refreshMissions } from '../core/missions'
 import { applyRoundResult, type RoundRewards } from '../core/round'
@@ -28,6 +30,8 @@ interface GameState {
   spendEnergy(): boolean
   finishRound(result: RoundResult): RoundRewards | null
   claimMission(id: string): void
+  /** Holt die tägliche Belohnung ab, falls eine bereitliegt. */
+  claimDailyReward(): void
   clearRewards(): void
   renameProfile(name: string): void
   updateSettings(patch: Partial<SaveData['settings']>): void
@@ -135,6 +139,16 @@ export const useGameStore = create<GameState>((set, get) => ({
         crystalsEarnedTotal: save.stats.crystalsEarnedTotal + (mission.rewardCrystals ?? 0),
       },
     }
+    set({ save: next })
+    persist(next)
+  },
+
+  claimDailyReward() {
+    const save = get().save
+    if (!save) return
+
+    const next = applyDailyClaim(save, Date.now())
+    if (next === save) return // lag nichts bereit
     set({ save: next })
     persist(next)
   },
