@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { GameId } from '../content/games'
 import { refillEnergy } from '../core/energy'
+import { refreshMissions } from '../core/missions'
 import { applyRoundResult, type RoundRewards } from '../core/round'
 import { LocalSaveAdapter, type SaveAdapter } from '../save/adapter'
 import { createNewSave } from '../save/defaults'
@@ -17,6 +18,12 @@ interface GameState {
   lastRewards: RoundRewards | null
 
   init(): Promise<void>
+  /**
+   * Bringt alles Zeitabhängige auf den Stand der Uhr: Energie und Missionen.
+   * Wird beim Start und beim Öffnen zeitabhängiger Bildschirme aufgerufen —
+   * eine App, die über Mitternacht offen bleibt, zeigt sonst Missionen von gestern.
+   */
+  refreshTimed(): void
   /** Zieht eine Energieeinheit ab. Gibt false zurück, wenn keine da ist. */
   spendEnergy(): boolean
   finishRound(result: RoundResult): RoundRewards | null
@@ -44,8 +51,28 @@ export const useGameStore = create<GameState>((set, get) => ({
     const loaded = await adapter.load()
     const save = loaded ?? createNewSave(now)
     save.profile = refillEnergy(save.profile, now)
+    save.missions = refreshMissions(save.missions, now)
     set({ save, loaded: true })
     persist(save)
+  },
+
+  refreshTimed() {
+    const save = get().save
+    if (!save) return
+
+    const now = Date.now()
+    const profile = refillEnergy(save.profile, now)
+    const missions = refreshMissions(save.missions, now)
+    // Nur schreiben, wenn sich wirklich etwas geändert hat — sonst löst jeder
+    // Aufruf ein Neuzeichnen aller Bildschirme aus.
+    if (profile === save.profile && missions.length === save.missions.length) {
+      const same = missions.every((m, i) => m.id === save.missions[i].id)
+      if (same) return
+    }
+
+    const next: SaveData = { ...save, profile, missions }
+    set({ save: next })
+    persist(next)
   },
 
   spendEnergy() {

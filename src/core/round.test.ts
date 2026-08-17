@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createNewSave } from '../save/defaults'
-import type { RoundResult, SaveData } from '../save/types'
+import type { Mission, RoundResult, SaveData } from '../save/types'
 import { refillEnergy } from './energy'
 import { levelUpCoins, levelUpCrystals, xpForNextLevel } from './progression'
 import { applyRoundResult } from './round'
@@ -121,36 +121,71 @@ describe('applyRoundResult', () => {
 })
 
 describe('Missionen', () => {
+  /**
+   * Die Missionen werden hier gesetzt statt aus dem Spielstand genommen:
+   * Welche Vorlagen ein Tag zeigt, entscheidet `core/missions.ts` aus der
+   * Tagesnummer. Dieser Test prüft die Rundenauswertung, nicht die Auswahl.
+   */
+  function saveWith(...missions: Mission[]): SaveData {
+    return { ...createNewSave(NOW), missions }
+  }
+
+  function mission(id: string, goal: number, track: Mission['track']): Mission {
+    return {
+      id,
+      kind: 'daily',
+      text: id,
+      goal,
+      progress: 0,
+      rewardCoins: 100,
+      claimed: false,
+      expiresAt: NOW + 86_400_000,
+      track,
+    }
+  }
+
   it('zählt "Spiele 3 Runden Waldblöcke" nur bei Waldblöcken hoch', () => {
-    const save = createNewSave(NOW)
-    const id = 'daily-play-waldbloecke'
+    const save = saveWith(mission('play', 3, { type: 'playRounds', game: 'waldbloecke' }))
 
     const right = applyRoundResult(save, round({ game: 'waldbloecke' }))
-    expect(right.save.missions.find((m) => m.id === id)!.progress).toBe(1)
+    expect(right.save.missions[0].progress).toBe(1)
 
     const wrong = applyRoundResult(save, round({ game: 'blockfall' }))
-    expect(wrong.save.missions.find((m) => m.id === id)!.progress).toBe(0)
+    expect(wrong.save.missions[0].progress).toBe(0)
   })
 
   it('zählt eigene Zähler der Spiele hoch', () => {
-    const save = createNewSave(NOW)
+    const save = saveWith(
+      mission('rows', 10, { type: 'custom', key: 'rowsCleared' }),
+      mission('combos', 5, { type: 'custom', key: 'combos' }),
+    )
     const { save: next } = applyRoundResult(
       save,
       round({ counters: { rowsCleared: 4, combos: 2 } }),
     )
-    expect(next.missions.find((m) => m.id === 'daily-rows')!.progress).toBe(4)
-    expect(next.missions.find((m) => m.id === 'daily-combos')!.progress).toBe(2)
+    expect(next.missions.find((m) => m.id === 'rows')!.progress).toBe(4)
+    expect(next.missions.find((m) => m.id === 'combos')!.progress).toBe(2)
   })
 
   it('läuft nicht über das Ziel hinaus und meldet den Abschluss', () => {
-    const save = createNewSave(NOW)
+    const save = saveWith(mission('rows', 10, { type: 'custom', key: 'rowsCleared' }))
     const { save: next, rewards } = applyRoundResult(
       save,
       round({ counters: { rowsCleared: 99 } }),
     )
-    const mission = next.missions.find((m) => m.id === 'daily-rows')!
-    expect(mission.progress).toBe(mission.goal)
-    expect(rewards.completedMissions).toContain('daily-rows')
+    expect(next.missions[0].progress).toBe(10)
+    expect(rewards.completedMissions).toContain('rows')
+  })
+
+  it('zählt einen spielgebundenen eigenen Zähler nur beim richtigen Spiel', () => {
+    const save = saveWith(
+      mission('pairs', 100, { type: 'custom', key: 'pairs', game: 'tempelpaare' }),
+    )
+    const right = applyRoundResult(save, round({ game: 'tempelpaare', counters: { pairs: 18 } }))
+    expect(right.save.missions[0].progress).toBe(18)
+
+    const wrong = applyRoundResult(save, round({ game: 'blockfall', counters: { pairs: 18 } }))
+    expect(wrong.save.missions[0].progress).toBe(0)
   })
 })
 

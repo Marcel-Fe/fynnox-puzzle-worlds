@@ -1,5 +1,6 @@
 import { GAMES, type GameId } from '../content/games'
-import type { GameProgress, Mission, SaveData } from './types'
+import { createMissions } from '../core/missions'
+import type { GameProgress, SaveData } from './types'
 
 /** Aktuelle Version der Datenstruktur. Bei Änderungen erhöhen + Migration ergänzen. */
 export const SAVE_VERSION = 1
@@ -19,48 +20,6 @@ function emptyProgress(): GameProgress {
     highestLevel: 0,
     totalPlaytimeMs: 0,
   }
-}
-
-const DAY_MS = 24 * 60 * 60 * 1000
-
-/** Tagesmissionen aus den Mockups (docs/01-gamedesign.md). */
-export function createDailyMissions(now: number): Mission[] {
-  const expiresAt = now + DAY_MS
-  return [
-    {
-      id: 'daily-play-waldbloecke',
-      kind: 'daily',
-      text: 'Spiele 3 Runden Waldblöcke',
-      goal: 3,
-      progress: 0,
-      rewardCoins: 100,
-      claimed: false,
-      expiresAt,
-      track: { type: 'playRounds', game: 'waldbloecke' },
-    },
-    {
-      id: 'daily-rows',
-      kind: 'daily',
-      text: 'Fülle 10 Reihen',
-      goal: 10,
-      progress: 0,
-      rewardCoins: 150,
-      claimed: false,
-      expiresAt,
-      track: { type: 'custom', key: 'rowsCleared' },
-    },
-    {
-      id: 'daily-combos',
-      kind: 'daily',
-      text: 'Erziele 5 Kombos',
-      goal: 5,
-      progress: 0,
-      rewardCoins: 200,
-      claimed: false,
-      expiresAt,
-      track: { type: 'custom', key: 'combos' },
-    },
-  ]
 }
 
 export function createNewSave(now: number): SaveData {
@@ -84,7 +43,7 @@ export function createNewSave(now: number): SaveData {
       favoriteGame: null,
     },
     progress,
-    missions: createDailyMissions(now),
+    missions: createMissions(now),
     achievements: [
       {
         id: 'adventurer',
