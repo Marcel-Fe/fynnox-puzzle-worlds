@@ -122,3 +122,20 @@ body {
   animation: chest-ready 1.6s ease-in-out infinite;
   transform-origin: 50% 70%;
 }
+
+/* Die Fahne am Minigolf-Loch weht leicht. Der Energiesparmodus hält sie an. */
+@keyframes golf-flag {
+  0%,
+  100% {
+    transform: skewY(0deg) scaleX(1);
+  }
+  50% {
+    transform: skewY(-3deg) scaleX(0.9);
+  }
+}
+
+.golf-flag {
+  animation: golf-flag 2.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+}

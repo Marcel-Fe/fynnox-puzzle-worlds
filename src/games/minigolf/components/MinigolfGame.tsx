@@ -5,15 +5,7 @@ import { Card } from '../../../components/Card'
 import { RoundResultOverlay } from '../../../components/RoundResult'
 import { GAMES_BY_ID } from '../../../content/games'
 import { useGameStore } from '../../../store/gameStore'
-import {
-  COURSE_COUNT,
-  COURSES,
-  courseAt,
-  FIELD_HEIGHT,
-  FIELD_WIDTH,
-  HOLE_RADIUS,
-  unlockedCourses,
-} from '../logic/courses'
+import { COURSE_COUNT, COURSES, courseAt, FIELD_HEIGHT, FIELD_WIDTH, unlockedCourses } from '../logic/courses'
 import {
   advance,
   courseOf,
@@ -25,7 +17,8 @@ import {
   starsFor,
   type GameState,
 } from '../logic/game'
-import { BALL_RADIUS, sub, type Vec } from '../logic/physics'
+import { sub, type Vec } from '../logic/physics'
+import { CourseView } from './CourseView'
 
 const INFO = GAMES_BY_ID.minigolf
 
@@ -247,7 +240,6 @@ export function MinigolfGame() {
   const course = courseOf(game)
   const stars = starsFor(game)
   const target = aim ?? course.hole
-  const boundary = course.boundary.map((p) => `${p.x},${p.y}`).join(' ')
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-3">
@@ -277,100 +269,25 @@ export function MinigolfGame() {
         {flash && <p className="mt-1 text-sm font-bold text-gold">{flash}</p>}
       </Card>
 
+      {/*
+        Die Kulisse liegt unscharf dahinter: Sie soll die Stimmung der Welt
+        tragen, aber nicht mit dem Spielfeld um Aufmerksamkeit ringen.
+      */}
       <div className="relative -mx-4 overflow-hidden border-y border-edge shadow-xl shadow-black/40 sm:mx-0 sm:rounded-2xl sm:border">
-        <img src={course.bg} alt="" className="absolute inset-0 size-full object-cover" />
-        <div className="absolute inset-0 bg-deep/55" />
+        <img
+          src={course.bg}
+          alt=""
+          className="absolute inset-0 size-full scale-110 object-cover blur-[3px]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-deep/45 via-deep/65 to-deep/80" />
 
-        <svg
-          viewBox={`0 0 ${FIELD_WIDTH} ${FIELD_HEIGHT}`}
-          className="relative block w-full touch-none"
+        <CourseView
+          course={course}
+          ball={game.ball.position}
+          aimTarget={!game.moving && !finished ? target : null}
+          moving={game.moving}
           onPointerDown={onField}
-          role="application"
-          aria-label={`Spielfeld ${course.name}. Tippe, um zu zielen.`}
-        >
-          {/* Rasen */}
-          <polygon
-            points={boundary}
-            fill="color-mix(in srgb, var(--color-game-minigolf) 78%, black)"
-            stroke="#f4e3c1"
-            strokeWidth={1.6}
-            strokeLinejoin="round"
-          />
-
-          {course.hazards.map((h, i) => (
-            <rect
-              key={i}
-              x={h.x}
-              y={h.y}
-              width={h.width}
-              height={h.height}
-              fill="#c2410c"
-              opacity={0.85}
-            />
-          ))}
-
-          {course.updrafts.map((z, i) => (
-            <rect
-              key={i}
-              x={z.x}
-              y={z.y}
-              width={z.width}
-              height={z.height}
-              fill="#e0f2fe"
-              opacity={0.22}
-            />
-          ))}
-
-          {course.obstacles.map((o, i) => (
-            <circle
-              key={i}
-              cx={o.center.x}
-              cy={o.center.y}
-              r={o.radius}
-              fill={o.restitution ? '#a855f7' : '#57534e'}
-              stroke="#1c1917"
-              strokeWidth={0.6}
-            />
-          ))}
-
-          {/* Loch mit Fahne */}
-          <circle cx={course.hole.x} cy={course.hole.y} r={HOLE_RADIUS} fill="#0c0a09" />
-          <line
-            x1={course.hole.x}
-            y1={course.hole.y}
-            x2={course.hole.x}
-            y2={course.hole.y - 16}
-            stroke="#f5f5f4"
-            strokeWidth={0.8}
-          />
-          <polygon
-            points={`${course.hole.x},${course.hole.y - 16} ${course.hole.x + 9},${course.hole.y - 13} ${course.hole.x},${course.hole.y - 10}`}
-            fill="#dc2626"
-          />
-
-          {/* Ziellinie — nur solange der Ball liegt */}
-          {!game.moving && !finished && (
-            <line
-              x1={game.ball.position.x}
-              y1={game.ball.position.y}
-              x2={target.x}
-              y2={target.y}
-              stroke="var(--color-gold)"
-              strokeWidth={1}
-              strokeDasharray="3 2.5"
-              strokeLinecap="round"
-            />
-          )}
-
-          <circle
-            cx={game.ball.position.x}
-            cy={game.ball.position.y}
-            r={BALL_RADIUS}
-            fill="#ffffff"
-            stroke="#0c0a09"
-            strokeWidth={0.5}
-          />
-        </svg>
+        />
       </div>
 
       {/* Kraftskala — im Mockup ein Halbkreis, hier liegend: auf 390 px Breite
