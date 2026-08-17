@@ -29,6 +29,8 @@ export type GameId =
   | 'kristallmix'
   | 'solitaire'
   | 'minigolf'
+  | 'sudoku'
+  | 'bubbleshooter'
 ```
 
 ### Profil
@@ -91,7 +93,7 @@ export type MissionTrack =
   | { type: 'collectCoins' }
   | { type: 'collectCrystals' }
   | { type: 'reachScore'; game: GameId }
-  | { type: 'custom'; key: string }              // z. B. "combos", "holeInOne", "noHint"
+  | { type: 'custom'; key: string; game?: GameId } // z. B. "combos", "holeInOne", "stars"
 ```
 
 `custom` ist der Auffangfall: Jedes Spiel darf beim Rundenende eigene Zähler melden
@@ -155,6 +157,8 @@ export interface SaveData {
   dailyRewardStreak: number
   /** zuletzt gespielte Spiele für die "Weiterspielen"-Reihe auf dem Dashboard */
   recentGames: GameId[]
+  /** IDs gekaufter Shop-Waren (ab Version 2) */
+  ownedItems: string[]
 }
 
 export interface GlobalStats {
@@ -246,8 +250,14 @@ Nicht bei jedem einzelnen Zug — das würde bei Blockfall hunderte Schreibvorg�
 `SaveData.version` beginnt bei `1`. Ändert sich die Struktur:
 
 1. `version` erhöhen
-2. eine Migrationsfunktion `v1 → v2` in `src/save/migrations.ts` ergänzen
+2. eine Migrationsfunktion ergänzen — sie steht in `src/save/adapter.ts` (`migrate()`),
+   nicht in einer eigenen Datei; für zwei Versionen wäre eine eigene Datei Überbau
 3. beim Laden alle Migrationen der Reihe nach anwenden
+
+**Version 2** (17.08.2026, Phase 7): `ownedItems: string[]` kam dazu, damit ein Kauf im
+Shop im Spielstand landet. Alte Stände bekommen eine leere Liste. Andere Felder blieben
+unverändert — Missionen, Erfolge und Abenteuerpfad waren von Anfang an vollständig
+angelegt und mussten für Phase 7 nur gefüllt werden.
 
 Fehlt eine Migration oder schlägt das Laden fehl, wird ein frischer Spielstand angelegt —
 aber der defekte vorher unter `fynnox-puzzle-worlds:save-backup` weggesichert,

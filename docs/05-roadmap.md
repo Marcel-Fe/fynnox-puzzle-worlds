@@ -294,8 +294,10 @@ Shop-Oberfläche (ohne Bezahlung), Events.
 
 **Fertig, wenn**: Der Abenteuerpfad zeigt echten Fortschritt und Belohnungen sind abholbar.
 
-Vorher zu klären: der Widerspruch zwischen elf Welten und einem Pfad bis Level 100
-(siehe [Gamedesign](01-gamedesign.md)).
+Der frühere Vorbehalt „Widerspruch zwischen elf Welten und einem Pfad bis Level 100" ist
+seit dem 29.07.2026 erledigt: Das [Gamedesign](01-gamedesign.md) legt Entwurf B verbindlich
+fest — Kapitel zu 15 Leveln, **ein Kapitel je Welt**. Sieben Kapitel ergeben 105 Stufen und
+damit ungefähr die 100 Level des alten Entwurfs, nur in Kapitel geschnitten.
 
 ---
 

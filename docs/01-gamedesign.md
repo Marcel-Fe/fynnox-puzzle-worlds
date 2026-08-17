@@ -469,12 +469,82 @@ Drei Arten, als Reiter getrennt: **Täglich**, **Wöchentlich**, **Event**.
   „Gewinne 2 Spiele" (180)
 - Missionen greifen auf Spielereignisse zu — jedes Spiel meldet am Rundenende ein einheitliches
   Ergebnis (siehe [Datenmodell](04-datenmodell.md))
-- **OFFEN**: Missionspool, wie viele gleichzeitig aktiv sind, Zeitpunkt des täglichen Resets
+
+**Festgelegt am 17.08.2026** (war offen bis Phase 7):
+
+| Frage | Festlegung | Begründung |
+|---|---|---|
+| Wie viele gleichzeitig | 3 täglich, 3 wöchentlich, 1 Event | Drei Einträge passen ohne Scrollen auf einen Handy-Reiter. Mehr gleichzeitige Ziele verwässern die Führung, statt sie zu geben |
+| Poolgröße | 8 tägliche, 5 wöchentliche Vorlagen | Genug, dass sich zwei Tage nie exakt gleichen, ohne Vorlagen zu erfinden, die kein Spiel bedienen kann |
+| Auswahl aus dem Pool | ohne Zufall: aus der Tagesnummer gedreht (`(tag * 3 + i) % 8`) | Ungesäter Zufall ist im Projekt verboten (CLAUDE.md). So ergibt derselbe Tag auf jedem Gerät dieselben Missionen und ein Fehler ist reproduzierbar |
+| Reset täglich | **Mitternacht Ortszeit** | Das Mockup zeigt „16 h 45 m" Restzeit — das ist ein Countdown auf einen festen Tageswechsel, nicht auf 24 h ab dem ersten Start |
+| Reset wöchentlich | **Montag 0 Uhr Ortszeit** | Gleiches Prinzip eine Ebene höher; Montag ist der Wochenanfang nach DIN 1355 |
+| Beim Wechsel | abgelaufene Missionen werden ersetzt, nicht abgeholte Belohnungen verfallen | Sonst stapeln sich Belohnungen wochenlang und der tägliche Anreiz verschwindet |
+| Nicht abgelaufene | behalten ihren Fortschritt | Eine Wochenmission darf durch das Öffnen der App nicht zurückgesetzt werden |
+
+Nur Vorlagen, die auch ein Spiel meldet, dürfen in den Pool — sonst gäbe es unerfüllbare
+Missionen. Verfügbar sind `stars` (alle acht Spiele), `rowsCleared` (Waldblöcke, Blockfall),
+`combos` (Waldblöcke, Kristallmix), `pairs` (Tempelpaare), `crystalsCollected` und `rainbows`
+(Kristallmix), `strokes` und `holeInOne` (Minigolf), `moves`/`undos` (Solitaire), `mistakes` (Sudoku).
+`winRounds` ohne Spielangabe zählt nur bei den sechs gewinnbaren Spielen — Waldblöcke und
+Blockfall sind Endlosspiele und melden nie einen Sieg.
+
+**Tagespool** (8):
+
+| Mission | Ziel | Münzen |
+|---|---|---|
+| Spiele 5 Runden | 5 | 120 |
+| Spiele 3 Runden Waldblöcke | 3 | 100 |
+| Spiele 3 Runden Blockfall | 3 | 100 |
+| Räume 10 Reihen | 10 | 150 |
+| Erziele 5 Kombos | 5 | 200 |
+| Sammle 5 Sterne | 5 | 180 |
+| Sammle 300 Münzen | 300 | 150 |
+| Gewinne 2 Runden | 2 | 200 |
+
+**Wochenpool** (5) — größere Ziele, dafür zusätzlich Kristalle:
+
+| Mission | Ziel | Belohnung |
+|---|---|---|
+| Spiele 25 Runden | 25 | 400 Münzen + 10 Kristalle |
+| Gewinne 10 Runden | 10 | 450 Münzen + 10 Kristalle |
+| Sammle 2.000 Münzen | 2.000 | 500 Münzen + 10 Kristalle |
+| Sammle 30 Sterne | 30 | 600 Münzen + 15 Kristalle |
+| Finde 100 Paare in Tempelpaare | 100 | 400 Münzen + 10 Kristalle |
+
+Die Event-Mission kommt aus dem laufenden Hauptevent (siehe [Events](#events)).
 
 ### Tägliche Belohnung
 
 *„Komme jeden Tag zurück und erhalte tolle Belohnungen!"* — Staffelung mit Münzen und
-Kristallen, Abholen per Knopf. **OFFEN**: Belohnungsleiter und Verhalten bei Aussetzern.
+Kristallen, Abholen per Knopf.
+
+**Festgelegt am 17.08.2026** (war offen bis Phase 7) — Leiter über sieben Tage, danach
+beginnt sie wieder bei Tag 1:
+
+| Tag | Belohnung |
+|---|---|
+| 1 | 100 Münzen |
+| 2 | 200 Münzen |
+| 3 | 10 Kristalle |
+| 4 | 300 Münzen |
+| 5 | 20 Kristalle |
+| 6 | 500 Münzen |
+| 7 | 1.000 Münzen + 50 Kristalle |
+
+Begründung der Zahlen: Tag 7 ist mit 1.000 Münzen ungefähr eine ganze Levelaufstiegs-Prämie
+wert (Level 12 gibt 2.000) und damit spürbar, ohne den Wert einer gespielten Runde
+(10–40 Münzen) sinnlos zu machen. Kristalle stehen nur auf drei der sieben Stufen — sie sind
+laut Währungstabelle die seltene Währung, und der Shop verlangt bis zu 2.500 davon.
+
+**Verhalten bei Aussetzern**: Wird ein Tag ausgelassen, beginnt die Serie wieder bei Tag 1.
+Begründung: Die Leiter ist genau dann ein Grund zurückzukommen, wenn Lücken etwas kosten.
+Sie ist mit sieben Tagen kurz genug, dass die Spitze schnell wieder erreichbar ist —
+ein härterer Verfall (etwa gesammelte Belohnungen einziehen) wäre für ein Kinderspiel
+ohne Echtgeld unangemessen.
+
+Abgeholt wird pro **Kalendertag in Ortszeit**, nicht alle 24 Stunden. Sonst wandert der
+Zeitpunkt bei jedem Abholen nach hinten und liegt nach einer Woche mitten in der Nacht.
 
 ### Abenteuerpfad
 
@@ -511,9 +581,48 @@ Kapitelreihenfolge nach den Welten des Masterprompts: Sonnenwald → Kristallhö
 Lavawelt → Pirateninsel → Schneewelt → Candy → Unterwasser → Steampunk → Weltraum.
 Halloween und Weihnachten sind **Saison-Kapitel** und erscheinen nur zur passenden Zeit.
 
-**OFFEN**: Was auf einem Knoten passiert — eine Runde in einem bestimmten Spiel mit
-vorgegebenem Ziel, oder freie Wahl des Spiels. Wird in Phase 7 entschieden, wenn mehrere
-Spiele fertig sind.
+**Festgelegt am 17.08.2026** (war offen bis Phase 7):
+
+**Ein Knoten ist eine Runde in einem vorgegebenen Spiel.** Er gilt als geschafft, sobald
+diese Runde mindestens **einen Stern** erreicht; die Sterne der Runde werden unverändert
+auf den Knoten übertragen.
+
+Begründung gegen die Alternative „freie Wahl des Spiels": Bei freier Wahl wäre der Pfad nur
+ein zweiter Rundenzähler neben der Statistik — er würde nirgends hinführen. Ein vorgegebenes
+Spiel führt dagegen durch alle acht Spiele und passt zur Weltkulisse des Kapitels.
+
+Begründung gegen ein **Punkteziel** je Knoten: Die Punktebereiche der acht Spiele liegen um
+den Faktor zehn auseinander (Minigolf rund 300–1.500, Sudoku bis 4.700, Waldblöcke mehrere
+Tausend). Ein Punkteziel bräuchte deshalb eine zweite Balancing-Tabelle je Spiel, die neben
+den bereits kalibrierten Sternschwellen (`starsFor` in jedem Spiel) herliefe und mit ihnen
+auseinanderlaufen könnte. Die Sterne sind bereits pro Spiel geeicht — genau das wird benutzt.
+
+| Frage | Festlegung | Begründung |
+|---|---|---|
+| Knoten je Kapitel | 15 | Aus dem Mockup („8/15") |
+| Welches Spiel | fest je Knoten, reihum durch alle acht: `spiele[(knoten - 1 + (kapitel - 1) * 3) % 8]` | Ohne Zufall und dadurch reproduzierbar. Der Versatz von 3 je Kapitel sorgt dafür, dass zwei Kapitel nicht dieselbe Reihenfolge haben |
+| Bestanden ab | 1 Stern | Der Pfad soll führen, nicht blockieren. Die Tiefe liegt im Nachspielen für 3 Sterne, nicht im Wiederholenmüssen |
+| Zurückspringen | nicht möglich | Ein abgeschlossener Knoten behält seine Sterne. Ein Auswahlmodus für alte Knoten bräuchte zusätzlichen Zustand im Spielstand, ohne etwas hinzuzufügen |
+| Energie | ja, wie jede Runde | Ein Knoten *ist* eine normale Runde — er läuft über dieselbe Rundenauswertung |
+| Truhe am Kapitelende | 500 Münzen + 25 Kristalle, plus 20 Münzen je gesammeltem Stern (max. 45) | Damit lohnt sich Genauigkeit: 45 Sterne bringen 900 Münzen zusätzlich |
+| Nach der Truhe | nächstes Kapitel | Die Truhe ist der Abschluss, nicht ein Nebenpreis |
+
+**Kapitel** — je Kapitel eine Welt mit vorhandener Kulisse aus `public/art/bg/`:
+
+| Kapitel | Welt | Kulisse |
+|---|---|---|
+| 1 | Sonnenwald | `bg/sonnenwald.jpg` |
+| 2 | Kristallhöhlen | `bg/kristallhoehle.jpg` |
+| 3 | Lavawelt | `bg/lavatal.jpg` |
+| 4 | Pirateninsel | `bg/piratenbucht.jpg` |
+| 5 | Schneewelt | `bg/wintergipfel.jpg` |
+| 6 | Wolkeninsel | `bg/wolkeninsel.jpg` |
+| 7 | Tempelruinen | `bg/tempel.jpg` |
+
+Sieben Kapitel zu 15 Knoten sind 105 Stufen — ungefähr die 100 Level aus Entwurf A, nur
+in Kapitel geschnitten. Candy, Unterwasser, Steampunk und Weltraum fehlen bewusst: Für sie
+gibt es **kein Bildmaterial** in den Konzeptbildern. Sie kommen dazu, sobald eine Kulisse
+existiert — erfunden wird hier keine (CLAUDE.md, Abschnitt Grafik).
 
 ### Events
 
@@ -526,7 +635,36 @@ Der Eventbildschirm zeigt drei Gruppen:
 | Aktive Events | „Kristalljagd" (endet in 2 T 6 h), „Täglicher Bonus" (Zustand *Bereit!* mit Knopf „Abholen") |
 | Kommende Events | „Piratenfest", „Monsterjagd" |
 
-**OFFEN**: vollständiger Eventkatalog und Rhythmus.
+**Festgelegt am 17.08.2026** (war offen bis Phase 7):
+
+**Rhythmus**: Eine Woche ist ein Eventzyklus. Aus der Wochennummer (`floor(Ortszeit-Montag / 7 Tage)`)
+ergibt sich ohne Zufall, welches Event läuft:
+
+| Rolle | Event | Zeitraum |
+|---|---|---|
+| Hauptevent | `katalog[woche % 4]` | ganze Woche, Montag bis Sonntag |
+| Nebenevent | `katalog[(woche + 1) % 4]` | zweite Wochenhälfte, ab Donnerstag 0 Uhr |
+| Kommend | `katalog[(woche + 2) % 4]`, `katalog[(woche + 3) % 4]` | nächste und übernächste Woche |
+| Dauerhaft aktiv | „Täglicher Bonus" | jeden Tag, führt zur Tagesbelohnung |
+
+**Katalog** (4 Events, jedes trägt eine eigene Event-Mission):
+
+| Event | Mission | Ziel | Belohnung |
+|---|---|---|---|
+| Sommer Cup | Sammle 10.000 Münzen | 10.000 | 1.000 Münzen + 100 Kristalle |
+| Kristalljagd | Sammle 300 Kristalle in Kristallmix | 300 | 500 Münzen + 50 Kristalle |
+| Piratenfest | Loche 15 Bahnen ein | 15 | 600 Münzen + 60 Kristalle |
+| Monsterjagd | Räume 200 Reihen | 200 | 700 Münzen + 70 Kristalle |
+
+Der Sommer Cup übernimmt die Zahlen des Mockups (3.250 / 10.000, 1.000 Münzen + 100 Kristalle)
+unverändert. Vier Events bei einem Wochenzyklus heißt: Jedes Event ist alle vier Wochen einmal
+Hauptevent und einmal Nebenevent — oft genug, um vertraut zu werden, selten genug, um nicht
+zur Pflicht zu werden.
+
+Bewusst **nicht** umgesetzt: der eigene Event-Shop und die Platzierung („Platz 245") aus dem
+Mockup. Eine Platzierung ohne Server wäre eine erfundene Zahl, und ein zweiter Shop mit
+zweiter Währung verdoppelt das Kaufsystem, bevor das erste benutzt wurde. Beides gehört
+zu Phase 8 (Cloud).
 
 ### Ranglisten und Freunde
 
@@ -543,7 +681,45 @@ Der Eventbildschirm zeigt drei Gruppen:
 Dauerhafte Ziele mit Fortschritt, z. B. „Abenteurer — Spiele 100 Spiele" (erfüllt),
 „Sammler — Sammle 10.000 Münzen" (8.450/10.000), „Meister — Erreiche Level 50" (34/50).
 Im Profil steht ein Gesamtstand (Mockup: **25 / 60**) mit Abzeichen in Bronze, Silber und Gold.
-**OFFEN**: vollständige Erfolgsliste.
+
+**Festgelegt am 17.08.2026** (war offen bis Phase 7) — **24 Erfolge**, nicht 60:
+
+| # | ID | Titel | Ziel |
+|---|---|---|---|
+| 1 | `first-round` | Erste Schritte | Spiele deine erste Runde |
+| 2 | `adventurer` | Abenteurer | Spiele 100 Runden |
+| 3 | `veteran` | Vielspieler | Spiele 500 Runden |
+| 4 | `winner` | Siegertyp | Gewinne 50 Runden |
+| 5 | `collector` | Sammler | Sammle 10.000 Münzen |
+| 6 | `crystal-collector` | Kristallsammler | Sammle 500 Kristalle |
+| 7 | `climber` | Aufsteiger | Erreiche Level 10 |
+| 8 | `master` | Meister | Erreiche Level 50 |
+| 9 | `endurance` | Ausdauer | Spiele 10 Stunden |
+| 10 | `allrounder` | Alleskönner | Spiele jedes der acht Spiele |
+| 11 | `game-waldbloecke` | Waldläufer | 25 Runden Waldblöcke |
+| 12 | `game-blockfall` | Stapelmeister | 25 Runden Blockfall |
+| 13 | `game-tempelpaare` | Tempelforscher | 25 Runden Tempelpaare |
+| 14 | `game-kristallmix` | Kristallschleifer | 25 Runden Kristallmix |
+| 15 | `game-sudoku` | Zahlenfuchs | 25 Runden Sudoku |
+| 16 | `game-bubbleshooter` | Blasenjäger | 25 Runden Bubble Shooter |
+| 17 | `game-solitaire` | Kartenkünstler | 25 Runden Solitaire |
+| 18 | `game-minigolf` | Bahnenkenner | 25 Runden Minigolf |
+| 19 | `wanderer` | Wanderer | Schließe 15 Abenteuer-Knoten ab |
+| 20 | `chapter-master` | Kapitelmeister | Schließe ein ganzes Kapitel ab |
+| 21 | `star-hunter` | Sternensammler | Sammle 30 Sterne im Abenteuerpfad |
+| 22 | `loyal` | Treuer Freund | Hole die Tagesbelohnung 7 Tage in Folge |
+| 23 | `shopper` | Erster Einkauf | Kaufe etwas im Shop |
+| 24 | `wardrobe` | Sammlerstück | Besitze 3 Gegenstände |
+
+Begründung für 24 statt der 60 aus dem Mockup: **Jeder dieser Erfolge ist aus Daten
+messbar, die der Spielstand ohnehin führt** — Statistik, Fortschritt je Spiel, Abenteuerpfad,
+Serie der Tagesbelohnung, Besitz. Für 60 müssten 36 weitere Ziele erfunden werden, die
+niemand zählt; die Zahl 60 auf dem Mockup ist eine Platzhalter-Beschriftung wie die
+Euro-Preise im Shop. Die drei bereits vorhandenen IDs (`adventurer`, `collector`, `master`)
+bleiben unverändert, damit gespeicherte Fortschritte die Migration überleben.
+
+Die Abzeichenstufen aus dem Mockup (Bronze, Silber, Gold) ergeben sich aus der Zielgröße:
+Bronze bis 25, Silber bis 100, Gold darüber.
 
 ### Statistik
 
@@ -570,6 +746,21 @@ Dazu **tägliche Gratis-Angebote** mit Countdown: 500 Münzen, 10 Kristalle, Ene
 
 Die Euro-Preise sind **Platzhalter**. Es ist keine Bezahlung geplant oder implementiert.
 Alles, was mit Kristallen bezahlt wird, ist dagegen umsetzbar.
+
+**Festgelegt am 17.08.2026** (Phase 7):
+
+- Waren mit Kristallpreis sind **einmalig** käuflich und landen als ID in `ownedItems`
+  im Spielstand. Ohne diese Ablage wäre der Kauf wirkungslos — die Kristalle wären weg
+  und nichts wäre da. Das ist die einzige Strukturänderung der Phase (`SAVE_VERSION` 2).
+- Waren mit Euro-Preis werden angezeigt, sind aber **nicht anklickbar** und tragen den
+  Hinweis „Keine Bezahlung". Sie stehen im Mockup und werden darum gezeigt, statt zu fehlen.
+- Die **täglichen Gratis-Angebote** werden nicht doppelt gebaut: Diese Rolle füllt bereits
+  die tägliche Belohnung auf dem Startbildschirm, mit derselben Staffelung aus Münzen und
+  Kristallen und demselben Countdown. Zwei getrennte Tagesgeschenke wären zwei Systeme
+  für denselben Zweck.
+- Der Warenkatalog geht über die sechs belegten Einträge des Mockups hinaus, damit die
+  vier Reiter nicht halb leer sind. Zusätzliche Waren übernehmen die Preislage der
+  belegten: Outfits 800–1.500, Helfer 600–1.200, Booster 250–2.500 Kristalle.
 
 ### Einstellungen
 
