@@ -35,7 +35,26 @@ Fallende Blöcke, klassisch. *"Räume Reihen ab und verhindere, dass die Blöcke
   vier Power-Up-Plätze mit Anzahl
 - **Missionsbeispiele**: „Räume 40 Reihen ab" (100 Münzen), „Erreiche 25.000 Punkte" (150),
   „Nutze 3 Bomben" (100)
-- **OFFEN**: Punkteformel, Level-Aufstiegskurve, Fallgeschwindigkeit, welche vier Power-Ups genau
+
+**Festgelegt in Phase 6, nachgetragen am 17.08.2026** (stand hier zu lange als *OFFEN*,
+obwohl der Code die Werte längst hatte):
+
+| Punkt | Festlegung |
+|---|---|
+| Punkte je Räumung | 40 / 100 / 300 / 1.200 für ein bis vier Reihen, mal aktuelles Level |
+| Levelaufstieg | alle 10 geräumte Reihen |
+| Fallgeschwindigkeit | `max(110, 1.200 − (Level − 1) × 70)` Millisekunden je Schritt |
+
+**Zur Fallgeschwindigkeit** — geändert am 17.08.2026 auf Hinweis des Auftraggebers
+(„bei Level 1 sollen die Blöcke nicht sofort so schnell runtergehen"):
+
+Level 1 lag bei **800 ms**, dem Wert der Vorlage aus den Achtzigern. Der passt hier nicht:
+Dort wurde mit einer Tastatur gespielt, hier mit Knöpfen auf einem Handybildschirm. Einen
+Stein an den linken Rand zu schieben und zweimal zu drehen sind vier Tipps — in 800 ms
+nicht zu schaffen. Der Einstieg beginnt darum bei **1.200 ms**; das alte Tempo ist ab
+Level 6 erreicht, die Untergrenze von 110 ms ab Level 17.
+
+- **OFFEN**: welche vier Power-Ups genau (die Mockups zeigen vier Plätze, aber keine Wirkung)
 
 ### 2. Waldblöcke — `waldbloecke` ← **erstes zu bauendes Spiel**
 
@@ -129,6 +148,19 @@ Anzahl der Hilfen):
 | Hinweise | **3**, sinkt bis auf 0 | Startwert wie bei Tempelpaare und Sudoku — der Spieler soll nicht je Spiel neu lernen, wie viel Hilfe er hat |
 | Rückgängig | **unbegrenzt**, in jedem Level | Solitaire lebt vom Ausprobieren. Ein Zug, der eine Sackgasse erzeugt, wäre sonst das Ende der Runde |
 | Zeitlimit | **keins** | Die Kachel verspricht „Klassisch. Entspannt. Zeitlos." Die Zeit zählt nur für Punkte und Sterne, sie beendet nichts |
+
+**Ergänzt am 17.08.2026 auf Wunsch des Auftraggebers:**
+
+| Punkt | Festlegung | Begründung |
+|---|---|---|
+| Ein Tipp legt ab | Passt die angetippte Karte auf **ihren Ablagestapel**, wandert sie sofort dorthin. Sonst wird sie wie bisher nur ausgewählt | Auf einem Ablagestapel hat jede Karte genau einen richtigen Platz — „wo sie hingehört" ist dort eindeutig |
+| Nicht in die Spalten | In eine Spalte wird **nie** automatisch gelegt | Dieselbe Karte passt oft auf mehrere Spalten, und welche davon weiterhilft, weiß nur der Spieler. Automatisch abgelegt nähme ihm das Antippen die Entscheidung ab |
+| Nur einzelne Karten | Eine angefasste Folge bleibt zusammen | Wer mehrere Karten aufnimmt, will sie in eine Spalte legen, nicht auseinanderreißen |
+| Dreierzug frei wählbar | Drei Karten sind in **jedem** Level einstellbar, auch in Level 1 | Der Dreierzug ist die klassische Variante. Sie erst nach sechs gewonnenen Leveln freizugeben hält Spieler von dem Spiel fern, das sie eigentlich kennen |
+| Umgekehrt nicht | Ein Level, das drei Karten vorsieht, lässt sich **nicht** auf eine herunterstellen | Sonst wäre die Freischaltleiter über eine Einstellung auszuhebeln: Level 7 auf Einsteigerbedingungen gewinnen und trotzdem Level 8 öffnen |
+
+Die Variante wird beim Levelwechsel auf den Wert des Levels zurückgesetzt — eine einmal
+gewählte Einstellung soll sich nicht unbemerkt durch die ganze Leiter schleppen.
 
 **„Neu mischen"** aus der Hilfenliste ist bei Klondike das Umdrehen des Talons: Ist der
 Ziehstapel leer, wandern die abgelegten Karten in der ursprünglichen Reihenfolge zurück.

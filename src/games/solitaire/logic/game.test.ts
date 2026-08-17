@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { createDeck, KING, shuffleDeck, SUITS, type Card, type Suit } from './cards'
 import { LEVEL_COUNT, LEVELS, levelAt, unlockedLevels } from './levels'
 import {
+  autoMove,
+  autoTarget,
   canDrop,
   COLUMNS,
   createGame,
@@ -20,6 +22,7 @@ import {
   POINTS_WASTE_TO_TABLEAU,
   select,
   starsFor,
+  startDraw,
   undo,
   useHint,
   type GameState,
@@ -31,9 +34,14 @@ function card(suit: Suit, rank: number, faceUp = true): Card {
 }
 
 /** Leerer Tisch, auf den ein Test genau die Karten legt, die er prüfen will. */
+/**
+ * Das Level wird an `createGame` durchgereicht statt nachträglich gesetzt:
+ * Am Level hängen auch `draw` und `hints`, und ein nachgetragenes `level`
+ * ließe die Runde mit den Werten von Level 1 weiterlaufen.
+ */
 function stateWith(patch: Partial<GameState>): GameState {
   return {
-    ...createGame(1, 0),
+    ...createGame(1, 0, patch.level ?? 1),
     stock: [],
     waste: [],
     foundations: [[], [], [], []],
@@ -740,5 +748,103 @@ describe('Wertung', () => {
     const leicht: GameState = { ...stateWith({ score: 0, level: 1 }), won: true }
     const schwer: GameState = { ...stateWith({ score: 0, level: 12 }), won: true }
     expect(finalScore(schwer, 60_000) - finalScore(leicht, 60_000)).toBe(11 * 100)
+  })
+})
+
+describe('Ein Tipp legt auf den Ablagestapel', () => {
+  it('schickt ein Ass vom Talon sofort auf seinen Stapel', () => {
+    const state = stateWith({ waste: [card('hearts', 1)] })
+    const out = autoMove(state, { zone: 'waste' })
+
+    expect(out.outcome).toBe('moved')
+    expect(out.state.foundations[SUITS.indexOf('hearts')]).toHaveLength(1)
+    expect(out.state.waste).toHaveLength(0)
+    expect(out.state.score).toBe(POINTS_TO_FOUNDATION)
+    expect(out.state.selected).toBeNull()
+  })
+
+  it('legt die passende Folgekarte nach und deckt darunter auf', () => {
+    const state = stateWith({
+      foundations: [[], [], [], []].map((_, i) =>
+        SUITS[i] === 'spades' ? [card('spades', 1)] : [],
+      ),
+      tableau: [[card('hearts', 9, false), card('spades', 2)], [], [], [], [], [], []],
+    })
+    const out = autoMove(state, { zone: 'tableau', column: 0, index: 1 })
+
+    expect(out.outcome).toBe('moved')
+    expect(out.state.foundations[SUITS.indexOf('spades')]).toHaveLength(2)
+    // Die verdeckte Karte darunter liegt jetzt offen und zählt Punkte
+    expect(out.state.tableau[0][0].faceUp).toBe(true)
+    expect(out.state.score).toBe(POINTS_TO_FOUNDATION + POINTS_REVEAL)
+  })
+
+  it('rührt eine Karte nicht an, die nirgends hingehört', () => {
+    const state = stateWith({ waste: [card('hearts', 9)] })
+    expect(autoTarget(state, { zone: 'waste' })).toBeNull()
+    expect(autoMove(state, { zone: 'waste' }).state).toBe(state)
+  })
+
+  it('reißt eine aufgenommene Folge nicht auseinander', () => {
+    // Herz 2 liegt unter Pik As — als Folge unbewegbar, aber selbst ablegbar wäre
+    // nur die oberste Karte. Angetippt wird die untere.
+    const state = stateWith({
+      tableau: [[card('spades', 3), card('hearts', 2)], [], [], [], [], [], []],
+    })
+    expect(autoTarget(state, { zone: 'tableau', column: 0, index: 0 })).toBeNull()
+  })
+
+  it('holt nichts vom Ablagestapel zurück', () => {
+    const state = stateWith({
+      foundations: SUITS.map((s) => (s === 'hearts' ? [card('hearts', 1)] : [])),
+    })
+    expect(autoTarget(state, { zone: 'foundation', pile: SUITS.indexOf('hearts') })).toBeNull()
+  })
+
+  it('lässt sich zurücknehmen wie jeder andere Zug', () => {
+    const state = stateWith({ waste: [card('hearts', 1)] })
+    const moved = autoMove(state, { zone: 'waste' }).state
+    const back = undo(moved)
+
+    expect(back.waste).toHaveLength(1)
+    expect(back.foundations[SUITS.indexOf('hearts')]).toHaveLength(0)
+    expect(back.score).toBe(0)
+  })
+
+  it('tut nach dem Rundenende nichts mehr', () => {
+    const state: GameState = { ...stateWith({ waste: [card('hearts', 1)] }), stuck: true }
+    expect(autoMove(state, { zone: 'waste' }).outcome).toBe('blocked')
+  })
+})
+
+describe('Ziehvariante', () => {
+  it('erlaubt drei Karten in jedem Level', () => {
+    expect(startDraw(1, 3)).toBe(3)
+    expect(createGame(5, 0, 1, 3).draw).toBe(3)
+  })
+
+  it('lässt ein Dreier-Level nicht auf eine Karte herunterstellen', () => {
+    // Sonst wäre die Leiter über eine Einstellung auszuhebeln.
+    expect(levelAt(7).draw).toBe(3)
+    expect(startDraw(7, 1)).toBe(3)
+    expect(createGame(5, 0, 7, 1).draw).toBe(3)
+  })
+
+  it('nimmt ohne Wunsch den Wert des Levels', () => {
+    for (const level of LEVELS) {
+      expect(startDraw(level.number)).toBe(level.draw)
+      expect(createGame(5, 0, level.number).draw).toBe(level.draw)
+    }
+  })
+
+  it('zieht in Level 1 auf Wunsch tatsächlich drei Karten', () => {
+    const state = stateWith({
+      level: 1,
+      draw: 3,
+      stock: [card('hearts', 2, false), card('spades', 3, false), card('clubs', 4, false)],
+    })
+    const out = drawFromStock(state)
+    expect(out.state.waste).toHaveLength(3)
+    expect(out.state.stock).toHaveLength(0)
   })
 })

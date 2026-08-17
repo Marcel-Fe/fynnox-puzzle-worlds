@@ -16,6 +16,7 @@ import {
   type Card,
 } from '../logic/cards'
 import {
+  autoMove,
   configOf,
   createGame,
   drawFromStock,
@@ -23,8 +24,10 @@ import {
   moveTo,
   placedCards,
   redealsLeft,
+  sameSelection,
   select,
   starsFor,
+  startDraw,
   undo,
   useHint,
   type GameState,
@@ -67,6 +70,10 @@ export function SolitaireGame() {
   // Vorausgewählt ist das neueste freigeschaltete Level — dorthin will der
   // Spieler nach einem Sieg als Nächstes.
   const [chosen, setChosen] = useState(unlocked)
+  // Gewählte Ziehvariante. Startet beim Wert des Levels und wird beim
+  // Levelwechsel wieder darauf zurückgesetzt — sonst schleppt eine einmal
+  // gewählte Variante sich unbemerkt durch die ganze Leiter.
+  const [draw, setDraw] = useState(() => levelAt(unlocked).draw)
   const [elapsed, setElapsed] = useState(0)
   const [hint, setHint] = useState<Hint | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
@@ -77,7 +84,7 @@ export function SolitaireGame() {
   const chosenLevel = levelAt(chosen)
 
   const start = useCallback(
-    (level: number) => {
+    (level: number, wish: number) => {
       if (!spendEnergy()) {
         setFlash('Keine Energie mehr! Sie füllt sich alle 10 Minuten wieder auf.')
         return
@@ -90,7 +97,8 @@ export function SolitaireGame() {
       setFlash(null)
       setGivenUp(false)
       setChosen(level)
-      setGame(createGame(now, now, level))
+      setDraw(startDraw(level, wish))
+      setGame(createGame(now, now, level, wish))
     },
     [clearRewards, spendEnergy],
   )
@@ -125,6 +133,32 @@ export function SolitaireGame() {
   }, [finishRound, finished, game])
 
   /**
+   * Eine angetippte Karte aufnehmen — oder sie gleich ablegen, wenn sie auf
+   * ihren Ablagestapel passt. Erspart bei Assen und aufsteigenden Folgen den
+   * zweiten Tipp auf das Ziel.
+   *
+   * Zweimal dieselbe Karte antippen wählt weiterhin ab. Sonst käme man aus
+   * einer Auswahl, die sich ablegen ließe, nie wieder heraus.
+   */
+  function pickOrPlace(pickUp: Selection) {
+    if (!game || finished) return
+
+    const alreadySelected = game.selected !== null && sameSelection(game.selected, pickUp)
+    if (!alreadySelected) {
+      const auto = autoMove(game, pickUp)
+      if (auto.outcome === 'moved') {
+        setGame(auto.state)
+        setFlash(auto.state.won ? 'Alle Karten abgelegt!' : null)
+        return
+      }
+    }
+
+    const picked = select(game, pickUp)
+    setGame(picked.state)
+    setFlash(picked.outcome === 'blocked' ? 'Diese Karte lässt sich nicht bewegen.' : null)
+  }
+
+  /**
    * Ein Ziel wurde angetippt. Liegt etwas in der Hand, wird zuerst versucht
    * abzulegen — erst wenn das nicht geht, wird die Karte dort aufgenommen.
    */
@@ -147,9 +181,7 @@ export function SolitaireGame() {
       return
     }
 
-    const picked = select(game, pickUp)
-    setGame(picked.state)
-    setFlash(picked.outcome === 'blocked' ? 'Diese Karte lässt sich nicht bewegen.' : null)
+    pickOrPlace(pickUp)
   }
 
   function onStock() {
@@ -170,8 +202,7 @@ export function SolitaireGame() {
   function onWaste() {
     if (!game || finished) return
     setHint(null)
-    const picked = select(game, { zone: 'waste' })
-    setGame(picked.state)
+    pickOrPlace({ zone: 'waste' })
   }
 
   function onUndo() {
@@ -224,7 +255,10 @@ export function SolitaireGame() {
                 <button
                   key={level.number}
                   type="button"
-                  onClick={() => setChosen(level.number)}
+                  onClick={() => {
+                    setChosen(level.number)
+                    setDraw(level.draw)
+                  }}
                   disabled={locked}
                   aria-label={`Level ${level.number}${locked ? ', gesperrt' : done ? ', geschafft' : ''}`}
                   className="grid min-h-12 place-items-center rounded-xl border text-sm font-black disabled:opacity-30"
@@ -246,10 +280,52 @@ export function SolitaireGame() {
           <p className="mt-3 text-sm font-bold" style={{ color: INFO.colorVar }}>
             {chosenLevel.title}
           </p>
-          <p className="text-xs text-ink-muted">{levelRules(chosenLevel)}</p>
+          <p className="text-xs text-ink-muted">{levelRules(chosenLevel, draw)}</p>
           <p className="text-xs text-ink-muted">
             Drei Sterne unter {formatTime(chosenLevel.targetMs)}
           </p>
+
+          {/*
+            Der Dreierzug ist die klassische Solitaire-Variante und soll nicht
+            erst ab Level 7 erreichbar sein. Umgekehrt lässt sich ein Level, das
+            drei Karten vorsieht, nicht auf eine herunterstellen — sonst wäre die
+            Leiter über eine Einstellung auszuhebeln.
+          */}
+          <div className="mt-3">
+            <p className="mb-1.5 text-xs font-bold tracking-wider text-ink-muted uppercase">
+              Ziehen
+            </p>
+            <div className="flex gap-2">
+              {[1, 3].map((count) => {
+                const blocked = count < chosenLevel.draw
+                const active = draw === count
+                return (
+                  <button
+                    key={count}
+                    type="button"
+                    onClick={() => setDraw(count)}
+                    disabled={blocked}
+                    aria-pressed={active}
+                    className="min-h-11 flex-1 rounded-xl border text-sm font-bold disabled:opacity-30"
+                    style={{
+                      borderColor: active ? INFO.colorVar : 'var(--color-edge)',
+                      borderWidth: active ? 2 : 1,
+                      background: active
+                        ? `color-mix(in srgb, ${INFO.colorVar} 30%, transparent)`
+                        : undefined,
+                    }}
+                  >
+                    {count === 1 ? 'Eine Karte' : 'Drei Karten'}
+                  </button>
+                )
+              })}
+            </div>
+            {chosenLevel.draw === 3 && (
+              <p className="mt-1 text-xs text-ink-muted">
+                Ab Level 7 gehören drei Karten zum Level — weniger geht hier nicht.
+              </p>
+            )}
+          </div>
 
           <dl className="mt-3 flex gap-4 text-sm">
             <div>
@@ -277,12 +353,14 @@ export function SolitaireGame() {
           <p className="mt-3 text-xs text-ink-muted">
             Sortiere alle 52 Karten auf die vier Ablagestapel — je Farbe von Ass bis König.
             In den Spalten wird absteigend und mit wechselnder Farbe gelegt, auf eine leere
-            Spalte darf nur ein König. Erst die Karte antippen, dann das Ziel.
+            Spalte darf nur ein König. <strong>Ein Tipp genügt</strong>: Passt die Karte auf
+            ihren Ablagestapel, wandert sie sofort dorthin. Sonst wählst du sie damit aus
+            und tippst danach das Ziel an.
           </p>
           {flash && <p className="mt-3 text-sm font-semibold text-gold">{flash}</p>}
           <button
             type="button"
-            onClick={() => start(chosenLevel.number)}
+            onClick={() => start(chosenLevel.number, draw)}
             className="mt-4 min-h-12 w-full rounded-xl text-sm font-black text-white uppercase shadow-lg"
             style={{ background: INFO.colorVar }}
           >
@@ -300,7 +378,7 @@ export function SolitaireGame() {
    * Beim Dreierzug liegen die zuletzt gezogenen Karten aufgefächert — sonst
    * wäre nicht zu sehen, was noch darunter liegt. Spielbar ist nur die letzte.
    */
-  const wasteFan = game.waste.slice(Math.max(0, game.waste.length - config.draw))
+  const wasteFan = game.waste.slice(Math.max(0, game.waste.length - game.draw))
   const wasteTop = wasteFan[wasteFan.length - 1]
 
   /** Gehört diese Spaltenkarte zur aufgenommenen Folge? */
@@ -319,11 +397,10 @@ export function SolitaireGame() {
           <p className="text-sm font-black" style={{ color: INFO.colorVar }}>
             Level {game.level} — {config.title}
           </p>
-          {redeals !== null && (
-            <p className="text-xs font-semibold text-ink-muted">
-              Talon: noch {redeals}×
-            </p>
-          )}
+          <p className="text-xs font-semibold text-ink-muted">
+            {game.draw === 1 ? '1 Karte' : '3 Karten'}
+            {redeals !== null && ` · Talon: noch ${redeals}×`}
+          </p>
         </div>
         <div className="flex items-center justify-between gap-2">
           <div>
@@ -551,7 +628,7 @@ export function SolitaireGame() {
           ]}
           rewards={rewards}
           accent={INFO.colorVar}
-          onAgain={() => start(nextLevel)}
+          onAgain={() => start(nextLevel, game.draw)}
           onLeave={() => navigate('/')}
           againDisabled={energy < 1}
           againLabel={

@@ -237,9 +237,17 @@ export function hardDrop(state: GameState): StepResult {
   }
 }
 
-/** Wie lange ein Stein je Level für einen Schritt braucht. */
+/**
+ * Wie lange ein Stein je Level für einen Schritt braucht.
+ *
+ * Level 1 lag bis zum 17.08.2026 bei 800 ms — dem Wert der Vorlage aus den
+ * Achtzigern. Auf dem Handy wird aber mit Knöpfen gesteuert statt mit einer
+ * Tastatur: Ein Stein an den linken Rand und zweimal gedreht sind vier Tipps,
+ * und die waren in 800 ms nicht zu schaffen. Der Einstieg beginnt darum bei
+ * 1.200 ms; ab Level 6 ist das alte Tempo erreicht, ab Level 17 die Untergrenze.
+ */
 export function dropIntervalMs(level: number): number {
-  return Math.max(110, 800 - (level - 1) * 65)
+  return Math.max(110, 1200 - (level - 1) * 70)
 }
 
 /**

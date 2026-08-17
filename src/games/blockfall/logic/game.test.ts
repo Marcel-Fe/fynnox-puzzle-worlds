@@ -240,6 +240,9 @@ describe('Geschwindigkeit und Sterne', () => {
   it('wird mit steigendem Level schneller, aber nie beliebig schnell', () => {
     expect(dropIntervalMs(1)).toBeGreaterThan(dropIntervalMs(5))
     expect(dropIntervalMs(50)).toBeGreaterThanOrEqual(110)
+    // Level 1 muss Zeit für mehrere Tipps lassen: Ein Stein an den Rand und
+    // zweimal gedreht sind vier Bedienschritte.
+    expect(dropIntervalMs(1)).toBeGreaterThanOrEqual(1000)
   })
 
   it('vergibt Sterne nach den Schwellen', () => {

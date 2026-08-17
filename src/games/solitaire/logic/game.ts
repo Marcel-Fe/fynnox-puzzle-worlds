@@ -59,6 +59,14 @@ interface Snapshot {
 export interface GameState extends Snapshot {
   /** Gespieltes Level, 1 bis 12 (siehe levels.ts) */
   level: number
+  /**
+   * Wie viele Karten ein Tipp auf den Ziehstapel aufdeckt.
+   *
+   * Steht hier statt nur im Level, weil der Spieler die Dreier-Variante auch in
+   * einem Level wählen darf, das von Haus aus einzeln zieht. Umgekehrt geht es
+   * nicht — sonst ließe sich die Leiter nach unten aufweichen (siehe `startDraw`).
+   */
+  draw: number
   /** Angetippte, noch nicht abgelegte Karte(n) */
   selected: Selection | null
   /** Verbleibende Hinweise */
@@ -100,7 +108,20 @@ export function foundationFor(card: Card): number {
  * Ablagestapeln. Sie werden vor dem Austeilen aus dem Blatt genommen, damit
  * keine Karte doppelt im Spiel ist.
  */
-export function createGame(seed: number, startedAt: number, level = 1): GameState {
+/**
+ * Wie viele Karten eine Runde aufdeckt. Der Wunsch des Spielers zählt nur,
+ * wenn er das Level **schwerer** macht: Drei Karten sind in jedem Level
+ * erlaubt, eine Karte nur dort, wo das Level sie ohnehin vorsieht. Sonst
+ * ließen sich die schweren Level auf Einsteigerbedingungen herunterschrauben
+ * und trotzdem das nächste freischalten.
+ */
+export function startDraw(level: number, wish?: number): number {
+  const base = levelAt(level).draw
+  if (wish === undefined) return base
+  return Math.max(base, wish === 3 ? 3 : 1)
+}
+
+export function createGame(seed: number, startedAt: number, level = 1, draw?: number): GameState {
   const config = levelAt(level)
   const { cards, seed: nextSeed } = shuffleDeck(createDeck(), seed)
 
@@ -126,6 +147,7 @@ export function createGame(seed: number, startedAt: number, level = 1): GameStat
 
   return {
     level: config.number,
+    draw: startDraw(config.number, draw),
     stock: remaining.slice(dealt).map((c) => ({ ...c, faceUp: false })),
     waste: [],
     foundations,
@@ -245,7 +267,41 @@ export function clearSelection(state: GameState): GameState {
   return state.selected === null ? state : { ...state, selected: null }
 }
 
-function sameSelection(a: Selection, b: Selection): boolean {
+/**
+ * Wohin eine angetippte Karte von selbst wandern darf: auf ihren Ablagestapel.
+ *
+ * Bewusst **nur** dorthin und nicht in eine Spalte. Auf einem Ablagestapel gibt
+ * es je Karte genau einen richtigen Platz — „wo sie hingehört" ist eindeutig.
+ * In den Spalten passt dieselbe Karte oft auf mehrere Stellen, und welche davon
+ * weiterhilft, weiß nur der Spieler. Würde auch dorthin automatisch gelegt,
+ * nähme ihm das Antippen die Entscheidung ab.
+ */
+export function autoTarget(state: GameState, selection: Selection): Target | null {
+  if (finished(state)) return null
+  // Vom Ablagestapel gibt es keinen Weg nach oben — dort liegt sie schon.
+  if (selection.zone === 'foundation') return null
+
+  const cards = movingCards(state, selection)
+  // Nur einzelne Karten: Eine angefasste Folge will der Spieler in eine Spalte
+  // legen, nicht auseinanderreißen.
+  if (!cards || cards.length !== 1) return null
+
+  const target: Target = { zone: 'foundation', pile: foundationFor(cards[0]) }
+  return canDrop(state, selection, target) ? target : null
+}
+
+/**
+ * Ein Tipp auf eine Karte: Passt sie auf ihren Ablagestapel, wandert sie sofort
+ * dorthin. Sonst bleibt der Spielstand unverändert und der Aufrufer wählt sie
+ * wie bisher aus.
+ */
+export function autoMove(state: GameState, selection: Selection): MoveResult {
+  const target = autoTarget(state, selection)
+  if (!target) return { state, outcome: 'blocked' }
+  return moveTo({ ...state, selected: selection }, target)
+}
+
+export function sameSelection(a: Selection, b: Selection): boolean {
   if (a.zone !== b.zone) return false
   if (a.zone === 'foundation' && b.zone === 'foundation') return a.pile === b.pile
   if (a.zone === 'tableau' && b.zone === 'tableau') return a.column === b.column && a.index === b.index
@@ -319,7 +375,6 @@ export function moveTo(state: GameState, target: Target): MoveResult {
  */
 export function drawFromStock(state: GameState): MoveResult {
   if (finished(state)) return { state, outcome: 'blocked' }
-  const config = configOf(state)
   const history = remember(state)
 
   if (state.stock.length === 0) {
@@ -340,7 +395,7 @@ export function drawFromStock(state: GameState): MoveResult {
 
   // Beim Dreierzug bleibt die zuletzt gezogene Karte obenauf — nur sie ist
   // spielbar, die beiden darunter kommen erst nach ihr wieder frei.
-  const count = Math.min(config.draw, state.stock.length)
+  const count = Math.min(state.draw, state.stock.length)
   const taken = state.stock.slice(state.stock.length - count)
   const next: GameState = {
     ...state,

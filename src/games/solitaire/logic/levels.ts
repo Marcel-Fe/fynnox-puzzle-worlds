@@ -55,10 +55,14 @@ export function unlockedLevels(highestLevel: number): number {
   return Math.min(LEVEL_COUNT, Math.max(1, highestLevel + 1))
 }
 
-/** Regeln eines Levels als Spielertext, für den Auswahlbildschirm. */
-export function levelRules(level: Level): string {
+/**
+ * Regeln eines Levels als Spielertext, für den Auswahlbildschirm.
+ * `draw` überschreibt die Zieh-Angabe, wenn der Spieler eine andere Variante
+ * gewählt hat — sonst stünde dort eine Regel, die gar nicht gespielt wird.
+ */
+export function levelRules(level: Level, draw = level.draw): string {
   const parts = [
-    level.draw === 1 ? 'eine Karte ziehen' : 'drei Karten ziehen',
+    draw === 1 ? 'eine Karte ziehen' : 'drei Karten ziehen',
     level.redeals === null
       ? 'Talon beliebig oft umdrehen'
       : level.redeals === 1
