@@ -126,7 +126,7 @@ export const GAMES: GameInfo[] = [
     image: asset('games/minigolf.jpg'),
     bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'light',
-    available: false,
+    available: true,
   },
   {
     id: 'sudoku',

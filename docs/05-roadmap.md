@@ -256,11 +256,34 @@ lässt Level 2 gesperrt, ein Spielstand mit `highestLevel: 3` öffnet genau Leve
 Level 12 zieht drei Karten auf einmal, zeigt „Talon: noch 1×" und sperrt den
 Hinweisknopf. Keine Konsolenfehler.
 
-### Noch offen
+### ✅ Fynnox Minigolf
 
-1. **Minigolf** — zuletzt, weil Physik und sechs Bahnlayouts am meisten Aufwand sind
+Sechs Bahnen, nacheinander freigeschaltet. Eine Bahn ist eine Runde.
 
-**Fertig, wenn**: Alle acht Spiele sind auf dem Handy spielbar und zahlen aufs selbe Profil ein.
+- **Keine Engine.** CLAUDE.md hat diese Entscheidung bis Minigolf offengehalten; hier ist
+  sie gefallen. Es braucht Kreis-gegen-Strecke, Reflexion und Reibung — rund 180 Zeilen
+  in `logic/physics.ts`. PixiJS oder Phaser hätten ein Megabyte Abhängigkeit gebracht und
+  gegen die Regel „Spiellogik frei von React und ohne Rendering testbar" gearbeitet.
+- **Feste Schrittweite von 1/240 s** statt der Bildrate. Das war die riskanteste Annahme:
+  Bei großen Schritten legt ein schneller Ball in einem Sprung mehr zurück, als die Bande
+  dick ist, und fliegt hindurch. Ein Test schießt aus sechs Richtungen mit voller Kraft
+  und prüft, dass der Ball im Feld bleibt.
+- **Einlochen wird auf der Strecke geprüft**, nicht am Endpunkt. Bei knapp erlaubtem Tempo
+  läge der Ball sonst in einem Schritt vor und im nächsten hinter dem Loch.
+- **Zwei echte Fehler, die die Tests gefunden haben**: Die Piratenbucht war unspielbar,
+  weil ihre Bande über die ganze Breite lief und den Startbereich zu einem geschlossenen
+  Kasten machte. Und der Wind beschleunigte auch einen liegenden Ball weiter — Reibung
+  bremst anteilig, Wind schiebt absolut, beide finden sich bei rund 10 Einheiten/s und
+  damit über der Ruhegrenze. Wind wirkt jetzt nur auf einen rollenden Ball.
+- **Kein Zufall**: das einzige der acht Spiele, das keine Zufallszahl braucht. Richtung
+  und Kraft des Schlags bestimmen alles.
+
+**Nachgewiesen**: 50 Tests, darunter für jede Bahn eine Suche, die tatsächlich einlocht.
+Im Browser bei 390 × 844 gespielt: Bahn 1 offen und 2 bis 6 gesperrt, Zielen setzt die
+Linie, der Ball rollt von (37, 138) los und bleibt bei (52, 92) liegen, der Schlagzähler
+geht auf 1/8, die Kraftskala greift, kein waagerechtes Scrollen, keine Konsolenfehler.
+
+**Phase 6 ist damit abgeschlossen** — alle acht Spiele sind spielbar.
 
 ---
 
