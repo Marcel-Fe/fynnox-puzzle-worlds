@@ -385,6 +385,24 @@ Ton und Musik, Feinschliff der Animationen, Offline-Verhalten prüfen.
 
 **Fertig, wenn**: Derselbe Spielstand erscheint auf Handy und Desktop.
 
+### ✅ Einstellungen — vorgezogen am 17.08.2026
+
+Der einzige Teil dieser Phase, der **kein Backend** braucht, und darum vorgezogen:
+`settings` stand seit Phase 3 im Spielstand, wurde aber von keiner Zeile gelesen.
+
+Drei Gruppen wie im Mockup, dazu Datenschutz, Hilfe und ein Zurücksetzen mit
+Rückfrage. Schalter, die heute noch nichts bewirken — Musik, Soundeffekte,
+Energiesparmodus, Benachrichtigungen — tragen sichtbar die Marke **später**.
+Ein Schalter, der nichts tut, ohne es zu sagen, ist eine Lüge in der Oberfläche.
+Die Vibration wirkt bereits: Beim Einschalten rüttelt das Gerät kurz, sofern es das kann.
+
+**Nachgewiesen** im Browser bei 390 × 844: Fünf Schalter, „Musik" umgestellt →
+`aria-checked` und der gespeicherte Wert wechseln beide und überleben das Neuladen.
+Zeilenhöhe 73 px, kein waagerechtes Scrollen, keine Konsolenfehler.
+
+**Es bleiben Platzhalter**: Freunde und Rangliste. Beide brauchen einen Server,
+sonst wären ihre Zahlen erfunden.
+
 ---
 
 ## Was die Reihenfolge trägt

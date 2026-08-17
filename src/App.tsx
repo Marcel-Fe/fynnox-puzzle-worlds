@@ -20,6 +20,7 @@ import { Missions } from './screens/Missions'
 import { More } from './screens/More'
 import { Placeholder } from './screens/Placeholder'
 import { Profile } from './screens/Profile'
+import { Settings } from './screens/Settings'
 import { Shop } from './screens/Shop'
 import { useGameStore } from './store/gameStore'
 
@@ -65,10 +66,7 @@ export default function App() {
           <Route path="freunde" element={<Placeholder title="Freunde" phase="Phase 8" />} />
           <Route path="rangliste" element={<Placeholder title="Rangliste" phase="Phase 8" />} />
           <Route path="erfolge" element={<Achievements />} />
-          <Route
-            path="einstellungen"
-            element={<Placeholder title="Einstellungen" phase="Phase 8" />}
-          />
+          <Route path="einstellungen" element={<Settings />} />
           <Route path="*" element={<Placeholder title="Nicht gefunden" phase="—" />} />
         </Route>
       </Routes>
