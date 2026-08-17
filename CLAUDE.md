@@ -131,3 +131,13 @@ public/                  PWA-Icons (pwa-192, pwa-512, maskable-512, apple-touch-
 
 Kein Multiplayer, kein Echtgeld-Kauf, kein Werbe-SDK, keine Accounts.
 Shop-Preise auf den Mockups sind Platzhalter, keine implementierte Bezahlung.
+
+**Die Spieleliste ist bei acht geschlossen** (entschieden am 17.08.2026). Bewegungs- und
+Reaktionsspiele wie Snowboarden oder Skateboarden gehören **nicht** hierher, sondern nach
+**Fynnox City** — dem 3D-Projekt der Familie (`../Fynnox City/fynnox-city`, Three.js,
+1 Einheit = 1 m). Dort gibt es bereits die passende Geometrie: Bordsteine, Geländer,
+Kletterkanten, Parkour-Lücken. Hier wären sie das erste reine Reaktionsspiel und hätten
+zudem kein Bildmaterial in den Konzeptbildern.
+
+Wird trotzdem ein neuntes Spiel gewünscht, braucht es **zuerst ein Konzeptbild** —
+sonst wäre es das erste Spiel, dessen Grafik erfunden statt geschnitten ist.
