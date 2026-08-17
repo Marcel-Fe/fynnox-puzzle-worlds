@@ -5,6 +5,49 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-08-17 — Eine flache Darstellung wird durch Schattierung nicht zum Spiel
+
+**Was passiert ist**: Das Minigolf-Spielfeld wurde als „einfach nur schlimm, hat kein
+Spielniveau" bewertet, mit der Vorgabe „auf 2,5D-Niveau anpassen". Der erste Anlauf legte
+Verläufe, Schlagschatten, Texturen und Glanzlichter über die bestehende Draufsicht. Die
+Antwort war: „sieht immer noch so aus wie vorher".
+
+**Ursache**: Der Auftrag wurde als Stilfrage gelesen, war aber eine Strukturfrage. 2,5D
+ist eine **Projektion**, keine Oberflächenbehandlung. Solange die Bahn senkrecht von oben
+gezeigt wird, bleibt sie flach — ganz gleich, wie viele Schatten darauf liegen. Erst das
+Kippen der Ebene samt Wandflächen, Krone und Plattendicke brachte den Sprung.
+
+**Konsequenz**: Wird eine Darstellung **als Ganzes** abgelehnt, ist die Darstellungsart
+gemeint und nicht ihre Ausschmückung. Dann die Ansicht wechseln, statt die vorhandene zu
+verzieren. Ein zweiter Punkt aus demselben Durchgang: Die Kulisse hinter dem Spielfeld
+wurde unscharf gerechnet, damit sie weniger stört — das fiel sofort negativ auf. Etwas
+unkenntlich zu machen ist keine Lösung für „es konkurriert um Aufmerksamkeit"; das
+Spielfeld muss sich aus eigener Kraft abheben.
+
+**Und technisch**: Beim Zeichnen von Flächen aus einem Polygon wird die Umlaufrichtung
+über die Flächenformel bestimmt — die misst jedoch für eine nach **oben** zeigende
+Y-Achse. Auf dem Bildschirm zeigt Y nach unten, das Vorzeichen dreht sich also um. Beim
+falschen Vorzeichen zeigen alle Normalen nach innen, und die Rückwand landet als Balken
+quer über dem Bild.
+
+---
+
+## 2026-08-17 — Playwrights `set_offline` erreicht den Service Worker nicht
+
+**Was passiert ist**: Der erste Offline-Test meldete, dass das 2,4 MB große 3D-Modell auch
+ohne Netz lädt — obwohl es in keinem Cache lag. Das Ergebnis war geschönt.
+
+**Ursache**: `context.set_offline(True)` kappt die Netzwerkanfragen der **Seite**. Ein
+Service Worker holt seine Dateien in einem eigenen Kontext, den diese Schranke nicht
+erfasst. Anfragen, die er beantwortet, gehen weiterhin ins Netz.
+
+**Konsequenz**: Ein Offline-Test einer PWA ist nur dann aussagekräftig, wenn der Server
+**wirklich gestoppt** wird. Das Testskript startet den Vorschauserver selbst, hält ihn nach
+dem Aufwärmen an und fährt ihn zum Schluss wieder hoch. Gegenprobe: Fehlt in der Liste der
+gescheiterten Anfragen genau das, was gar nicht im Vorab-Cache liegt, misst der Test nichts.
+
+---
+
 ## 2026-07-29 — Ziehen auf Flächen, die sich neu zeichnen
 
 **Was passiert ist**: In Bubble Shooter kam nur jeder dritte Schuss an. Zwei Anläufe zur
