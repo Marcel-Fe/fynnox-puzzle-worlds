@@ -3,8 +3,10 @@ import { Avatar } from '../components/Avatar'
 import { Card, ProgressBar } from '../components/Card'
 import { DailyRewardCard } from '../components/DailyRewardCard'
 import { GameTile } from '../components/GameTile'
+import { NODES_PER_CHAPTER } from '../content/adventure'
 import { asset, HERO_WIDE } from '../content/assets'
 import { GAMES, GAMES_BY_ID } from '../content/games'
+import { chapterAt, chapterProgress } from '../core/adventure'
 import { xpForNextLevel } from '../core/progression'
 import { useGameStore } from '../store/gameStore'
 
@@ -72,8 +74,9 @@ export function Dashboard() {
         />
         <QuickTile
           to="/abenteuer"
-          label="Abenteuerpfad"
-          value={`Kapitel ${adventure.chapter}`}
+          label={chapterAt(adventure.chapter).world}
+          value={`${chapterProgress(adventure, adventure.chapter)}/${NODES_PER_CHAPTER}`}
+          note={`Kapitel ${adventure.chapter}`}
           accent="var(--color-purple)"
         />
         <QuickTile

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { GameId } from '../content/games'
-// Umbenannt, damit der Aufruf in der gleichnamigen Store-Aktion eindeutig bleibt.
+// Umbenannt, damit die Aufrufe in den gleichnamigen Store-Aktionen eindeutig bleiben.
+import { applyRoundToAdventure, claimChest as applyChestClaim } from '../core/adventure'
 import { claimDailyReward as applyDailyClaim } from '../core/dailyReward'
 import { refillEnergy } from '../core/energy'
 import { refreshMissions } from '../core/missions'
@@ -32,6 +33,8 @@ interface GameState {
   claimMission(id: string): void
   /** Holt die tägliche Belohnung ab, falls eine bereitliegt. */
   claimDailyReward(): void
+  /** Holt die Truhe am Ende eines vollständigen Kapitels ab. */
+  claimChest(chapter: number): void
   clearRewards(): void
   renameProfile(name: string): void
   updateSettings(patch: Partial<SaveData['settings']>): void
@@ -102,7 +105,12 @@ export const useGameStore = create<GameState>((set, get) => ({
     const save = get().save
     if (!save) return null
 
-    const { save: next, rewards } = applyRoundResult(save, result)
+    const { save: applied, rewards } = applyRoundResult(save, result)
+
+    // Der Abenteuerpfad hängt am selben Rundenergebnis, steht aber bewusst
+    // neben applyRoundResult: Die Rundenauswertung soll nicht wissen, wo der
+    // Spieler auf dem Pfad gerade steht.
+    const { save: next } = applyRoundToAdventure(applied, result)
 
     // Erfolge freischalten: applyRoundResult bleibt bewusst ohne Uhr,
     // also wird der Zeitstempel hier gesetzt.
@@ -149,6 +157,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     const next = applyDailyClaim(save, Date.now())
     if (next === save) return // lag nichts bereit
+    set({ save: next })
+    persist(next)
+  },
+
+  claimChest(chapter) {
+    const save = get().save
+    if (!save) return
+
+    const next = applyChestClaim(save, chapter)
+    if (next === save) return // Kapitel noch nicht voll oder Truhe schon geholt
     set({ save: next })
     persist(next)
   },
