@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { sfx } from '../core/audio'
 import { DAILY_REWARDS, dailyRewardState } from '../core/dailyReward'
 import { formatRemaining } from '../core/time'
 import { useGameStore } from '../store/gameStore'
@@ -78,7 +79,10 @@ export function DailyRewardCard() {
       <button
         type="button"
         disabled={!state.available}
-        onClick={claim}
+        onClick={() => {
+          claim()
+          sfx('reward')
+        }}
         className="mt-3 min-h-11 w-full rounded-xl bg-gold text-sm font-black text-deep uppercase disabled:opacity-40"
       >
         {state.available

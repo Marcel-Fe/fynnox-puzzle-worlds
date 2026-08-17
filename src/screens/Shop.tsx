@@ -8,6 +8,7 @@ import {
   type ShopItem,
   type ShopTab,
 } from '../content/shop'
+import { sfx } from '../core/audio'
 import { owns, refusalFor } from '../core/shop'
 import type { SaveData } from '../save/types'
 import { useGameStore } from '../store/gameStore'
@@ -112,7 +113,10 @@ function ShopCard({
       <button
         type="button"
         disabled={refusal !== null}
-        onClick={() => onBuy(item.id)}
+        onClick={() => {
+          onBuy(item.id)
+          sfx('purchase')
+        }}
         className="mt-2 min-h-11 w-full rounded-lg bg-gold text-sm font-black text-deep uppercase disabled:opacity-40"
       >
         {label}

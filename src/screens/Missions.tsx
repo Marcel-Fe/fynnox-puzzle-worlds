@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Card, ProgressBar } from '../components/Card'
 import { Tabs } from '../components/Tabs'
 import { MISSION_TABS } from '../content/missions'
+import { sfx } from '../core/audio'
 import { formatRemaining } from '../core/time'
 import type { Mission, MissionKind } from '../save/types'
 import { useGameStore } from '../store/gameStore'
@@ -96,7 +97,10 @@ function MissionRow({
         <button
           type="button"
           disabled={mission.claimed}
-          onClick={() => onClaim(mission.id)}
+          onClick={() => {
+            onClaim(mission.id)
+            sfx('reward')
+          }}
           className="mt-2 min-h-11 w-full rounded-lg bg-gold text-sm font-black text-deep uppercase disabled:opacity-40"
         >
           {mission.claimed ? 'Abgeholt' : 'Belohnung abholen'}

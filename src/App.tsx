@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { applyAudioSettings, armAudioOnFirstGesture } from './core/audio'
 import { requestFullscreenOnFirstTap } from './core/fullscreen'
 import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
 import { BubbleShooterGame } from './games/bubbleshooter/components/BubbleShooterGame'
@@ -31,6 +32,8 @@ import { useGameStore } from './store/gameStore'
 export default function App() {
   const init = useGameStore((s) => s.init)
   const loaded = useGameStore((s) => s.loaded)
+  const sound = useGameStore((s) => s.save?.settings.sound ?? false)
+  const music = useGameStore((s) => s.save?.settings.music ?? false)
   const [percent, setPercent] = useState(10)
 
   useEffect(() => {
@@ -40,6 +43,16 @@ export default function App() {
   }, [init])
 
   useEffect(() => requestFullscreenOnFirstTap(), [])
+  useEffect(() => armAudioOnFirstGesture(), [])
+
+  /*
+   * Der Ton kennt den Store nicht (src/core/audio.ts bleibt frei von React).
+   * Diese eine Stelle reicht ihm die Schalterstellung durch — beim Laden und
+   * bei jeder Änderung in den Einstellungen.
+   */
+  useEffect(() => {
+    applyAudioSettings({ sound, music })
+  }, [sound, music])
 
   if (!loaded) return <Loading percent={percent} />
 

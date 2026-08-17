@@ -18,14 +18,14 @@ export const GENERAL_SETTINGS: SettingRow[] = [
   {
     key: 'music',
     label: 'Musik',
-    hint: 'Hintergrundmusik in den Spielen. Kommt mit dem Ton in Phase 8.',
-    effective: false,
+    hint: 'Hintergrundmusik in Dauerschleife. Wird beim ersten Einschalten geladen — dafür braucht es einmal Netz.',
+    effective: true,
   },
   {
     key: 'sound',
     label: 'Soundeffekte',
-    hint: 'Klänge beim Legen, Räumen und Gewinnen. Kommt mit dem Ton in Phase 8.',
-    effective: false,
+    hint: 'Klänge beim Gewinnen, Abholen, Öffnen und Kaufen.',
+    effective: true,
   },
   {
     key: 'vibration',

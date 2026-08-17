@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { FYNNOX_FACES, fynnoxLine, moodFor } from '../content/reactions'
+import { sfx } from '../core/audio'
 import type { RoundRewards } from '../core/round'
 
 /**
@@ -34,6 +36,12 @@ export function RoundResultOverlay({
   againLabel?: string
 }) {
   const mood = moodFor(won)
+
+  // Das Overlay wird erst beim Rundenende eingehängt — der Klang gehört also
+  // an das Einhängen, nicht an einen Knopf. Eine Stelle für alle acht Spiele.
+  useEffect(() => {
+    sfx(won ? 'win' : 'lose')
+  }, [won])
 
   return (
     <div

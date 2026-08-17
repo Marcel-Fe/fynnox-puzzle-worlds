@@ -50,8 +50,30 @@ export default defineConfig({
         clientsClaim: true,
         // jpg gehört dazu, seit die Kulissen und Kachelbilder als JPEG vorliegen —
         // ohne das fehlt im Offline-Betrieb die halbe Grafik.
-        globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2,mp3}'],
+        //
+        // mp3 steht hier bewusst NICHT: Die Musikschleife wiegt allein 4,0 MB und
+        // hätte die Installation um rund 80 % vergrößert — auch für jeden Spieler,
+        // der die Musik nie einschaltet (docs/01-gamedesign.md, „Ton und Musik").
+        globPatterns: ['**/*.{js,css,html,png,jpg,svg,woff2}'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
+        /*
+         * Stattdessen holt die Musik sich beim ersten Einschalten selbst und liegt
+         * danach dauerhaft im Cache. `rangeRequests`, weil Browser Audiodateien
+         * stückweise anfordern — ohne das antwortet der Service Worker auf eine
+         * Teilanfrage mit der ganzen Datei, und das Element spielt nicht ab.
+         */
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.mp3'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fynnox-puzzle-worlds-musik',
+              rangeRequests: true,
+              expiration: { maxEntries: 4 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
     }),
   ],

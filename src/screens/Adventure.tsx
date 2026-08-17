@@ -8,6 +8,7 @@ import {
 } from '../content/adventure'
 import { PORTRAITS } from '../content/assets'
 import { GAMES_BY_ID } from '../content/games'
+import { sfx } from '../core/audio'
 import {
   chapterAt,
   chapterProgress,
@@ -97,7 +98,10 @@ export function Adventure() {
           <button
             type="button"
             disabled={!complete || chestClaimed}
-            onClick={() => claimChest(chapter.number)}
+            onClick={() => {
+              claimChest(chapter.number)
+              sfx('chest')
+            }}
             className="mt-2 min-h-11 w-full rounded-lg bg-gold text-sm font-black text-deep uppercase disabled:opacity-40"
           >
             {chestClaimed

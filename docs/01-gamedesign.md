@@ -419,6 +419,46 @@ und ein Knopf „WEITER".
 
 **Pause** ist in jedem Spiel oben rechts erreichbar.
 
+### Ton und Musik — festgelegt am 17.08.2026 (Phase 8)
+
+**Klangeffekte werden prozedural erzeugt**, nicht als Dateien ausgeliefert.
+Jeder Klang ist eine Handvoll Oszillatoren mit Hüllkurve über die WebAudio-Schnittstelle
+(`src/core/audio.ts`, Muster aus `fynnox-adventure/src/audio/sfx.ts`). Begründung:
+keine fremden Samples und damit keine Lizenzfrage, kein einziges Byte zusätzlich im
+PWA-Cache, sofort offline verfügbar.
+
+Fünf Klänge, jeweils an einen belegten Moment gebunden:
+
+| Klang | Anlass | Bildschirm |
+|---|---|---|
+| `win` | Runde gewonnen | Ergebnisbildschirm |
+| `lose` | Runde verloren | Ergebnisbildschirm |
+| `reward` | Belohnung abgeholt | Tagesbelohnung, Missionen |
+| `chest` | Truhe geöffnet | Abenteuerpfad |
+| `purchase` | Ware gekauft | Shop |
+
+**Musik**: Die lizenzfreie Schleife aus `fynnox-adventure` (`public/audio/musik.mp3`,
+4,0 MB, phatphrogstudio) kommt mit, aber **nicht in den Vorab-Cache**. `mp3` fällt aus
+`globPatterns` heraus; stattdessen holt eine Laufzeit-Regel (`CacheFirst`) die Datei
+beim ersten Einschalten und behält sie danach offline.
+
+Begründung, mit gemessenen Zahlen: Der Vorab-Cache umfasst **47 Einträge / 2,58 MB** —
+das ist, was jeder Spieler beim Installieren herunterlädt. Die Musikdatei allein wiegt
+3,97 MB und hätte diesen Wert auf rund 6,6 MB gebracht, also **mehr als verdoppelt** —
+auch für jeden Spieler, der die Musik nie einschaltet. (Der Ordner `dist` wächst von
+5,0 MB auf 9,0 MB, weil die Datei auf dem Server liegt; heruntergeladen wird sie
+dadurch nicht.)
+
+Der Preis dieser Entscheidung ist ehrlich zu nennen: Wer die Musik zum allerersten Mal
+ohne Netzverbindung einschaltet, hört nichts. Ab dem zweiten Mal ist sie da. Der
+Einstellungsbildschirm sagt das in seinem Hinweistext.
+
+**Autoplay-Sperre**: Browser lehnen Ton vor der ersten Nutzergeste ab. Der AudioContext
+entsteht darum erst beim ersten Klang, die Musik startet beim ersten Antippen — dasselbe
+Muster wie `requestFullscreenOnFirstTap` in `src/core/fullscreen.ts`.
+
+Beide Schalter im Einstellungsbildschirm wirken damit; die Marke „später" fällt dort weg.
+
 ---
 
 ## Start der App
