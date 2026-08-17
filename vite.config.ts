@@ -18,12 +18,20 @@ export default defineConfig({
       manifest: {
         name: 'Fynnox Puzzle Worlds',
         short_name: 'Fynnox Puzzle',
-        description: 'Sechs Puzzle-Spiele mit Fynnox: ein Profil, XP, Münzen und Abenteuerpfad.',
+        description: 'Acht Puzzle- und Kartenspiele mit Fynnox: ein Profil, XP, Münzen und Abenteuerpfad.',
         lang: 'de',
         theme_color: '#020C17',
         background_color: '#020C17',
-        display_override: ['standalone', 'fullscreen'],
-        display: 'standalone',
+        /*
+         * Vollbild: Als installierte App verschwindet damit auch die Statusleiste
+         * des Systems, nicht nur die Browserleiste. Die Liste wird von links nach
+         * rechts abgearbeitet — kann ein Gerät kein Vollbild, bleibt es bei
+         * 'standalone', und im schlechtesten Fall bei 'minimal-ui'.
+         * iOS wertet weder das eine noch das andere aus; dort entscheidet das
+         * Meta-Tag `apple-mobile-web-app-capable` in index.html.
+         */
+        display_override: ['fullscreen', 'standalone', 'minimal-ui'],
+        display: 'fullscreen',
         // Puzzle-Spiele werden hochkant gespielt (fynnox-adventure nutzt landscape).
         orientation: 'portrait',
         start_url: base,

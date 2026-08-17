@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/AppShell'
+import { requestFullscreenOnFirstTap } from './core/fullscreen'
 import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
 import { BubbleShooterGame } from './games/bubbleshooter/components/BubbleShooterGame'
 import { KristallmixGame } from './games/kristallmix/components/KristallmixGame'
@@ -31,6 +32,8 @@ export default function App() {
     setPercent(35)
     void init().then(() => setPercent(100))
   }, [init])
+
+  useEffect(() => requestFullscreenOnFirstTap(), [])
 
   if (!loaded) return <Loading percent={percent} />
 
