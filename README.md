@@ -17,7 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
-npm test         # Logik-Tests (305 Stück) — müssen grün sein
+npm test         # Logik-Tests (385 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -33,8 +33,8 @@ npm run preview  # gebauten Stand lokal ansehen
 | 5 | Spieleauswahl, Profil, Ergebnisbildschirm, Laden | ✅ |
 | 5b | Echte Spielgrafik aus den Konzeptbildern, Fynnox in 3D | ✅ |
 | 6 | Die weiteren sieben Spiele | ✅ 7 von 7 |
-| 7 | Abenteuerpfad, Events, Shop | offen |
-| 8 | Cloud-Save, Ranglisten, Einstellungen, Ton | offen |
+| 7 | **Meta-Systeme: Abenteuerpfad, Missionen, Tagesbelohnung, Shop, Events, Erfolge** | ✅ |
+| 8 | Cloud-Save, Ranglisten, Freunde, Einstellungen, Ton | offen |
 
 **Spielbar: alle acht** — Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku,
 Bubble Shooter, Fynnox Solitaire (zwölf Level) und Fynnox Minigolf (sechs Bahnen),
@@ -43,8 +43,21 @@ Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt
 Tagesmissionen hochzählen und wird lokal gespeichert. Danach zeigt ein
 Ergebnisbildschirm Sterne und Belohnungen.
 
-**Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · Waldblöcke · Missionen · Profil · Mehr.
-Shop, Events, Freunde, Rangliste und Einstellungen sind noch Platzhalter.
+**Was die Spiele zusammenhält**
+
+- **Abenteuerpfad** — sieben Kapitel zu je 15 Knoten. Ein Knoten ist eine Runde in einem
+  vorgegebenen Spiel und gilt ab einem Stern als geschafft; am Kapitelende wartet eine Truhe,
+  deren Inhalt mit den gesammelten Sternen wächst.
+- **Missionen** — drei Reiter: täglich (Wechsel um Mitternacht), wöchentlich (Montag) und Event.
+- **Tägliche Belohnung** — Leiter über sieben Tage; ein ausgelassener Tag setzt die Serie zurück.
+- **Shop** — Outfits, Helfer und Booster gegen Kristalle. Euro-Preise stehen als Anzeige da,
+  es gibt keine Bezahlung.
+- **Events** — vier Events im Wochenwechsel, jedes mit eigener Mission.
+- **Erfolge** — 24 Stück, alle aus dem Spielstand messbar.
+
+**Fertige Bildschirme**: Laden · Dashboard · Spieleauswahl · acht Spiele · Missionen ·
+Abenteuerpfad · Shop · Events · Erfolge · Profil · Mehr.
+Freunde, Rangliste und Einstellungen sind noch Platzhalter (Phase 8).
 
 ## Dokumentation
 

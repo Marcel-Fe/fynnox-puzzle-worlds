@@ -287,7 +287,7 @@ geht auf 1/8, die Kraftskala greift, kein waagerechtes Scrollen, keine Konsolenf
 
 ---
 
-## Phase 7 — Meta-Systeme
+## Phase 7 — Meta-Systeme ✅
 
 Abenteuerpfad, Missionsbildschirm mit drei Reitern, Erfolge, tägliche Belohnung,
 Shop-Oberfläche (ohne Bezahlung), Events.
@@ -298,6 +298,56 @@ Der frühere Vorbehalt „Widerspruch zwischen elf Welten und einem Pfad bis Lev
 seit dem 29.07.2026 erledigt: Das [Gamedesign](01-gamedesign.md) legt Entwurf B verbindlich
 fest — Kapitel zu 15 Leveln, **ein Kapitel je Welt**. Sieben Kapitel ergeben 105 Stufen und
 damit ungefähr die 100 Level des alten Entwurfs, nur in Kapitel geschnitten.
+
+### Zuerst entschieden, dann gebaut
+
+Fünf Balancing-Fragen waren im Gamedesign als *OFFEN* markiert und wurden dort mit
+Begründung festgelegt, bevor eine Zeile Code entstand: Missionspool und Reset-Zeitpunkt,
+Belohnungsleiter der Tagesbelohnung, Verhalten auf einem Abenteuer-Knoten, Eventkatalog
+und Erfolgsliste.
+
+Die wichtigste davon: **Ein Knoten ist eine Runde in einem vorgegebenen Spiel und gilt ab
+einem Stern als geschafft.** Ein eigenes Punkteziel je Knoten schied aus, weil die
+Punktebereiche der acht Spiele um den Faktor zehn auseinanderliegen (Minigolf rund 300 bis
+1.500, Sudoku bis 4.700) — es hätte eine zweite Balancing-Tabelle neben den bereits
+geeichten Sternschwellen gebraucht.
+
+### Was dazukam
+
+- **Reine Module** nach dem Muster von `energy.ts`, alle ohne Uhr: `core/time.ts`
+  (Kalenderrechnung in Ortszeit), `missions.ts`, `dailyReward.ts`, `adventure.ts`,
+  `events.ts`, `shop.ts`, `achievements.ts`
+- **`core/round.ts` blieb unangetastet** — `missionDelta` zählte alle Missionsarten schon
+  seit Phase 3 hoch, es fehlten nur Inhalte und Oberfläche. Der Abenteuerpfad hängt am
+  selben Rundenergebnis, steht aber daneben statt darin
+- **Vier Platzhalter weniger**: Abenteuerpfad, Shop, Events und Erfolge sind echte
+  Bildschirme. Freunde, Rangliste und Einstellungen bleiben bis Phase 8
+- **`SAVE_VERSION` 1 → 2** mit Migration in `adapter.ts`: `ownedItems` für gekaufte Waren.
+  Das war die einzige nötige Strukturänderung — Missionen, Erfolge und Abenteuerpfad waren
+  im Datenmodell von Anfang an vollständig angelegt
+
+Tage werden über den Date-Konstruktor addiert, nicht über Millisekunden: An den
+Umstellungswochenenden ist ein Tag 23 bzw. 25 Stunden lang, mit fester Millisekundenzahl
+läge der Tageswechsel danach eine Stunde daneben.
+
+**Nachgewiesen**: 385 Tests (davon 70 neu). Im Browser bei 390 × 844 mit abgeschaltetem
+Service Worker geprüft:
+
+- Tagesbelohnung abgeholt — 500 → 600 Münzen, Knopf danach „Abgeholt", Anzeige „Tag 2 von 7 ·
+  nächste in 13 h 50 m"
+- Missionsreiter gewechselt: täglich „Erneuert sich in 13 h 50 m", wöchentlich und Event
+  „6 T 13 h"
+- Abenteuerpfad Kapitel 1 Sonnenwald, Knoten 1 verlangt Blockfall, „Starten" führt nach
+  `#/spiel/blockfall`. Mit Teilfortschritt: Knoten 1–3 mit Sternen, Knoten 4 hervorgehoben,
+  ab 5 gesperrt, Kopf „★ 6 von 45 Sternen", Balken 3/15
+- Volles Kapitel: Truhe geöffnet → 500 → 1.620 Münzen (31 Sterne × 20 + 500) und 50 → 75
+  Kristalle, danach Kapitel 2 Kristallhöhlen. Überlebt das Neuladen
+- Shop: Piratenoutfit zunächst „Zu teuer · 💎 1.200", nach Aufstocken gekauft — Kristalle
+  5.000 → 3.800, Sammlung 1/12, bleibt nach dem Neuladen erhalten. Euro-Waren tragen
+  „Keine Bezahlung" und sind nicht anklickbar
+- Events: Hauptevent Monsterjagd mit Mission „Räume 200 Reihen", Täglicher Bonus als
+  aktives Event mit „Bereit!", drei kommende Events mit Countdown
+- Kein waagerechtes Scrollen auf einem der sechs Bildschirme, keine Konsolenfehler
 
 ---
 
