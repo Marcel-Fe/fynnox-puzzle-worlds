@@ -618,11 +618,22 @@ auseinanderlaufen könnte. Die Sterne sind bereits pro Spiel geeicht — genau d
 | 5 | Schneewelt | `bg/wintergipfel.jpg` |
 | 6 | Wolkeninsel | `bg/wolkeninsel.jpg` |
 | 7 | Tempelruinen | `bg/tempel.jpg` |
+| 8 | Unterwasserwelt | `bg/unterwasser.jpg` |
 
-Sieben Kapitel zu 15 Knoten sind 105 Stufen — ungefähr die 100 Level aus Entwurf A, nur
-in Kapitel geschnitten. Candy, Unterwasser, Steampunk und Weltraum fehlen bewusst: Für sie
-gibt es **kein Bildmaterial** in den Konzeptbildern. Sie kommen dazu, sobald eine Kulisse
-existiert — erfunden wird hier keine (CLAUDE.md, Abschnitt Grafik).
+Acht Kapitel zu 15 Knoten sind 120 Stufen — mehr als die 100 Level aus Entwurf A, nur in
+Kapitel geschnitten. Jedes Kapitel trägt eine andere der acht Spielfarben, damit sich
+Fortschrittsbalken und Knoten zweier Kapitel nie gleich anfühlen.
+
+**Nachtrag vom 17.08.2026**: Kapitel 8 kam am selben Tag dazu. Die Kulisse stammt als
+einzige **nicht** aus den Puzzle-Worlds-Konzeptbildern, sondern aus dem Bildmaterial von
+`fynnox-adventure` (Quelle und Ausschnitt: [Art-Guide](03-art-ui-guide.md)). Der Satz
+„für Unterwasser gibt es kein Bildmaterial" stand hier zuvor und war falsch — im
+Nachbarprojekt lag eine gemalte Über-/Unterwasserszene im passenden Stil.
+
+Candy, Steampunk und Weltraum fehlen weiterhin: Dafür gibt es in keinem der Fynnox-Projekte
+eine brauchbare Kulisse. Was in `fynnox-adventure` unter *Zuckerwirbel* und *Neon* liegt,
+sind Rennstrecken aus Pet Cars — mit Leitplanken und Fahrbahnmarkierung. Diese Kapitel
+kommen dazu, sobald eine Kulisse existiert; erfunden wird keine (CLAUDE.md, Abschnitt Grafik).
 
 ### Events
 

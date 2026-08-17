@@ -19,6 +19,7 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `chars/fynnox-jubel.jpg` | Fynnox freut sich — Ergebnisbildschirm nach einem Sieg | Start-Pop-up in `handy-flow-start-bis-minigolf.png` |
 | `chars/fynnox-still.jpg` | Fynnox gedämpft — Ergebnisbildschirm nach einer Niederlage | Übergangsbildschirm in `handy-flow-start-bis-minigolf.png` |
 | `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
+| `bg/unterwasser.jpg` | 8. Weltkulisse — **einzige Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
 | `games/` | 8 Kachelbilder | Spielkarten in `dashboard-hauptansicht.png` |
 | `hero.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
@@ -42,6 +43,52 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
    erkennen. Helligkeit und Kontrast werden darum **im Skript** angehoben (auf 54 bzw. 33)
    und bleiben damit reproduzierbar. Er ist weiterhin sichtbar gedämpfter als
    `fynnox-jubel` mit 84.
+6. **Fremdes Bildmaterial wird in `referenzen/` kopiert, nicht von außerhalb gelesen.**
+   Ein Pfad in ein Nachbarprojekt wäre auf keinem zweiten Rechner reproduzierbar und
+   würde `python scripts/build-art.py` bei jedem Umbenennen dort brechen.
+
+### Die eine Kulisse, die nicht aus den Mockups stammt
+
+`bg/unterwasser.jpg` ist die einzige Grafik im Projekt, die **nicht** aus den elf
+Puzzle-Worlds-Konzeptbildern geschnitten ist. Sie stammt aus dem Bildmaterial von
+`fynnox-adventure` und wurde am **17.08.2026** übernommen, als der Abenteuerpfad ein
+achtes Kapitel bekam.
+
+**Warum die Ausnahme**: Die Konzeptbilder zeigen keine Unterwasserwelt. Die Alternativen
+wären gewesen, das Kapitel wegzulassen oder eine Kulisse zu erfinden — Letzteres ist
+ausgeschlossen. Im Nachbarprojekt lag eine gemalte Über-/Unterwasserszene, deren Stil
+(gesättigte Farben, weiches Licht, gemalte Kanten) neben `wolkeninsel.jpg` und
+`piratenbucht.jpg` nicht auffällt.
+
+**Was der Ausschnitt weglässt** (Regel 3 in Reinform — das Quellbild ist ein Screenshot
+eines fremden Spiels und voller fremder Anzeigen):
+
+| Weggelassen | Warum |
+|---|---|
+| oben bis `y=170`: drei Herzen, „× 127", „× 09", „× 03" | HUD eines anderen Spiels. Solche Zahlen widersprechen den echten Werten des Spielers — derselbe Fehler wie damals bei „LEVEL 12 · 2.450 XP" im Begrüßungsbanner |
+| rechts ab `x=820`: eingesammelte Münzen und eine Schatztruhe | Spielobjekte, keine Kulisse. Auf einem Kapitelkopf sähen sie aus wie etwas, das man antippen kann — und die Truhe gibt es im Abenteuerpfad bereits als echtes Bedienelement |
+
+Übrig bleibt reine Kulisse: Steg, Boot, Palmen, Wasserlinie, tauchender Fynnox, Fische,
+Korallen.
+
+**Was aus den Nachbarprojekten bewusst *nicht* übernommen wurde** (gesichtet am 17.08.2026,
+damit niemand ein zweites Mal danach sucht):
+
+- `fynnox-adventure/public/art/items/` — Pfoten-Münze, Kristall, Stern, Truhe, Schlüssel als
+  freigestellte Icons. Flache Vektorformen von 2 KB; neben den gemalten Ausschnitten hier
+  wirken sie wie aus einem anderen Programm.
+- Das Charakterblatt „Die Charaktere von Fynnox Adventure" mit allen zehn Begleitfiguren.
+  Namentlich exakt unsere Charakterbibel, aber heller Storybook-Grund statt der dunklen
+  Porträts, die `chars/` heute liefert.
+- Freigestellter Fynnox (Turnarounds auf Weiß und auf Magenta). Widerlegt Regel 4 —
+  hier *gibt* es eine saubere Freistellung. Bislang nicht gebraucht, weil das
+  Begrüßungsbanner mit Landschaft funktioniert.
+- Fynnox City: Tatz-Taler und Stadtfunke als freigestellte 3D-Icons, dazu zwölf UI-Icons
+  und vier Stadtkulissen. Alles in Citys Marineblau/Orange statt unserem Gold/Violett.
+  Für ein späteres Stadt-Kapitel wäre `01_Hafenpromenade_Uebersicht.png` der Kandidat.
+- `fynnox-adventure/public/art/previews/` — *Zuckerwirbel*, *Neon*, *Gletscher*, *Vulkan*.
+  Sehen nach Candy- und Weltraumwelt aus, sind aber Rennstrecken aus Pet Cars, mit
+  Leitplanken und Fahrbahnmarkierung quer durchs Bild.
 
 ### Es gibt keinen traurigen Fynnox
 

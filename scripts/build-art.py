@@ -106,6 +106,22 @@ for name, (x0, x1) in WORLDS.items():
 # Tempelinneres aus der 3D-Ansicht von Tempelpaare, ab y 322 ohne Beschriftung
 save_jpg(ansichten.crop((390, 322, 545, 420)), os.path.join(ART, "bg", "tempel.jpg"), (640, 404))
 
+# Unterwasserwelt — einzige Kulisse, die NICHT aus den Puzzle-Worlds-Mockups
+# stammt, sondern aus dem Bildmaterial von fynnox-adventure (uebernommen am
+# 17.08.2026, siehe docs/03-art-ui-guide.md). Grund: Die elf Konzeptbilder
+# zeigen keine Unterwasserwelt, und erfunden wird hier keine.
+#
+# Der Ausschnitt laesst zwei Dinge bewusst weg:
+#   oben (bis y=170) die HUD-Leisten des fremden Spiels — links drei Herzen
+#     und "x 127", rechts "x 09" und "x 03". Solche Zahlen wuerden den
+#     echten Werten des Spielers widersprechen.
+#   rechts (ab x=820) die eingesammelten Muenzen und die Schatztruhe. Beides
+#     sind Spielobjekte, keine Kulisse — auf einem Kapitelkopf sahen sie aus
+#     wie etwas, das man antippen kann.
+# Bleibt: Steg, Boot, Palmen, Wasserlinie, tauchender Fynnox, Fische, Korallen.
+unterwasser = ref("fynnox-adventure-unterwasser.png")
+save_jpg(unterwasser.crop((0, 200, 820, 856)), os.path.join(ART, "bg", "unterwasser.jpg"), (640, 512))
+
 # --- Vorschaubilder der Spielkacheln -------------------------------------
 TILES = {
     "blockfall": (247, 410),

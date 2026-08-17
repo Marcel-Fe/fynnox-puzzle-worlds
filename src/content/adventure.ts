@@ -4,9 +4,12 @@ import { asset } from './assets'
  * Kapitel des Abenteuerpfads (docs/01-gamedesign.md, Entwurf B).
  *
  * Ein Kapitel je Welt, 15 Knoten je Kapitel. Es gibt nur Kapitel, für die eine
- * Kulisse in `public/art/bg/` existiert — Candy, Unterwasser, Steampunk und
- * Weltraum fehlen, weil in den Konzeptbildern kein Bildmaterial dazu liegt.
- * Erfunden wird hier keins (CLAUDE.md, Abschnitt Grafik).
+ * Kulisse in `public/art/bg/` existiert — Candy, Steampunk und Weltraum fehlen,
+ * weil dazu kein Bildmaterial vorliegt. Erfunden wird hier keins
+ * (CLAUDE.md, Abschnitt Grafik).
+ *
+ * Jedes Kapitel trägt eine andere der acht Spielfarben, damit sich Balken und
+ * Knoten zweier Kapitel nie gleich anfühlen.
  */
 export interface Chapter {
   number: number
@@ -52,7 +55,7 @@ export const CHAPTERS: Chapter[] = [
     world: 'Schneewelt',
     intro: 'Zieh dich warm an. Der Aufstieg ist steil, aber die Aussicht lohnt sich.',
     image: asset('bg/wintergipfel.jpg'),
-    accent: 'var(--color-game-sudoku)',
+    accent: 'var(--color-game-blockfall)',
   },
   {
     number: 6,
@@ -67,6 +70,13 @@ export const CHAPTERS: Chapter[] = [
     intro: 'Ganz leise jetzt. Diese Steine sind älter als alle Geschichten, die ich kenne.',
     image: asset('bg/tempel.jpg'),
     accent: 'var(--color-game-bubbleshooter)',
+  },
+  {
+    number: 8,
+    world: 'Unterwasserwelt',
+    intro: 'Einmal tief einatmen — unter uns liegt ein ganzes Riff voller Geschichten.',
+    image: asset('bg/unterwasser.jpg'),
+    accent: 'var(--color-game-sudoku)',
   },
 ]
 

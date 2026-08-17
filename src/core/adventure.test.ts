@@ -19,6 +19,14 @@ import {
 
 const NOW = new Date(2026, 7, 17, 10, 0, 0).getTime()
 
+/**
+ * Welche Kulissen tatsächlich unter public/art/bg/ liegen. Über `import.meta.glob`
+ * statt über das Dateisystem, weil die App-Typen bewusst ohne Node-Typen laufen.
+ */
+const BG_FILES = new Set(
+  Object.keys(import.meta.glob('../../public/art/bg/*.jpg')).map((p) => p.split('/').pop()),
+)
+
 function round(save: SaveData, stars: number): RoundResult {
   const { chapter, nodeInChapter } = save.adventure
   return {
@@ -40,11 +48,23 @@ function playChapter(save: SaveData, stars: number): SaveData {
 }
 
 describe('Kapitel und Knoten', () => {
-  it('es gibt für jedes Kapitel eine Kulisse', () => {
+  it('es gibt für jedes Kapitel eine Kulisse, und sie liegt auch wirklich da', () => {
     for (const chapter of CHAPTERS) {
       expect(chapter.image).toMatch(/art\/bg\/.+\.jpg$/)
       expect(chapter.world.length).toBeGreaterThan(0)
+      // Ein Kapitel ohne Bilddatei fällt im Browser erst als graue Fläche auf.
+      expect(BG_FILES).toContain(chapter.image.split('/').pop())
     }
+  })
+
+  it('kein Kapitel trägt dieselbe Farbe wie ein anderes', () => {
+    expect(new Set(CHAPTERS.map((c) => c.accent)).size).toBe(CHAPTERS.length)
+  })
+
+  it('die Kapitel sind lückenlos von 1 an durchnummeriert', () => {
+    expect(CHAPTERS.map((c) => c.number)).toEqual(
+      CHAPTERS.map((_, i) => i + 1),
+    )
   })
 
   it('verteilt die Knoten reihum auf alle acht Spiele', () => {
