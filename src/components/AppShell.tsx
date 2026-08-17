@@ -44,7 +44,12 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-edge bg-deep/95 px-3 py-2.5 backdrop-blur">
+        {/*
+          Ohne den oberen Sicherheitsabstand liegt die Währungsleiste im
+          Vollbild- und Startbildschirm-Modus unter Uhr und Akkuanzeige — die
+          Seite reicht dort bis an die Gerätekante (`viewport-fit=cover`).
+        */}
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-edge bg-deep/95 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] backdrop-blur">
           <NavLink to="/profil" className="flex items-center gap-2 md:hidden">
             <Avatar name="Fynnox" size={36} ring="var(--color-gold)" />
             <span className="max-w-20 truncate text-sm font-bold">{profile?.name}</span>

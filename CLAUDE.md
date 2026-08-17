@@ -60,8 +60,15 @@ Push auf `main` → GitHub Action baut → GitHub Pages. Nichts manuell hochlade
 - Der PWA-`cacheId` ist ebenfalls `fynnox-puzzle-worlds`. Er **muss** eindeutig sein,
   weil alle Projekte unter derselben Domain `marcel-fe.github.io` liegen und sich sonst
   gegenseitig den Cache überschreiben.
-- Manifest: `display: 'standalone'`, `orientation: 'portrait'` (Puzzle-Spiele werden hochkant
+- Manifest: `display: 'fullscreen'`, `orientation: 'portrait'` (Puzzle-Spiele werden hochkant
   gespielt — anders als `fynnox-adventure`, das `landscape` nutzt).
+  `display_override` fällt der Reihe nach auf `standalone` und `minimal-ui` zurück,
+  falls ein Gerät kein Vollbild kann. **iOS wertet beides nicht aus** — dort entscheidet
+  `apple-mobile-web-app-capable` in `index.html`, und Vollbild gibt es nur über
+  „Zum Home-Bildschirm", nicht im Safari-Tab.
+- Wegen `viewport-fit=cover` reicht die Seite bis an die Gerätekante. Alles, was oben
+  oder unten klebt, braucht `env(safe-area-inset-*)` — sonst liegt es unter Uhr,
+  Akkuanzeige oder Gestenbalken.
 
 **Auf dem Handy installieren**: Seite in Safari (iOS) bzw. Chrome (Android) öffnen →
 Teilen/Menü → „Zum Home-Bildschirm". Danach startet sie wie eine echte App, ohne Browserleiste.
