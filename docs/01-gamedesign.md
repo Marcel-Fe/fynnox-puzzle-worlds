@@ -769,8 +769,57 @@ zu Phase 8 (Cloud).
 - Je Freund: Bild, Name, Trophäenpunkte und Status — entweder was gerade gespielt wird
   („Spielt Blockfall") oder wann zuletzt online („Zuletzt online: 1 h")
 - Knopf „Freunden einladen"; Freunde können herausgefordert werden
-- **OFFEN**: Wie ohne Backend? Bis zur Cloud-Phase sind Freunde und Ranglisten Platzhalter
-  mit den Spielfiguren als Gegner
+
+**Festgelegt am 17.08.2026** (war offen bis Phase 8):
+
+Auch mit der Cloud (Lücke 3) gibt es **keine echten Mitspieler**: Der Cloud-Speicher
+kennt nur Spielstände, keine Konten und keine Beziehungen zwischen Geräten. Freunde und
+Rangliste bleiben deshalb dauerhaft von den Begleitfiguren bevölkert — und sagen das auf
+beiden Bildschirmen sichtbar, statt echte Menschen vorzutäuschen.
+
+Es sind **neun** Figuren, nicht zehn: Mira, Lumo, Borin, Pip, Elda, Juno, Kori, Finn, Bree.
+**Fynnox selbst tritt nicht als Gegner an.** Er ist der Begleiter des Spielers und steckt
+bereits im eigenen Avatar; als elfte Zeile stünde bei einem frischen Profil zweimal
+„Fynnox" in derselben Rangliste, weil das die Voreinstellung des Profilnamens ist.
+
+**Trophäenpunkte** — eine Formel für alle, Spieler wie Figuren:
+
+```
+Trophäen = Level × 100 + gewonnene Runden × 25 + gespielte Runden × 5
+```
+
+Beim Spieler kommen die drei Zahlen aus dem Spielstand (`profile.level`,
+`stats.totalWins`, `stats.totalGames`). Ein frisches Profil steht damit bei 100 Trophäen.
+
+**Werte der Figuren**: aus einem **gesäten** Generator, Seed ist der Figurname —
+dieselbe Figur hat auf jedem Gerät und nach jedem Neuladen dieselbe Zahl. Vier Level
+sind aus den Mockups belegt und werden übernommen: **Mira 15, Lumo 14, Borin 13, Pip 11**.
+Die übrigen sechs bekommen ein gesätes Level zwischen 2 und 16; Runden und Siege
+ebenfalls gesät, passend zum Level.
+
+Die Trophäenzahlen aus dem Mockup (Mira 24.580, Lumo 18.320, Borin 16.870, Spieler 12.580)
+werden **nicht** übernommen. Sie sind laut [Charakterbibel](02-charakterbibel.md)
+Beispielwerte, und sie ließen sich mit keiner nachvollziehbaren Formel aus Level 15
+herleiten. Eine erfundene Zahl neben einer errechneten wäre der Anfang vom Ende der
+Vergleichbarkeit.
+
+Die schwächste Figur liegt bewusst bei Level 2: Die Rangliste muss von unten erreichbar
+sein, sonst ist sie keine Rangliste, sondern eine Wand. Die Werte der Figuren wachsen
+**nicht** mit dem Spieler mit — mitwachsende Gegner wären eine zweite Lüge.
+
+**Online-Zustand**: ebenfalls gesät, Seed ist Figurname **plus Tagesnummer**. Damit
+wechselt das Bild täglich, bleibt innerhalb eines Tages aber stehen und ist auf jedem
+Gerät gleich. Vier bis fünf Figuren sind online und spielen eines der acht Spiele, die
+übrigen tragen „Zuletzt online: 3 h".
+
+**Reiter „Anfragen"**: bleibt leer und erklärt warum. Einladungen kämen von echten
+Menschen; die gibt es nicht. Der Knopf „Freunden einladen" aus dem Mockup entfällt
+deshalb — ein Knopf, der niemanden einlädt, ist eine Lüge in der Oberfläche
+(dieselbe Regel wie bei den Einstellungsschaltern).
+
+**Reiter „Bestenliste"** zeigt exakt dieselbe Liste wie der eigene Bildschirm
+*Rangliste* — eine Komponente, eine Quelle. Zwei Ranglisten, die auseinanderlaufen
+können, wären ein Fehler, der sich erst spät zeigt.
 
 ### Erfolge
 

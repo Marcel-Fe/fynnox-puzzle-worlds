@@ -15,12 +15,14 @@ import { Achievements } from './screens/Achievements'
 import { Adventure } from './screens/Adventure'
 import { Dashboard } from './screens/Dashboard'
 import { Events } from './screens/Events'
+import { Friends } from './screens/Friends'
 import { Games } from './screens/Games'
 import { Loading } from './screens/Loading'
 import { Missions } from './screens/Missions'
 import { More } from './screens/More'
 import { Placeholder } from './screens/Placeholder'
 import { Profile } from './screens/Profile'
+import { Ranking } from './screens/Ranking'
 import { Settings } from './screens/Settings'
 import { Shop } from './screens/Shop'
 import { useGameStore } from './store/gameStore'
@@ -76,8 +78,8 @@ export default function App() {
           <Route path="abenteuer" element={<Adventure />} />
           <Route path="shop" element={<Shop />} />
           <Route path="events" element={<Events />} />
-          <Route path="freunde" element={<Placeholder title="Freunde" phase="Phase 8" />} />
-          <Route path="rangliste" element={<Placeholder title="Rangliste" phase="Phase 8" />} />
+          <Route path="freunde" element={<Friends />} />
+          <Route path="rangliste" element={<Ranking />} />
           <Route path="erfolge" element={<Achievements />} />
           <Route path="einstellungen" element={<Settings />} />
           <Route path="*" element={<Placeholder title="Nicht gefunden" phase="—" />} />
