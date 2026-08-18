@@ -176,6 +176,38 @@ save_jpg(
     (328, 337),
 )
 
+# --- Einblendungen -------------------------------------------------------
+#
+# docs/01-gamedesign.md legt sechs Einblendungen fest, die in jedem Spiel gleich
+# aussehen sollen. Vier davon liegen als fertige Kachel im Block "SPIEL MOMENTE"
+# unten rechts auf dem Ansichten-Blatt.
+#
+# Diese Ausschnitte tragen ihre Beschriftung IM Bild — anders als ueberall sonst
+# ist das hier erwuenscht, weil das Wort feststeht: "SIEG!" ist immer "SIEG!"
+# und kann keinem echten Wert widersprechen. Die Oberflaeche darf denselben Text
+# dann aber kein zweites Mal danebenschreiben.
+#
+# PAUSE und NEUES LEVEL! werden bewusst nicht geschnitten: Fuer beide gibt es
+# im Code noch keinen Ort, und ein ungenutztes Bild wuerde nur den Vorab-Cache
+# der PWA belasten.
+MOMENTS = {
+    "sieg": (1141, 850, 1256, 935),
+    "fehler": (1141, 938, 1256, 1022),
+    "levelup": (1261, 850, 1382, 935),
+    "belohnung": (1386, 850, 1509, 935),
+}
+for name, box in MOMENTS.items():
+    save_jpg(ansichten.crop(box), os.path.join(ART, "moments", f"{name}.jpg"), (460, 340), 86)
+
+# Dieselbe Truhe ohne das Schild "BELOHNUNG!": Im Abenteuerpfad und bei der
+# Tagesbelohnung steht sie auch dann da, wenn gerade nichts abzuholen ist.
+save_jpg(
+    ansichten.crop((1387, 872, 1508, 934)),
+    os.path.join(ART, "moments", "truhe.jpg"),
+    (320, 164),
+    86,
+)
+
 # --- Shop ----------------------------------------------------------------
 #
 # Alle Warenbilder stammen aus dem Shop-Bildschirm von

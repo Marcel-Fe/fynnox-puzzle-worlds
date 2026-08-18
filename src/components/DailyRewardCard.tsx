@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { MOMENTS } from '../content/assets'
 import { sfx } from '../core/audio'
 import { DAILY_REWARDS, dailyRewardState } from '../core/dailyReward'
 import { formatRemaining } from '../core/time'
@@ -25,9 +26,17 @@ export function DailyRewardCard() {
   return (
     <Card title="Tägliche Belohnung">
       <div className="flex items-center gap-3">
-        <span className="text-4xl" aria-hidden>
-          {state.available ? '🎁' : '📦'}
-        </span>
+        {/* Die Truhe ohne Schild: Über der Karte steht bereits „Tägliche
+            Belohnung" — das beschriftete Bild würde dasselbe Wort wiederholen. */}
+        <img
+          src={MOMENTS.truhe}
+          alt=""
+          className={[
+            'h-16 w-24 shrink-0 rounded-lg object-cover ring-1 ring-edge',
+            state.available ? '' : 'opacity-50 grayscale',
+          ].join(' ')}
+          loading="lazy"
+        />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold">
             {state.available

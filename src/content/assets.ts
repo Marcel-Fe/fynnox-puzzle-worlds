@@ -36,3 +36,21 @@ export const PORTRAITS: Record<string, string> = {
  */
 export const HERO_WIDE = asset('hero.jpg')
 export const HERO_PORTRAIT = asset('hero-portrait.jpg')
+
+/**
+ * Einblendungen aus docs/01-gamedesign.md, Abschnitt „Rundenablauf und
+ * Rückmeldungen". Anders als jedes andere Bild im Projekt tragen die ersten
+ * drei ihre Beschriftung IM Bild — das ist hier zulässig, weil das Wort
+ * feststeht und keinem echten Wert widersprechen kann. Wo eines dieser Bilder
+ * steht, darf die Oberfläche denselben Text nicht ein zweites Mal schreiben.
+ *
+ * `truhe` ist dieselbe Truhe ohne Schild, für die Stellen, an denen gerade
+ * nichts abzuholen ist.
+ */
+export const MOMENTS = {
+  sieg: asset('moments/sieg.jpg'),
+  fehler: asset('moments/fehler.jpg'),
+  levelup: asset('moments/levelup.jpg'),
+  belohnung: asset('moments/belohnung.jpg'),
+  truhe: asset('moments/truhe.jpg'),
+} as const

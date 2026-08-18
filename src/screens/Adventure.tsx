@@ -6,7 +6,7 @@ import {
   CHAPTERS,
   NODES_PER_CHAPTER,
 } from '../content/adventure'
-import { PORTRAITS } from '../content/assets'
+import { MOMENTS, PORTRAITS } from '../content/assets'
 import { GAMES_BY_ID } from '../content/games'
 import { sfx } from '../core/audio'
 import {
@@ -88,13 +88,22 @@ export function Adventure() {
           ].join(' ')}
         >
           {/* Die bereitliegende Truhe atmet leicht — die Bewegung hört auf,
-              sobald der Energiesparmodus an ist (src/index.css). */}
-          <p
-            className={`text-3xl ${complete && !chestClaimed ? 'chest-ready inline-block' : ''}`}
-            aria-hidden
-          >
-            {chestClaimed ? '📭' : complete ? '🎁' : '🔒'}
-          </p>
+              sobald der Energiesparmodus an ist (src/index.css).
+
+              Nur solange etwas abzuholen ist, trägt sie das Schild
+              „BELOHNUNG!" aus dem Gamedesign; danach steht dieselbe Truhe
+              ohne Schild da, gesperrt zusätzlich abgedunkelt. */}
+          <img
+            src={complete && !chestClaimed ? MOMENTS.belohnung : MOMENTS.truhe}
+            alt={complete && !chestClaimed ? 'Belohnung!' : ''}
+            className={[
+              'mx-auto h-20 rounded-lg object-cover',
+              complete && !chestClaimed ? 'chest-ready' : '',
+              complete ? '' : 'opacity-45 grayscale',
+              chestClaimed ? 'opacity-60' : '',
+            ].join(' ')}
+            loading="lazy"
+          />
           <p className="mt-1 text-sm font-bold">Truhe am Kapitelende</p>
           <p className="tabular mt-0.5 text-xs text-ink-muted">
             🪙 {chestReward(stars).coins.toLocaleString('de-DE')} · 💎{' '}
