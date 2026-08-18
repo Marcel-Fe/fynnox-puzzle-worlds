@@ -540,6 +540,45 @@ jetzt mit `GAMES.length`.
 
 ---
 
+## Nachtrag 18.08.2026 — die Oberfläche wird bildreich
+
+Der Auftraggeber wollte die App „hoch modern und sehr bildreich" sehen. Das Material dafür
+lag vollständig im Haus: elf Konzeptbilder in `docs/referenzen/`, aus denen
+`scripts/build-art.py` schneidet. Das Problem war nie fehlendes, sondern **ungenutztes**
+Material — an vielen Stellen stand ein Emoji, wo längst eine Illustration existierte.
+
+Drei Runden, jede im Browser bei 390 × 844 belegt:
+
+| Runde | Was flach war | Woher das Bild jetzt kommt |
+|---|---|---|
+| 17.08. | Alle sieben Spielkacheln zeigten dasselbe Fynnox-Gesicht | echte Spielansichten aus `spiele-ansichten-und-charaktere.png` |
+| 17.08. | Der Mehr-Bildschirm war eine Textliste mit Emoji | Kachelraster mit dem Bild des jeweiligen Bildschirms |
+| 18.08. | Shop, die drei Kurzwege auf dem Start, die Einblendungen, Sudoku- und Bubble-Shooter-Kachel | siehe unten |
+
+**Was die dritte Runde brachte**
+
+- **Shop**: Sechs der Waren stehen auf den Mockups — der Katalog in `src/content/shop.ts`
+  war daraus abgeleitet worden, die Bilder blieben liegen. Sie sind jetzt geschnitten,
+  jeweils oberhalb der Mockup-Beschriftung, damit kein Preis ins Bild einbrennt. Waren ohne
+  Vorlage behalten ihr Emoji, stehen aber auf einer Fläche in der Kategoriefarbe.
+- **Startbildschirm**: Die drei Kurzwege waren leere Kästen mit farbigem Rand. Jeder trägt
+  jetzt das Bild des Bildschirms dahinter — die Kapitelkachel sogar das der Welt, in der
+  der Spieler gerade steht.
+- **Einblendungen**: `SIEG!`, `FEHLER!`, `LEVEL UP!` und `BELOHNUNG!` aus dem Gamedesign
+  gab es bis dahin nicht im Code. Stand und Begründung stehen jetzt in
+  [01-gamedesign.md](01-gamedesign.md); `PAUSE` und `NEUES LEVEL!` bleiben offen, weil es
+  im Code keinen Ort dafür gibt.
+- **Sudoku und Bubble Shooter** hatten als einzige Spiele einen Charakterausschnitt statt
+  eines Spielfelds. Ihre Symbole aus der Spieleauswahl von
+  `handy-ladebildschirm-und-hauptbereiche.png` schließen die Lücke.
+
+**Was das kostete**: der Vorab-Cache der PWA wächst von 2,58 MB auf 2,64 MB — elf neue
+JPEGs zu zusammen rund 190 KB. Die Grenze, ab der nachgemessen wird, liegt bei 3,5 MB.
+
+**Keine neue Abhängigkeit.** Framer Motion war am 17.08.2026 abgelehnt worden; dabei bleibt es.
+
+---
+
 ## Was die Reihenfolge trägt
 
 - Phase 3 vor Phase 4: Ein Spiel ohne Profil müsste später umgebaut werden.

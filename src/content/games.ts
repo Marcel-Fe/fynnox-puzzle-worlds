@@ -1,7 +1,7 @@
 import { asset } from './assets'
 
 /**
- * Die acht Spiele. IDs sind unveränderlich (siehe CLAUDE.md).
+ * Die sieben Spiele. IDs sind unveränderlich (siehe CLAUDE.md).
  * Regeln und Kurztexte stammen aus docs/01-gamedesign.md, Farben aus docs/03-art-ui-guide.md.
  */
 export type GameId =

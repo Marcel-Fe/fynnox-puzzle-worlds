@@ -190,7 +190,7 @@ export const SHOP_ITEMS_BY_ID = Object.fromEntries(SHOP_ITEMS.map((i) => [i.id, 
 /**
  * Gekauftes wird gesammelt, wirkt aber noch nicht ins Spiel hinein — Outfits
  * und Helfer brauchen dafür Grafik, die es in den Konzeptbildern nicht gibt,
- * Booster eine Regel in jedem der acht Spiele. Beides gehört zu Phase 8.
+ * Booster eine Regel in jedem der sieben Spiele. Beides gehört zu Phase 8.
  */
 export const SHOP_NOTE =
   'Gekauftes landet in deiner Sammlung. Wie es im Spiel wirkt, kommt später dazu.'

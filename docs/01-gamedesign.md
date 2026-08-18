@@ -21,7 +21,9 @@ und einen **Bestwert**, der auf der Spielkachel steht:
 | Tempelpaare | Finn | Bestzeit |
 | Kristallmix | Lumo | Bestes Level |
 | Solitaire | Fynnox | Bestzeit |
-| Minigolf | Pip | Bestes Level (= erreichte Bahn) |
+| Sudoku | Elda | Bestzeit |
+| Bubble Shooter | Juno | Bestes Level |
+| ~~Minigolf~~ | ~~Pip~~ | **entfernt am 17.08.2026** (siehe Abschnitt 6) |
 
 ### 1. Blockfall — `blockfall`
 
@@ -427,13 +429,16 @@ Eine Kachel am Ende der Spieleliste, die auf künftige Spiele verweist. Kein eig
 
 ### Kategorien in der Spieleauswahl
 
-Filterleiste über der Spieleliste: **Alle Spiele · Puzzle · Karten · Sport**
+Filterleiste über der Spieleliste: **Alle Spiele · Puzzle · Karten**
+
+Die vierte Kategorie **Sport** stand im Mockup und fiel mit Minigolf weg — sie war
+dessen einziges Spiel. `GameCategory` in `src/content/games.ts` kennt seitdem nur
+noch `puzzle` und `karten`.
 
 | Kategorie | Spiele |
 |---|---|
 | Puzzle | Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Sudoku, Bubble Shooter |
 | Karten | Fynnox Solitaire |
-| Sport | Fynnox Minigolf |
 
 ---
 
@@ -441,17 +446,31 @@ Filterleiste über der Spieleliste: **Alle Spiele · Puzzle · Karten · Sport**
 
 Aus den Mockups belegte Einblendungen, die in **jedem** Spiel gleich aussehen sollen:
 
-| Moment | Anlass |
-|---|---|
-| `SIEG!` | Runde gewonnen |
-| `LEVEL UP!` | Levelaufstieg des Profils |
-| `BELOHNUNG!` | Truhe oder Belohnung freigeschaltet |
-| `NEUES LEVEL!` | nächstes Spiellevel erreicht |
-| `FEHLER!` | Fehlzug oder verlorene Runde |
-| `PAUSE` | Spiel angehalten |
+| Moment | Anlass | Stand seit 18.08.2026 |
+|---|---|---|
+| `SIEG!` | Runde gewonnen | Kopfbild des Ergebnisbildschirms, alle sieben Spiele |
+| `LEVEL UP!` | Levelaufstieg des Profils | in der Belohnungsbox des Ergebnisbildschirms |
+| `BELOHNUNG!` | Truhe oder Belohnung freigeschaltet | an der Truhe im Abenteuerpfad, solange etwas bereitliegt |
+| `NEUES LEVEL!` | nächstes Spiellevel erreicht | **nicht umgesetzt** — siehe unten |
+| `FEHLER!` | Fehlzug oder verlorene Runde | Kopfbild des Ergebnisbildschirms, alle sieben Spiele |
+| `PAUSE` | Spiel angehalten | **nicht umgesetzt** — siehe unten |
+
+Alle vier umgesetzten Einblendungen sind Bildausschnitte aus dem Block „SPIEL MOMENTE"
+in `docs/referenzen/spiele-ansichten-und-charaktere.png` und tragen ihr Wort **im Bild**.
+Das ist die einzige zugelassene Ausnahme von der Regel, fremde Beschriftungen wegzuschneiden
+(docs/03-art-ui-guide.md, Regel 7) — sie gilt, weil das Wort feststeht. Im Gegenzug darf
+die Oberfläche denselben Text nicht wiederholen: Die Überschrift des Ergebnisbildschirms
+nennt nur noch den spielspezifischen Grund („Tempel geräumt!", „Zu viele Fehler!").
+
+`NEUES LEVEL!` und `PAUSE` sind bewusst offen. Für beide gibt es im Code noch keinen Ort:
+Die Pause ist bisher nur ein Knopf in Blockfall ohne eigene Schicht darüber, und ein
+Spiellevel wird heute über die Beschriftung des „Nochmal"-Knopfes angekündigt. Ein
+geschnittenes, aber ungenutztes Bild würde nur den Vorab-Cache der PWA belasten — beide
+Ausschnitte entstehen erst, wenn die Stelle dafür existiert.
 
 Dazu spielspezifisch: `COMBO x4` / `KOMBO x3` / `Combo x5!` (Blockfall, Tempelpaare, Kristallmix),
-`TETRIS!` (Blockfall), `Sweet!` (Kristallmix), `PERFEKT!` und `HOLE IN ONE!` (Minigolf).
+`TETRIS!` (Blockfall) und `Sweet!` (Kristallmix). `PERFEKT!` und `HOLE IN ONE!` standen
+im Mockup für Minigolf und fielen mit dem Spiel weg.
 
 **Gewonnen-Bildschirm** (aus dem Solitaire-Mockup, gilt als Vorlage für alle Spiele):
 Überschrift „GEWONNEN!", bis zu drei Sterne, die erreichten Werte (Zeit, Punkte)
@@ -602,7 +621,8 @@ Drei Arten, als Reiter getrennt: **Täglich**, **Wöchentlich**, **Event**.
 - Jede Mission: Text, Fortschritt (z. B. 2/3), Belohnung in Münzen
 - Tägliche Missionen laufen ab und erneuern sich (Mockup zeigt Restzeit 16 h 45 m)
 - Beispiele täglich: „Spiele 3 Runden Blockfall" (100), „Sammle 200 Kristalle" (150),
-  „Gewinne 1 Spiel in Minigolf" (200)
+  „Gewinne 2 Runden" (200). Das Mockup zeigt an dritter Stelle „Gewinne 1 Spiel in
+  Minigolf" — die Vorlage fiel mit dem Spiel weg
 - Beispiele wöchentlich: „Spiele 5 Runden irgendein Spiel" (150), „Sammle 500 Münzen" (250),
   „Gewinne 2 Spiele" (180)
 - Missionen greifen auf Spielereignisse zu — jedes Spiel meldet am Rundenende ein einheitliches
@@ -621,9 +641,10 @@ Drei Arten, als Reiter getrennt: **Täglich**, **Wöchentlich**, **Event**.
 | Nicht abgelaufene | behalten ihren Fortschritt | Eine Wochenmission darf durch das Öffnen der App nicht zurückgesetzt werden |
 
 Nur Vorlagen, die auch ein Spiel meldet, dürfen in den Pool — sonst gäbe es unerfüllbare
-Missionen. Verfügbar sind `stars` (alle acht Spiele), `rowsCleared` (Waldblöcke, Blockfall),
+Missionen. Verfügbar sind `stars` (alle sieben Spiele), `rowsCleared` (Waldblöcke, Blockfall),
 `combos` (Waldblöcke, Kristallmix), `pairs` (Tempelpaare), `crystalsCollected` und `rainbows`
-(Kristallmix), `strokes` und `holeInOne` (Minigolf), `moves`/`undos` (Solitaire), `mistakes` (Sudoku).
+(Kristallmix), `moves`/`undos` (Solitaire), `mistakes` (Sudoku). `strokes` und `holeInOne`
+fielen mit Minigolf weg.
 `winRounds` ohne Spielangabe zählt nur bei den sechs gewinnbaren Spielen — Waldblöcke und
 Blockfall sind Endlosspiele und melden nie einen Sieg.
 
@@ -727,18 +748,18 @@ auf den Knoten übertragen.
 
 Begründung gegen die Alternative „freie Wahl des Spiels": Bei freier Wahl wäre der Pfad nur
 ein zweiter Rundenzähler neben der Statistik — er würde nirgends hinführen. Ein vorgegebenes
-Spiel führt dagegen durch alle acht Spiele und passt zur Weltkulisse des Kapitels.
+Spiel führt dagegen durch alle sieben Spiele und passt zur Weltkulisse des Kapitels.
 
-Begründung gegen ein **Punkteziel** je Knoten: Die Punktebereiche der acht Spiele liegen um
-den Faktor zehn auseinander (Minigolf rund 300–1.500, Sudoku bis 4.700, Waldblöcke mehrere
-Tausend). Ein Punkteziel bräuchte deshalb eine zweite Balancing-Tabelle je Spiel, die neben
+Begründung gegen ein **Punkteziel** je Knoten: Die Punktebereiche der sieben Spiele liegen um
+den Faktor zehn auseinander (Sudoku bis 4.700, Waldblöcke mehrere Tausend, Tempelpaare
+wertet gar nicht in Punkten, sondern in Zeit). Ein Punkteziel bräuchte deshalb eine zweite Balancing-Tabelle je Spiel, die neben
 den bereits kalibrierten Sternschwellen (`starsFor` in jedem Spiel) herliefe und mit ihnen
 auseinanderlaufen könnte. Die Sterne sind bereits pro Spiel geeicht — genau das wird benutzt.
 
 | Frage | Festlegung | Begründung |
 |---|---|---|
 | Knoten je Kapitel | 15 | Aus dem Mockup („8/15") |
-| Welches Spiel | fest je Knoten, reihum durch alle acht: `spiele[(knoten - 1 + (kapitel - 1) * 3) % 8]` | Ohne Zufall und dadurch reproduzierbar. Der Versatz von 3 je Kapitel sorgt dafür, dass die ersten acht Kapitel unterschiedlich beginnen. Ab dem neunten wiederholt sich die Reihenfolge zwangsläufig — acht Spiele geben nicht mehr her |
+| Welches Spiel | fest je Knoten, reihum durch alle sieben: `spiele[(knoten - 1 + (kapitel - 1) * 3) % 7]` | Ohne Zufall und dadurch reproduzierbar. Der Versatz von 3 je Kapitel sorgt dafür, dass aufeinanderfolgende Kapitel unterschiedlich beginnen. Der Code rechnet mit `GAMES.length`, nicht mit einer festen 7 — nach der Minigolf-Entfernung wäre eine getippte Zahl sonst still falsch geworden |
 | Bestanden ab | 1 Stern | Der Pfad soll führen, nicht blockieren. Die Tiefe liegt im Nachspielen für 3 Sterne, nicht im Wiederholenmüssen |
 | Zurückspringen | nicht möglich | Ein abgeschlossener Knoten behält seine Sterne. Ein Auswahlmodus für alte Knoten bräuchte zusätzlichen Zustand im Spielstand, ohne etwas hinzuzufügen |
 | Energie | ja, wie jede Runde | Ein Knoten *ist* eine normale Runde — er läuft über dieselbe Rundenauswertung |
@@ -875,7 +896,7 @@ sein, sonst ist sie keine Rangliste, sondern eine Wand. Die Werte der Figuren wa
 
 **Online-Zustand**: ebenfalls gesät, Seed ist Figurname **plus Tagesnummer**. Damit
 wechselt das Bild täglich, bleibt innerhalb eines Tages aber stehen und ist auf jedem
-Gerät gleich. Vier bis fünf Figuren sind online und spielen eines der acht Spiele, die
+Gerät gleich. Vier bis fünf Figuren sind online und spielen eines der sieben Spiele, die
 übrigen tragen „Zuletzt online: 3 h".
 
 **Reiter „Anfragen"**: bleibt leer und erklärt warum. Einladungen kämen von echten
@@ -893,7 +914,8 @@ Dauerhafte Ziele mit Fortschritt, z. B. „Abenteurer — Spiele 100 Spiele" (er
 „Sammler — Sammle 10.000 Münzen" (8.450/10.000), „Meister — Erreiche Level 50" (34/50).
 Im Profil steht ein Gesamtstand (Mockup: **25 / 60**) mit Abzeichen in Bronze, Silber und Gold.
 
-**Festgelegt am 17.08.2026** (war offen bis Phase 7) — **24 Erfolge**, nicht 60:
+**Festgelegt am 17.08.2026** (war offen bis Phase 7) — **23 Erfolge**, nicht 60.
+Seit der Minigolf-Entfernung am 17.08.2026 sind es sieben Spiel-Erfolge statt acht:
 
 | # | ID | Titel | Ziel |
 |---|---|---|---|
@@ -906,7 +928,7 @@ Im Profil steht ein Gesamtstand (Mockup: **25 / 60**) mit Abzeichen in Bronze, S
 | 7 | `climber` | Aufsteiger | Erreiche Level 10 |
 | 8 | `master` | Meister | Erreiche Level 50 |
 | 9 | `endurance` | Ausdauer | Spiele 10 Stunden |
-| 10 | `allrounder` | Alleskönner | Spiele jedes der acht Spiele |
+| 10 | `allrounder` | Alleskönner | Spiele jedes der 7 Spiele (Zahl aus `GAMES.length`) |
 | 11 | `game-waldbloecke` | Waldläufer | 25 Runden Waldblöcke |
 | 12 | `game-blockfall` | Stapelmeister | 25 Runden Blockfall |
 | 13 | `game-tempelpaare` | Tempelforscher | 25 Runden Tempelpaare |
@@ -914,15 +936,14 @@ Im Profil steht ein Gesamtstand (Mockup: **25 / 60**) mit Abzeichen in Bronze, S
 | 15 | `game-sudoku` | Zahlenfuchs | 25 Runden Sudoku |
 | 16 | `game-bubbleshooter` | Blasenjäger | 25 Runden Bubble Shooter |
 | 17 | `game-solitaire` | Kartenkünstler | 25 Runden Solitaire |
-| 18 | `game-minigolf` | Bahnenkenner | 25 Runden Minigolf |
-| 19 | `wanderer` | Wanderer | Schließe 15 Abenteuer-Knoten ab |
-| 20 | `chapter-master` | Kapitelmeister | Schließe ein ganzes Kapitel ab |
-| 21 | `star-hunter` | Sternensammler | Sammle 30 Sterne im Abenteuerpfad |
-| 22 | `loyal` | Treuer Freund | Hole die Tagesbelohnung 7 Tage in Folge |
-| 23 | `shopper` | Erster Einkauf | Kaufe etwas im Shop |
-| 24 | `wardrobe` | Sammlerstück | Besitze 3 Gegenstände |
+| 18 | `wanderer` | Wanderer | Schließe 15 Abenteuer-Knoten ab |
+| 19 | `chapter-master` | Kapitelmeister | Schließe ein ganzes Kapitel ab |
+| 20 | `star-hunter` | Sternensammler | Sammle 30 Sterne im Abenteuerpfad |
+| 21 | `loyal` | Treuer Freund | Hole die Tagesbelohnung 7 Tage in Folge |
+| 22 | `shopper` | Erster Einkauf | Kaufe etwas im Shop |
+| 23 | `wardrobe` | Sammlerstück | Besitze 3 Gegenstände |
 
-Begründung für 24 statt der 60 aus dem Mockup: **Jeder dieser Erfolge ist aus Daten
+Begründung für 23 statt der 60 aus dem Mockup: **Jeder dieser Erfolge ist aus Daten
 messbar, die der Spielstand ohnehin führt** — Statistik, Fortschritt je Spiel, Abenteuerpfad,
 Serie der Tagesbelohnung, Besitz. Für 60 müssten 36 weitere Ziele erfunden werden, die
 niemand zählt; die Zahl 60 auf dem Mockup ist eine Platzhalter-Beschriftung wie die

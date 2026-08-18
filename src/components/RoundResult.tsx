@@ -40,7 +40,7 @@ export function RoundResultOverlay({
   const mood = moodFor(won)
 
   // Das Overlay wird erst beim Rundenende eingehängt — der Klang gehört also
-  // an das Einhängen, nicht an einen Knopf. Eine Stelle für alle acht Spiele.
+  // an das Einhängen, nicht an einen Knopf. Eine Stelle für alle sieben Spiele.
   useEffect(() => {
     sfx(won ? 'win' : 'lose')
   }, [won])

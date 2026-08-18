@@ -108,11 +108,14 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: 'allrounder',
     title: 'Alleskönner',
-    description: 'Spiele jedes der acht Spiele',
+    // Zahl aus GAMES abgeleitet: Nach der Minigolf-Entfernung stand hier
+    // „acht“, während das Ziel längst sieben war — der Spieler las eine
+    // Beschreibung, die dem Fortschrittsbalken daneben widersprach.
+    description: `Spiele jedes der ${GAMES.length} Spiele`,
     goal: GAMES.length,
     measure: (s) => Object.values(s.progress).filter((p) => p.gamesPlayed > 0).length,
   },
-  // Ein Erfolg je Spiel — erzeugt statt achtmal getippt, damit kein Spiel fehlt.
+  // Ein Erfolg je Spiel — erzeugt statt von Hand getippt, damit kein Spiel fehlt.
   ...GAMES.map((game) => ({
     id: `game-${game.id}`,
     title: PER_GAME_TITLES[game.id],

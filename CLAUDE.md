@@ -1,6 +1,6 @@
 # Fynnox Puzzle Worlds
 
-Ein Casual-Game-Universum mit sechs Puzzle-Spielen, die sich ein gemeinsames Profil teilen
+Ein Casual-Game-Universum mit sieben Puzzle-Spielen, die sich ein gemeinsames Profil teilen
 (XP, Münzen, Kristalle, Missionen, Abenteuerpfad). Hauptfigur ist der Fuchs **Fynnox**, der auf
 jedem Bildschirm auftaucht. Auslieferung als **installierbare PWA** — primär fürs Smartphone
 im Hochformat, funktioniert aber auch am Desktop.
@@ -15,12 +15,12 @@ werden **nie aus dem Gedächtnis erfunden**, sondern hier nachgelesen:
 | Datei | Inhalt |
 |---|---|
 | [docs/00-masterprompt.md](docs/00-masterprompt.md) | Ursprüngliche Vision des Auftraggebers, unverändert |
-| [docs/01-gamedesign.md](docs/01-gamedesign.md) | Regeln der 6 Spiele + geteilte Systeme (XP, Währungen, Missionen, Events) |
+| [docs/01-gamedesign.md](docs/01-gamedesign.md) | Regeln der sieben Spiele + geteilte Systeme (XP, Währungen, Missionen, Events) |
 | [docs/02-charakterbibel.md](docs/02-charakterbibel.md) | Fynnox und alle Nebenfiguren: Aussehen, Rolle, Sprechstil |
 | [docs/03-art-ui-guide.md](docs/03-art-ui-guide.md) | Farben (aus den Mockups gemessen), Typografie, Layout, Navigation |
 | [docs/04-datenmodell.md](docs/04-datenmodell.md) | Typen für Profil/Fortschritt + Speicher-Schnittstelle |
 | [docs/05-roadmap.md](docs/05-roadmap.md) | Phasenplan mit Abschlusskriterien |
-| [docs/referenzen/](docs/referenzen/) | Sechs Konzeptbilder — visuelle Referenz für alles UI-nahe |
+| [docs/referenzen/](docs/referenzen/) | Elf Konzeptbilder plus zwei Kulissen aus den Nachbarprojekten — visuelle Referenz für alles UI-nahe |
 
 Widerspricht eine Anforderung diesen Dokumenten, wird der Widerspruch benannt und geklärt,
 bevor Code entsteht. Wird eine Festlegung geändert, wird das Dokument mitgeändert — nie nur der Code.
@@ -33,7 +33,7 @@ Bewusst identisch zu **`fynnox-adventure`**, damit alle Fynnox-Projekte gleich f
 - **zustand** für den geteilten Zustand (Profil, Währungen, Missionen)
 - **vite-plugin-pwa** — macht die App auf dem Smartphone installierbar und offline-fähig
 - **TailwindCSS v4** — einzige bewusste Abweichung von `fynnox-adventure`.
-  Grund: Dieses Projekt ist UI-lastig (Dashboard, Shop, Missionen, sechs HUDs);
+  Grund: Dieses Projekt ist UI-lastig (Dashboard, Shop, Missionen, sieben HUDs);
   `fynnox-adventure` ist ein 3D-Spiel mit wenig UI und kommt darum mit reinem CSS aus.
 - **three.js / @react-three/fiber / drei** — **ausschließlich** für die 3D-Ansicht von Fynnox
   auf dem Profilbildschirm, und nur über `lazy()` nachgeladen. Gebaut wiegt der 3D-Teil
@@ -121,7 +121,7 @@ public/                  PWA-Icons (pwa-192, pwa-512, maskable-512, apple-touch-
 
 ## Arbeitsweise in diesem Projekt
 
-- **Ein Spiel nach dem anderen** vollständig fertigstellen, statt sechs halbe Spiele zu haben.
+- **Ein Spiel nach dem anderen** vollständig fertigstellen, statt sieben halbe Spiele zu haben.
   Reihenfolge und Abschlusskriterien stehen in der [Roadmap](docs/05-roadmap.md).
 - Jedes neue Spiel folgt dem Muster des ersten (Waldblöcke) — kein zweiter Architekturstil.
 - Balancing-Zahlen (XP pro Runde, Münzen, Energiekosten) stehen im Gamedesign-Dokument.

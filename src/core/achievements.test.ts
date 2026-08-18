@@ -21,7 +21,7 @@ describe('Erfolgskatalog', () => {
     for (const id of ['adventurer', 'collector', 'master']) expect(ids).toContain(id)
   })
 
-  it('hat für jedes der acht Spiele einen eigenen Erfolg', () => {
+  it('hat für jedes Spiel einen eigenen Erfolg', () => {
     for (const game of GAMES) {
       const found = ACHIEVEMENTS.find((a) => a.id === `game-${game.id}`)
       expect(found?.title.length).toBeGreaterThan(0)

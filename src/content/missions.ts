@@ -5,12 +5,11 @@ import type { MissionTrack } from '../save/types'
  *
  * Eine Vorlage darf nur an einen Zähler andocken, den auch wirklich ein Spiel
  * meldet — sonst entstünde eine unerfüllbare Mission. Gemeldet werden:
- * `stars` (alle acht), `rowsCleared` (Waldblöcke, Blockfall), `combos`
+ * `stars` (alle sieben), `rowsCleared` (Waldblöcke, Blockfall), `combos`
  * (Waldblöcke, Kristallmix), `pairs` (Tempelpaare), `crystalsCollected` und
- * `rainbows` (Kristallmix), `strokes`/`holeInOne` (Minigolf), `moves`/`undos`
- * (Solitaire), `mistakes` (Sudoku).
+ * `rainbows` (Kristallmix), `moves`/`undos` (Solitaire), `mistakes` (Sudoku).
  *
- * `winRounds` ohne Spielangabe zählt nur bei den sechs gewinnbaren Spielen:
+ * `winRounds` ohne Spielangabe zählt nur bei den fünf gewinnbaren Spielen:
  * Waldblöcke und Blockfall sind Endlosspiele und melden nie einen Sieg.
  */
 export interface MissionTemplate {

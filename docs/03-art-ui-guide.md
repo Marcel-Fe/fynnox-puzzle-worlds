@@ -21,8 +21,11 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
 | `bg/unterwasser.jpg` | 8. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
 | `bg/stadt.jpg` | 9. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-city-hafenpromenade.png` |
-| `games/` | 8 Kachelbilder | Spielkarten in `dashboard-hauptansicht.png` |
-| `hero.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
+| `games/` | 5 Kachelbilder (Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Solitaire) | echte Spielansichten in `spiele-ansichten-und-charaktere.png` |
+| `games/sudoku.jpg`, `games/bubbleshooter.jpg` | die zwei Kacheln ohne ausgearbeitete Spielansicht | Symbole der Spieleauswahl in `handy-ladebildschirm-und-hauptbereiche.png` |
+| `shop/` | 6 Warenbilder + Kopfbild des Shops | Shop-Bildschirme in `handy-app-10-bildschirme.png` und `handy-ladebildschirm-und-hauptbereiche.png` |
+| `moments/` | 4 Einblendungen (`SIEG!`, `FEHLER!`, `LEVEL UP!`, `BELOHNUNG!`) + Truhe ohne Schild | Block „SPIEL MOMENTE" in `spiele-ansichten-und-charaktere.png` |
+| `hero.jpg`, `hero-portrait.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
 **Regeln dazu:**
 
@@ -47,6 +50,26 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 6. **Fremdes Bildmaterial wird in `referenzen/` kopiert, nicht von außerhalb gelesen.**
    Ein Pfad in ein Nachbarprojekt wäre auf keinem zweiten Rechner reproduzierbar und
    würde `python scripts/build-art.py` bei jedem Umbenennen dort brechen.
+7. **Eine Beschriftung darf im Bild bleiben, wenn das Wort feststeht.** Genau eine
+   Ausnahme von Regel 3, und sie gilt nur für `moments/`: „SIEG!" ist immer „SIEG!" und
+   kann keinem gespielten Wert widersprechen. Der Preis dafür: Wo ein solches Bild steht,
+   darf die Oberfläche denselben Text **nicht ein zweites Mal danebenschreiben** — der
+   Ergebnisbildschirm nennt darum nur noch den spielspezifischen Grund
+   („Tempel geräumt!", „Zu viele Fehler!"). Warenbilder fallen ausdrücklich **nicht**
+   unter diese Ausnahme: Ihre Mockup-Kachel trägt Name und Preis, und beide werden
+   weggeschnitten, weil ein eingebrannter Preis sich nie wieder ändern ließe.
+
+### Die zwei Kacheln ohne Spielansicht
+
+Für Sudoku und Bubble Shooter zeichnet kein Mockup ein ausgearbeitetes Spielfeld — wohl
+aber ein Symbol: In der Spieleauswahl von `handy-ladebildschirm-und-hauptbereiche.png`
+steht für Sudoku ein 3×3-Gitter und für Bubble Shooter eine Traube farbiger Blasen.
+Bis zum **18.08.2026** trug stattdessen jedes der beiden einen Charakterausschnitt aus dem
+Minigolf-Blatt; in der Spieleliste standen damit fünf Spielfelder neben zwei Fuchsgesichtern.
+
+Beide Ausschnitte behalten als einzige in `games/` ihr Seitenverhältnis, statt auf
+328 × 380 gezogen zu werden — ein gezerrtes 3×3-Gitter fällt sofort auf. Die Kachel zeigt
+das Bild ohnehin als `object-cover`, also entscheidet nicht die Datei über den Ausschnitt.
 
 ### Die zwei Kulissen, die nicht aus den Mockups stammen
 

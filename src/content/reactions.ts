@@ -2,7 +2,7 @@ import { asset } from './assets'
 
 /**
  * Was Fynnox nach einer Runde sagt (docs/02-charakterbibel.md, „Reaktion nach
- * einer Runde"). Gilt in allen acht Spielen gleich.
+ * einer Runde"). Gilt in allen sieben Spielen gleich.
  *
  * Fynnox kommentiert nie die Regeln eines einzelnen Spiels — das bleibt Sache
  * der jeweiligen Begleitfigur — sondern nur, wie die Runde ausgegangen ist.

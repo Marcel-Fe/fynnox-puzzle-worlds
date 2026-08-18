@@ -16,7 +16,7 @@ import { dayIndex } from './time'
 
 /**
  * Mulberry32, dieselbe Formel wie in `games/solitaire/logic/cards.ts`.
- * Bewusst kopiert statt geteilt: Die Spiellogik der acht Spiele wird für die
+ * Bewusst kopiert statt geteilt: Die Spiellogik der sieben Spiele wird für die
  * Meta-Bildschirme nicht angefasst, und acht Zeilen Zahlenmischer sind billiger
  * als eine Abhängigkeit quer durch den Baum.
  */
