@@ -67,7 +67,7 @@ describe('Kapitel und Knoten', () => {
     )
   })
 
-  it('verteilt die Knoten reihum auf alle acht Spiele', () => {
+  it('verteilt die Knoten reihum auf alle Spiele', () => {
     for (const chapter of CHAPTERS) {
       const games = new Set<string>()
       for (let node = 1; node <= NODES_PER_CHAPTER; node++) {
@@ -87,9 +87,9 @@ describe('Kapitel und Knoten', () => {
     expect(new Set(firsts).size).toBe(Math.min(CHAPTERS.length, GAMES.length))
   })
 
-  it('nach acht Kapiteln beginnt die Reihenfolge von vorn', () => {
+  it('nach so vielen Kapiteln wie Spielen beginnt die Reihenfolge von vorn', () => {
     for (let node = 1; node <= NODES_PER_CHAPTER; node++) {
-      expect(nodeGame(9, node)).toBe(nodeGame(1, node))
+      expect(nodeGame(1 + GAMES.length, node)).toBe(nodeGame(1, node))
     }
   })
 

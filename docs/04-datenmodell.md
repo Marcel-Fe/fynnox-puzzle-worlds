@@ -28,7 +28,6 @@ export type GameId =
   | 'tempelpaare'
   | 'kristallmix'
   | 'solitaire'
-  | 'minigolf'
   | 'sudoku'
   | 'bubbleshooter'
 ```
@@ -61,7 +60,7 @@ export interface GameProgress {
   highScore: number
   highestLevel: number
   totalPlaytimeMs: number
-  /** spielspezifisch: Bestzeit (Tempelpaare, Solitaire), bestes Par-Ergebnis (Minigolf) */
+  /** spielspezifisch: Bestzeit (Tempelpaare, Solitaire, Sudoku) */
   bestTimeMs?: number
   bestUnderPar?: number
   starsCollected?: number
@@ -353,6 +352,13 @@ möglich, in dem die App eine Cloud vortäuscht, die es nicht gibt.
 Shop im Spielstand landet. Alte Stände bekommen eine leere Liste. Andere Felder blieben
 unverändert — Missionen, Erfolge und Abenteuerpfad waren von Anfang an vollständig
 angelegt und mussten für Phase 7 nur gefüllt werden.
+
+**Version 4** (17.08.2026): Minigolf fiel aus dem Umfang. Ein alter Stand trug es an vier
+Stellen mit sich — `progress`, `recentGames`, `favoriteGame` und laufenden Missionen.
+`toV4` entfernt alles, was `GAMES` nicht mehr kennt; bewusst allgemein formuliert statt
+auf `minigolf` fest verdrahtet, damit die Migration die nächste Umfangsänderung mitträgt.
+Erfolge brauchen nichts: `syncAchievements` baut die Liste bei jedem Laden aus den
+Definitionen neu auf.
 
 **Version 3** (17.08.2026, Phase 8): `updatedAt: number` kam für den Cloud-Abgleich dazu.
 Alte Stände bekommen `0` — der niedrigstmögliche Wert. Das ist Absicht: Ein Stand ohne

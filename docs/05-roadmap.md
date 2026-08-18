@@ -513,6 +513,33 @@ außer den Benachrichtigungen, die eine Geräteerlaubnis brauchen.
 
 ---
 
+## Nachtrag 17.08.2026 — Minigolf wieder entfernt
+
+Alles oben über Minigolf bleibt stehen, weil es den damaligen Stand beschreibt. **Das
+Spiel ist seit dem 17.08.2026 nicht mehr Teil des Umfangs.** Aus acht Spielen sind sieben
+geworden.
+
+**Warum**: Die Bahnen überzeugten in der Darstellung nicht. Zwei Anläufe — erst eine
+schattierte Draufsicht, dann eine echte 2,5D-Projektion mit umlaufendem Wall — blieben
+hinter dem zurück, was das Spiel hätte tragen müssen. Dazu kam ein struktureller Grund:
+Minigolf war das einzige Spiel mit laufender Simulation; die übrigen sieben sind alle
+zugbasiert und teilen sich dadurch dieselben Muster für Zustand, Eingabe und Auswertung.
+
+**Was das kostete**: 5 Dateien mit rund 1.500 Zeilen, davon 514 Zeilen Tests — die
+Testzahl fällt von 442 auf 392. Alles liegt in der Git-Historie und ist zurückholbar.
+
+**Was blieb**: die sechs Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal,
+Wolkeninsel, Wintergipfel). Sie waren für die Bahnen geschnitten worden und tragen jetzt
+Abenteuerpfad, Events und die Spielhintergründe.
+
+**Was nachgezogen wurde**: `SAVE_VERSION` 3 → 4 mit `toV4`, die Spiel-ID, die Route, der
+Erfolg „Bahnenkenner“, die Event-Mission des Piratenfests (hängt jetzt an Tempelpaare),
+die Kapitelfarbe der Pirateninsel (jetzt Gold) und der Kachelausschnitt in
+`scripts/build-art.py`. Zwei Tests, die auf die feste Zahl Acht geprüft haben, rechnen
+jetzt mit `GAMES.length`.
+
+---
+
 ## Was die Reihenfolge trägt
 
 - Phase 3 vor Phase 4: Ein Spiel ohne Profil müsste später umgebaut werden.

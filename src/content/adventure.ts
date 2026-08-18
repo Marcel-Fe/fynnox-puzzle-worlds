@@ -48,7 +48,10 @@ export const CHAPTERS: Chapter[] = [
     world: 'Pirateninsel',
     intro: 'Riechst du das Salz? Irgendwo hier soll ein Schatz vergraben sein.',
     image: asset('bg/piratenbucht.jpg'),
-    accent: 'var(--color-game-minigolf)',
+    // Gold statt einer Spielfarbe: Seit Minigolf raus ist, gibt es sieben
+    // Spielfarben für acht Kapitel — und zur Pirateninsel passt Gold ohnehin
+    // besser als jede Spielfarbe.
+    accent: 'var(--color-gold)',
   },
   {
     number: 5,

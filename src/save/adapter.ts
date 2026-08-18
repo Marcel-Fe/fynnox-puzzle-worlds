@@ -1,3 +1,4 @@
+import { GAMES } from '../content/games'
 import { SAVE_VERSION } from './defaults'
 import type { SaveData } from './types'
 
@@ -94,6 +95,7 @@ export function migrate(data: SaveData): SaveData | null {
   let save = data
   if (save.version < 2) save = toV2(save)
   if (save.version < 3) save = toV3(save)
+  if (save.version < 4) save = toV4(save)
 
   return { ...save, version: SAVE_VERSION }
 }
@@ -112,4 +114,47 @@ function toV2(data: SaveData): SaveData {
  */
 function toV3(data: SaveData): SaveData {
   return { ...data, updatedAt: data.updatedAt ?? 0 }
+}
+
+/**
+ * 3 → 4: Minigolf fiel aus dem Umfang.
+ *
+ * Ein alter Stand trägt es an drei Stellen mit sich: als Fortschrittseintrag,
+ * in der Liste zuletzt gespielter Spiele und womöglich als Lieblingsspiel.
+ * Bliebe es stehen, zeigte das Dashboard eine Kachel für ein Spiel, das es
+ * nicht mehr gibt.
+ *
+ * Bewusst allgemein formuliert statt auf `minigolf` fest verdrahtet: Die
+ * Migration wirft alles weg, was `GAMES` heute nicht mehr kennt. Damit trägt
+ * sie auch die nächste Umfangsänderung.
+ *
+ * Erfolge und Missionen brauchen nichts: `syncAchievements` baut die Liste bei
+ * jedem Laden aus den Definitionen neu auf, und Missionen laufen ab und werden
+ * ersetzt. Nur laufende Missionen auf ein entferntes Spiel wären bis zu ihrem
+ * Ablauf unerfüllbar — die werden darum hier gestrichen.
+ */
+function toV4(data: SaveData): SaveData {
+  const known = new Set<string>(GAMES.map((g) => g.id))
+
+  const progress = Object.fromEntries(
+    Object.entries(data.progress ?? {}).filter(([id]) => known.has(id)),
+  ) as SaveData['progress']
+
+  const missions = (data.missions ?? []).filter(
+    (m) => !('game' in m.track) || !m.track.game || known.has(m.track.game),
+  )
+
+  return {
+    ...data,
+    progress,
+    missions,
+    recentGames: (data.recentGames ?? []).filter((id) => known.has(id)),
+    profile: {
+      ...data.profile,
+      favoriteGame:
+        data.profile?.favoriteGame && known.has(data.profile.favoriteGame)
+          ? data.profile.favoriteGame
+          : null,
+    },
+  }
 }

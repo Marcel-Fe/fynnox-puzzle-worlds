@@ -37,7 +37,6 @@ const PER_GAME_TITLES: Record<string, string> = {
   sudoku: 'Zahlenfuchs',
   bubbleshooter: 'Blasenjäger',
   solitaire: 'Kartenkünstler',
-  minigolf: 'Bahnenkenner',
 }
 
 const ROUNDS_PER_GAME = 25

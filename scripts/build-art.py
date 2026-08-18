@@ -141,7 +141,6 @@ TILES = {
     "tempelpaare": (580, 744),
     "kristallmix": (747, 911),
     "solitaire": (914, 1078),
-    "minigolf": (1081, 1245),
 }
 # y ab 476: Auf der Blockfall-Karte klebt oben links ein "NEU"-Fahnchen,
 # das sonst angeschnitten als sinnloses "EU" auf der Kachel landet.

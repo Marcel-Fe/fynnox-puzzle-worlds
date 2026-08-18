@@ -60,11 +60,11 @@ export const EVENT_CATALOG: EventInfo[] = [
     text: 'Auf der Pirateninsel wird gefeiert — wer trifft am besten?',
     image: asset('bg/piratenbucht.jpg'),
     mission: {
-      text: 'Loche 15 Bahnen ein',
+      text: 'Finde 15 Mal alle Tempelpaare',
       goal: 15,
       rewardCoins: 600,
       rewardCrystals: 60,
-      track: { type: 'winRounds', game: 'minigolf' },
+      track: { type: 'winRounds', game: 'tempelpaare' },
     },
   },
   {

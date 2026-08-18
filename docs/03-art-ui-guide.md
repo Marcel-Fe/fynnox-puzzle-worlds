@@ -179,7 +179,7 @@ Jedes Spiel hat eine eigene Farbe — sie färbt Karte, Knopf und HUD-Rand.
 | Tempelpaare | `game-tempelpaare` | `#D26A03` (Orange) | weiß | gemessen |
 | Kristallmix | `game-kristallmix` | `#CA314D` (Pink-Rot) | weiß | gemessen |
 | Solitaire | `game-solitaire` | `#135EB0` (Blau) | weiß | gemessen |
-| Minigolf | `game-minigolf` | `#057336` (Rasengrün) | weiß | gemessen |
+| ~~Minigolf~~ | ~~`game-minigolf`~~ | ~~`#057336`~~ | — | *Spiel am 17.08.2026 entfernt, Token aus `index.css` gelöscht* |
 | Sudoku | `game-sudoku` | `#0B7A6A` (Türkis) | weiß | neu vergeben |
 | Bubble Shooter | `game-bubbleshooter` | `#A02BA8` (Magenta) | weiß | neu vergeben |
 

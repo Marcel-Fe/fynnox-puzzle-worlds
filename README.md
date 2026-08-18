@@ -1,6 +1,6 @@
 ﻿# Fynnox Puzzle Worlds
 
-Acht Puzzle- und Kartenspiele mit dem Fuchs **Fynnox** — ein gemeinsames Profil, XP, Münzen, Kristalle,
+Sieben Puzzle- und Kartenspiele mit dem Fuchs **Fynnox** — ein gemeinsames Profil, XP, Münzen, Kristalle,
 Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut fürs Smartphone.
 
 **Live:** https://marcel-fe.github.io/fynnox-puzzle-worlds/
@@ -17,7 +17,7 @@ Missionen und ein Abenteuerpfad über mehrere Welten. Installierbare PWA, gebaut
 ```bash
 npm install
 npm run dev      # Entwicklungsserver, auch im Heimnetz übers Handy erreichbar
-npm test         # Logik-Tests (442 Stück) — müssen grün sein
+npm test         # Logik-Tests (392 Stück) — müssen grün sein
 npm run build    # Produktionsbau — muss vor jedem Push durchlaufen
 npm run preview  # gebauten Stand lokal ansehen
 ```
@@ -32,13 +32,12 @@ npm run preview  # gebauten Stand lokal ansehen
 | 4 | **Waldblöcke — spielbar** | ✅ |
 | 5 | Spieleauswahl, Profil, Ergebnisbildschirm, Laden | ✅ |
 | 5b | Echte Spielgrafik aus den Konzeptbildern, Fynnox in 3D | ✅ |
-| 6 | Die weiteren sieben Spiele | ✅ 7 von 7 |
+| 6 | Die weiteren Spiele | ✅ 6 von 6 |
 | 7 | **Meta-Systeme: Abenteuerpfad, Missionen, Tagesbelohnung, Shop, Events, Erfolge** | ✅ |
 | 8 | **Ton, Freunde, Rangliste, Cloud-Save, Offline, Feinschliff** | ✅ · Cloud noch ohne Server |
 
-**Spielbar: alle acht** — Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku,
-Bubble Shooter, Fynnox Solitaire (zwölf Level) und Fynnox Minigolf (sechs Bahnen),
-jeweils nacheinander freigeschaltet.
+**Spielbar: alle sieben** — Waldblöcke, Blockfall, Tempelpaare, Kristallmix, Sudoku,
+Bubble Shooter und Fynnox Solitaire (zwölf Level), jeweils nacheinander freigeschaltet.
 Eine Runde kostet 1 Energie, bringt XP und Münzen, lässt
 Tagesmissionen hochzählen und wird lokal gespeichert. Danach zeigt ein
 Ergebnisbildschirm Sterne und Belohnungen.
@@ -53,12 +52,12 @@ Ergebnisbildschirm Sterne und Belohnungen.
 - **Shop** — Outfits, Helfer und Booster gegen Kristalle. Euro-Preise stehen als Anzeige da,
   es gibt keine Bezahlung.
 - **Events** — vier Events im Wochenwechsel, jedes mit eigener Mission.
-- **Erfolge** — 24 Stück, alle aus dem Spielstand messbar.
+- **Erfolge** — 23 Stück, alle aus dem Spielstand messbar.
 - **Freunde und Rangliste** — neun Begleitfiguren als Gegner, mit festen Werten aus einem
   gesäten Generator. Beide Bildschirme schreiben hin, dass es Spielfiguren sind und keine
   echten Menschen.
 
-**Alle Bildschirme sind gebaut**: Laden · Dashboard · Spieleauswahl · acht Spiele ·
+**Alle Bildschirme sind gebaut**: Laden · Dashboard · Spieleauswahl · sieben Spiele ·
 Missionen · Abenteuerpfad · Shop · Events · Erfolge · Freunde · Rangliste · Profil ·
 Einstellungen · Mehr. Es gibt keinen Platzhalter mehr.
 

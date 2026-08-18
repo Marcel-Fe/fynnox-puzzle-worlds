@@ -230,7 +230,16 @@ immer möglich und würde jede Sackgasse verdecken. Alles andere zählt mit, auc
 nichts bringen: Lieber einmal zu selten „Schluss" sagen als eine Runde beenden, die noch
 zu gewinnen wäre.
 
-### 6. Fynnox Minigolf — `minigolf`
+### 6. Fynnox Minigolf — ~~`minigolf`~~ · **ENTFERNT am 17.08.2026**
+
+> **Dieses Spiel ist nicht mehr Teil des Umfangs.** Der Abschnitt bleibt stehen, weil er
+> die Begründung trägt: Die Bahnen überzeugten in der Darstellung nicht — weder flach
+> noch in 2,5D —, und als einziges Spiel mit laufender Simulation stand es quer zur
+> Architektur der übrigen sieben, die alle zugbasiert sind. Wird Minigolf je
+> zurückgeholt, liegt alles Nötige hier und in der Git-Historie
+> (`src/games/minigolf/`, entfernt in Phase 8).
+>
+> Was von ihm blieb: die sechs Weltkulissen, die jetzt Abenteuerpfad und Events tragen.
 
 Minigolf mit Physik. *"Ziele, schlage und loch ein! Hole in One für extra Sterne!"*
 

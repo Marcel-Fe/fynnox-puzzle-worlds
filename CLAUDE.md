@@ -40,8 +40,9 @@ Bewusst identisch zu **`fynnox-adventure`**, damit alle Fynnox-Projekte gleich f
   rund 1 MB, das Hauptbündel dagegen 274 KB. Nie im Hauptbündel landen lassen.
 - **Framer Motion** für UI-Animationen (erst einbauen, wenn tatsächlich animiert wird)
 - **Spiellogik** als reines TypeScript + React/DOM bzw. Canvas.
-  Eine Engine (PixiJS/Phaser) erst dann, wenn ein konkretes Spiel sie nachweislich braucht
-  — Kandidat ist ausschließlich Minigolf wegen der Ballphysik. Keine Engine „auf Vorrat".
+  Eine Engine (PixiJS/Phaser) erst dann, wenn ein konkretes Spiel sie nachweislich braucht.
+  Keine Engine „auf Vorrat" — seit Minigolf raus ist, gibt es dafür auch keinen Kandidaten
+  mehr, weil kein verbliebenes Spiel eine laufende Simulation hat.
 - **Speicher**: startet lokal (localStorage) hinter der Schnittstelle aus dem Datenmodell.
   Supabase kommt später dahinter. Spielcode ruft niemals direkt `localStorage` auf.
 
@@ -90,8 +91,11 @@ Die Spielgrafik ist **nicht** nachgebaut, sondern aus den Konzeptbildern geschni
 - **Sprache**: Code, Dateinamen, Variablen, Funktionen, Kommentare → **Englisch**.
   Alles, was ein Spieler liest → **Deutsch**. Spielertexte liegen in `src/content/`,
   nicht im JSX verstreut.
-- **Spiel-IDs** (technisch, unveränderlich): `blockfall`, `waldbloecke`, `tempelpaare`,
-  `kristallmix`, `solitaire`, `minigolf`.
+- **Spiel-IDs** (technisch): `blockfall`, `waldbloecke`, `tempelpaare`, `kristallmix`,
+  `solitaire`, `sudoku`, `bubbleshooter`. Sie werden nicht umbenannt — ein Spielstand hängt
+  daran. Fällt ein Spiel ganz weg, braucht das eine Migration, die seine Spuren aus
+  `progress`, `recentGames`, `favoriteGame` und laufenden Missionen entfernt
+  (Vorlage: `toV4` in `src/save/adapter.ts`).
 - Reine Spiellogik ist **frei von React** — testbar ohne Rendering.
   Ein Spiel besteht aus `logic/` (Regeln, Zustand, Züge) und `components/` (Darstellung).
 - Keine Zufallszahlen ohne Seed in der Spiellogik — sonst sind Bugs nicht reproduzierbar.
@@ -132,7 +136,10 @@ public/                  PWA-Icons (pwa-192, pwa-512, maskable-512, apple-touch-
 Kein Multiplayer, kein Echtgeld-Kauf, kein Werbe-SDK, keine Accounts.
 Shop-Preise auf den Mockups sind Platzhalter, keine implementierte Bezahlung.
 
-**Die Spieleliste ist bei acht geschlossen** (entschieden am 17.08.2026). Bewegungs- und
+**Sieben Spiele, und die Liste ist geschlossen** (bei acht geschlossen am 17.08.2026,
+Minigolf am selben Tag wieder entfernt: Seine Bahnen überzeugten in der Darstellung
+nicht, und als einziges Spiel mit laufender Physik trug es die Architektur nicht mit —
+siehe `lessons.md`). Bewegungs- und
 Reaktionsspiele wie Snowboarden oder Skateboarden gehören **nicht** hierher, sondern nach
 **Fynnox City** — dem 3D-Projekt der Familie (`../Fynnox City/fynnox-city`, Three.js,
 1 Einheit = 1 m). Dort gibt es bereits die passende Geometrie: Bordsteine, Geländer,

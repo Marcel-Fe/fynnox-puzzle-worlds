@@ -7,7 +7,6 @@ import { requestFullscreenOnFirstTap } from './core/fullscreen'
 import { BlockfallGame } from './games/blockfall/components/BlockfallGame'
 import { BubbleShooterGame } from './games/bubbleshooter/components/BubbleShooterGame'
 import { KristallmixGame } from './games/kristallmix/components/KristallmixGame'
-import { MinigolfGame } from './games/minigolf/components/MinigolfGame'
 import { SolitaireGame } from './games/solitaire/components/SolitaireGame'
 import { SudokuGame } from './games/sudoku/components/SudokuGame'
 import { TempelpaareGame } from './games/tempelpaare/components/TempelpaareGame'
@@ -101,7 +100,6 @@ export default function App() {
           <Route path="spiel/sudoku" element={<SudokuGame />} />
           <Route path="spiel/bubbleshooter" element={<BubbleShooterGame />} />
           <Route path="spiel/solitaire" element={<SolitaireGame />} />
-          <Route path="spiel/minigolf" element={<MinigolfGame />} />
           <Route path="missionen" element={<Missions />} />
           <Route path="profil" element={<Profile />} />
           <Route path="mehr" element={<More />} />

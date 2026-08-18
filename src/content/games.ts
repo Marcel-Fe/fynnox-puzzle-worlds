@@ -10,7 +10,6 @@ export type GameId =
   | 'tempelpaare'
   | 'kristallmix'
   | 'solitaire'
-  | 'minigolf'
   | 'sudoku'
   | 'bubbleshooter'
 
@@ -110,20 +109,6 @@ export const GAMES: GameInfo[] = [
     bestLabel: 'Bestzeit',
     colorVar: 'var(--color-game-solitaire)',
     image: asset('games/solitaire.jpg'),
-    bg: asset('bg/sonnenwald.jpg'),
-    textOnColor: 'light',
-    available: true,
-  },
-  {
-    id: 'minigolf',
-    title: 'Fynnox Minigolf',
-    tagline: 'Ziele. Schlage. Meistere den Kurs.',
-    hint: 'Das schaffen wir mit einem perfekten Schlag!',
-    companion: 'Pip',
-    category: 'sport',
-    bestLabel: 'Bestes Level',
-    colorVar: 'var(--color-game-minigolf)',
-    image: asset('games/minigolf.jpg'),
     bg: asset('bg/sonnenwald.jpg'),
     textOnColor: 'light',
     available: true,

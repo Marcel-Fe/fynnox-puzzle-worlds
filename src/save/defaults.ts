@@ -8,8 +8,9 @@ import type { GameProgress, SaveData } from './types'
  *
  * 2 (17.08.2026): `ownedItems` kam für den Shop dazu.
  * 3 (17.08.2026): `updatedAt` kam für den Cloud-Abgleich dazu.
+ * 4 (17.08.2026): Minigolf fiel aus dem Umfang; seine Spuren müssen raus.
  */
-export const SAVE_VERSION = 3
+export const SAVE_VERSION = 4
 
 /** Startwerte für ein neues Profil (docs/01-gamedesign.md). */
 export const START_COINS = 500

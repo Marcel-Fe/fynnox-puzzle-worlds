@@ -115,7 +115,7 @@ Die neueren Mockups ordnen jedem Spiel eine feste Figur zu, die es in einer Spre
 | Tempelpaare | Finn | „Diese uralten Tempel bergen viele Geheimnisse. Finde alle passenden Steine." |
 | Kristallmix | Lumo | „Wow! Diese Kristalle versorgen unser Dorf mit Energie!" |
 | Fynnox Solitaire | Fynnox | „Zeit für eine kleine Pause. Lass uns gemeinsam Karten sortieren." |
-| Fynnox Minigolf | Pip | „Das schaffen wir mit einem perfekten Schlag!" |
+| ~~Fynnox Minigolf~~ | ~~Pip~~ | *Spiel am 17.08.2026 entfernt — Pip begleitet derzeit kein Spiel. Als Entdecker wäre er der nächste Kandidat, falls ein Spiel dazukommt.* |
 | Sudoku | Elda | *(neu vergeben — Zahlen wollen Geduld, das ist Eldas Sache)* |
 | Bubble Shooter | Juno | *(neu vergeben — bunt und leichtherzig wie seine Musik)* |
 

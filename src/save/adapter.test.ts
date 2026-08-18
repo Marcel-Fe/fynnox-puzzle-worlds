@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { GAMES } from '../content/games'
 import { migrate, stampSave } from './adapter'
 import { createNewSave, SAVE_VERSION } from './defaults'
 import type { SaveData } from './types'
@@ -13,6 +14,42 @@ function oldSave(version: number): SaveData {
   save.stats.totalGames = 123
   if (version < 2) delete (save as Partial<SaveData>).ownedItems
   if (version < 3) delete (save as Partial<SaveData>).updatedAt
+  if (version < 4) {
+    // So sah ein Stand aus, solange es Minigolf noch gab.
+    ;(save.progress as Record<string, unknown>).minigolf = {
+      gamesPlayed: 12,
+      gamesWon: 5,
+      highScore: 400,
+      highestLevel: 3,
+      totalPlaytimeMs: 60_000,
+    }
+    save.recentGames = ['minigolf', 'sudoku'] as SaveData['recentGames']
+    save.profile.favoriteGame = 'minigolf' as SaveData['profile']['favoriteGame']
+    save.missions = [
+      {
+        id: 'alt-minigolf',
+        kind: 'daily',
+        text: 'Loche drei Bahnen ein',
+        goal: 3,
+        progress: 0,
+        rewardCoins: 100,
+        claimed: false,
+        expiresAt: NOW + 86_400_000,
+        track: { type: 'winRounds', game: 'minigolf' } as never,
+      },
+      {
+        id: 'alt-sudoku',
+        kind: 'daily',
+        text: 'Löse ein Sudoku',
+        goal: 1,
+        progress: 0,
+        rewardCoins: 100,
+        claimed: false,
+        expiresAt: NOW + 86_400_000,
+        track: { type: 'winRounds', game: 'sudoku' },
+      },
+    ]
+  }
   return save
 }
 
@@ -46,8 +83,25 @@ describe('migrate', () => {
     expect(migrate(oldSave(2))!.updatedAt).toBe(0)
   })
 
+  it('entfernt bei Version 3 alle Spuren entfernter Spiele', () => {
+    const migrated = migrate(oldSave(3))!
+    expect(migrated.version).toBe(SAVE_VERSION)
+    expect('minigolf' in migrated.progress).toBe(false)
+    expect(migrated.recentGames).toEqual(['sudoku'])
+    expect(migrated.profile.favoriteGame).toBeNull()
+    expect(migrated.missions.map((m) => m.id)).toEqual(['alt-sudoku'])
+  })
+
+  it('lässt den Fortschritt der verbliebenen Spiele stehen', () => {
+    const migrated = migrate(oldSave(3))!
+    for (const game of GAMES) {
+      expect(migrated.progress[game.id]).toBeDefined()
+    }
+    expect(Object.keys(migrated.progress)).toHaveLength(GAMES.length)
+  })
+
   it('lässt echten Fortschritt unangetastet', () => {
-    for (const version of [1, 2, 3]) {
+    for (const version of [1, 2, 3, 4]) {
       const migrated = migrate(oldSave(version))!
       expect(migrated.profile.level).toBe(9)
       expect(migrated.stats.totalGames).toBe(123)

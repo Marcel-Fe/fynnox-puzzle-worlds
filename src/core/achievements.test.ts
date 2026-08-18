@@ -8,9 +8,12 @@ import { applyRoundResult } from './round'
 const NOW = new Date(2026, 7, 17, 10, 0, 0).getTime()
 
 describe('Erfolgskatalog', () => {
-  it('enthält 24 Erfolge mit eindeutigen IDs', () => {
-    expect(ACHIEVEMENTS).toHaveLength(24)
-    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(24)
+  it('hat eindeutige IDs — je Spiel einen plus 16 allgemeine', () => {
+    // An GAMES gekoppelt statt an eine feste Zahl: Fällt ein Spiel weg oder
+    // kommt eines dazu, soll der Test die Absicht prüfen, nicht den Zählstand.
+    const expected = 16 + GAMES.length
+    expect(ACHIEVEMENTS).toHaveLength(expected)
+    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(expected)
   })
 
   it('behält die drei IDs aus Phase 3', () => {
