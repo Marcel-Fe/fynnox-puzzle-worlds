@@ -29,6 +29,7 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `games/sudoku.jpg`, `games/bubbleshooter.jpg` | die zwei Kacheln ohne ausgearbeitete Spielansicht | Symbole der Spieleauswahl in `handy-ladebildschirm-und-hauptbereiche.png` |
 | `shop/` | 15 Warenbilder + Kopfbild des Shops | 6 aus den Shop-Bildschirmen der Mockups, 9 aus der Nachlieferung |
 | `moments/` | 4 Einblendungen (`SIEG!`, `FEHLER!`, `LEVEL UP!`, `BELOHNUNG!`) + Truhe ohne Schild | Block „SPIEL MOMENTE" in `spiele-ansichten-und-charaktere.png` |
+| `ui/` | Münze, Kristall, Energie — freigestellte Symbole der Währungsleiste | Kopfleiste in `dashboard-hauptansicht.png` |
 | `hero.jpg`, `hero-portrait.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
 **Regeln dazu:**
@@ -36,15 +37,21 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 1. Soll ein Ausschnitt anders sitzen, wird die Koordinate im **Skript** geändert und das
    Skript erneut ausgeführt — nie von Hand nachgeschnitten. Sonst ist der Stand nicht
    reproduzierbar.
-2. **Alles JPEG.** Die Motive haben keine Transparenz; als PNG wäre die App viermal so
-   schwer zu laden (gemessen: 2,8 MB gegenüber 0,9 MB).
+2. **Alles JPEG — außer `ui/`.** Die Motive haben keine Transparenz; als PNG wäre die App
+   viermal so schwer zu laden (gemessen: 2,8 MB gegenüber 0,9 MB). Die drei Symbole der
+   Währungsleiste sind die Ausnahme: Ein Icon **muss** transparent sein, sonst klebt ein
+   Kästchen um jede Münze. Drei PNGs zu zusammen 43 KB.
 3. **Beim Zuschneiden auf fremde Beschriftungen achten.** In den Mockups steht überall
    UI mit auf den Bildern. Zwei Beispiele, die schon danebengingen: Das Begrüßungsbanner
    enthielt die Mockup-Karte „LEVEL 12 · 2.450 XP" und widersprach damit den echten Werten
    des Spielers; die Blockfall-Kachel zeigte ein angeschnittenes „NEU"-Fähnchen als „EU".
-4. **Freistellen ist nicht möglich.** Eine Figur sauber aus einem KI-Bild zu lösen gelingt
-   nicht — deshalb wird Fynnox samt Landschaft als ganzer Bildausschnitt gezeigt.
-   Auf den Mockups steht er ohnehin mitten in der Kulisse.
+4. **Freistellen ist nicht möglich — außer auf einfarbigem Grund.** Eine Figur sauber aus
+   einem KI-Bild zu lösen gelingt nicht; deshalb wird Fynnox samt Landschaft als ganzer
+   Bildausschnitt gezeigt. Bei den drei Symbolen in `ui/` liegt der Fall anders: Sie sitzen
+   auf einer nahezu einfarbigen, sehr dunklen Pille. Die Maske ist die Helligkeit des
+   **hellsten Kanals**, nicht die Luminanz — Violett fällt in der Luminanz durch (der
+   Kristall käme auf 89 statt 192) und wäre halb weggeschnitten. Die Schwelle liegt bei
+   72–100; weichere Werte hinterlassen ein sichtbares Kästchen.
 5. **Belichtung darf angehoben werden, das Motiv nicht verändert.** `fynnox-still` stammt
    aus einer Dämmerungsszene und kam mit einer mittleren Helligkeit von 35 bei einer
    Streuung von 16 heraus — auf der dunklen Ergebniskarte war bei 56 px nichts mehr zu
@@ -86,6 +93,25 @@ Wolkenmeer voller schwebender Inseln — genau das, was der Kapiteltext verspric
 **Lehre daraus**: Wird ein Spiel entfernt, reicht es nicht, seinen Code und seine Kachel zu
 löschen. Auch jede Grafik, die aus seinem Bildmaterial geschnitten wurde, gehört auf den
 Prüfstand — sonst bleibt das Spiel sichtbar, obwohl es niemand mehr spielen kann.
+
+### Warum Sterne Schriftzeichen bleiben
+
+Münze, Kristall und Energie standen bis zum 18.08.2026 als System-Emoji in der Leiste, die
+auf **jedem** Bildschirm oben klebt. Zwischen gemalten Kulissen und Warenbildern fielen die
+bunten Systemzeichen sofort auf — und sie sehen auf jedem Gerät anders aus. Sie sind jetzt
+geschnitten (`ui/`) und stehen über `CurrencyIcon` überall dort, wo vorher das Emoji stand:
+Währungsleiste, Shop-Preise, Missionen, Events, Truhe, Tagesbelohnung, Ergebnisbildschirm.
+
+Der **Stern** bleibt dagegen das Schriftzeichen „★“. Der größte gemalte Stern im gesamten
+Bildmaterial misst 21 × 19 Pixel (Abenteuerpfad in `dashboard-uebersicht-alle-bereiche.png`);
+im Ergebnisbildschirm steht er bei 36 px und wäre dort sichtbar weich. Ein Schriftzeichen
+ist schärfer, skaliert verlustfrei und lässt sich einfärben — für „drei von drei" wird
+genau das gebraucht. Dasselbe gilt für das Schloss an gesperrten Knoten.
+
+Die Energiekosten auf dem „Nochmal"-Knopf sind ein Sonderfall: Die Beschriftung kommt als
+Zeichenkette aus dem Spiel („Nochmal (1 ⚡)", „Level 4 (1 ⚡)"). `RoundResult` tauscht beim
+Zeichnen nur das Zeichen gegen das Symbol, statt die Schnittstelle zu allen sieben Spielen
+zu ändern.
 
 ### Nachlieferung vom 18.08.2026 — vier Motive, die es nirgends gab
 

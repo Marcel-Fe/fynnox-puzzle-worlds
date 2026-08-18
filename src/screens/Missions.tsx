@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Card, ProgressBar } from '../components/Card'
+import { CurrencyIcon } from '../components/CurrencyIcon'
 import { Tabs } from '../components/Tabs'
 import { asset } from '../content/assets'
 import { MISSION_TABS, MISSIONS_HEADLINE, MISSIONS_TEASER } from '../content/missions'
@@ -103,8 +104,13 @@ function MissionRow({
       <div className="mb-1.5 flex items-baseline justify-between gap-2">
         <span className="text-sm font-semibold">{mission.text}</span>
         <span className="tabular shrink-0 text-sm font-bold text-gold">
-          🪙 {mission.rewardCoins.toLocaleString('de-DE')}
-          {mission.rewardCrystals ? ` · 💎 ${mission.rewardCrystals}` : ''}
+          <CurrencyIcon kind="coins" size={16} /> {mission.rewardCoins.toLocaleString('de-DE')}
+          {mission.rewardCrystals ? (
+            <>
+              {' · '}
+              <CurrencyIcon kind="crystals" size={16} /> {mission.rewardCrystals}
+            </>
+          ) : null}
         </span>
       </div>
       <ProgressBar

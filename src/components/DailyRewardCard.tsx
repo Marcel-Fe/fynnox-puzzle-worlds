@@ -5,6 +5,7 @@ import { DAILY_REWARDS, dailyRewardState } from '../core/dailyReward'
 import { formatRemaining } from '../core/time'
 import { useGameStore } from '../store/gameStore'
 import { Card } from './Card'
+import { CurrencyIcon } from './CurrencyIcon'
 
 /**
  * Die Truhe vom Startbildschirm-Mockup: Leiter über sieben Tage, Countdown
@@ -73,11 +74,22 @@ export function DailyRewardCard() {
                 {day}
               </span>
               <span className="tabular block text-[11px] font-black">
-                {reward.crystals > 0 ? `💎${reward.crystals}` : `🪙${reward.coins}`}
+                {reward.crystals > 0 ? (
+                  <>
+                    <CurrencyIcon kind="crystals" size={13} />
+                    {reward.crystals}
+                  </>
+                ) : (
+                  <>
+                    <CurrencyIcon kind="coins" size={13} />
+                    {reward.coins}
+                  </>
+                )}
               </span>
               {reward.crystals > 0 && reward.coins > 0 && (
                 <span className="tabular block text-[9px] font-bold text-gold">
-                  🪙{reward.coins}
+                  <CurrencyIcon kind="coins" size={11} />
+                  {reward.coins}
                 </span>
               )}
             </li>
@@ -94,11 +106,25 @@ export function DailyRewardCard() {
         }}
         className="mt-3 min-h-11 w-full rounded-xl bg-gold text-sm font-black text-deep uppercase disabled:opacity-40"
       >
-        {state.available
-          ? `Abholen · ${state.reward.coins > 0 ? `🪙 ${state.reward.coins.toLocaleString('de-DE')}` : ''}${
-              state.reward.coins > 0 && state.reward.crystals > 0 ? ' + ' : ''
-            }${state.reward.crystals > 0 ? `💎 ${state.reward.crystals}` : ''}`
-          : 'Abgeholt'}
+        {state.available ? (
+          <>
+            Abholen ·{' '}
+            {state.reward.coins > 0 && (
+              <>
+                <CurrencyIcon kind="coins" size={16} />{' '}
+                {state.reward.coins.toLocaleString('de-DE')}
+              </>
+            )}
+            {state.reward.coins > 0 && state.reward.crystals > 0 && ' + '}
+            {state.reward.crystals > 0 && (
+              <>
+                <CurrencyIcon kind="crystals" size={16} /> {state.reward.crystals}
+              </>
+            )}
+          </>
+        ) : (
+          'Abgeholt'
+        )}
       </button>
     </Card>
   )

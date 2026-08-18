@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Card } from '../components/Card'
+import { CurrencyIcon } from '../components/CurrencyIcon'
 import { Tabs } from '../components/Tabs'
 import {
   SHOP_CATEGORY_ACCENT,
@@ -119,14 +120,19 @@ function ShopCard({
   const refusal = refusalFor(save, item.id)
   const accent = SHOP_CATEGORY_ACCENT[item.category]
 
+  // Als Bausteine statt als Zeichenkette, damit im Preis das geschnittene
+  // Kristallsymbol steht und nicht das System-Emoji.
   const label =
-    refusal === null
-      ? `Kaufen · 💎 ${item.crystals!.toLocaleString('de-DE')}`
-      : refusal === 'owned'
-        ? 'Gekauft'
-        : refusal === 'too-expensive'
-          ? `Zu teuer · 💎 ${item.crystals!.toLocaleString('de-DE')}`
-          : 'Keine Bezahlung'
+    refusal === null || refusal === 'too-expensive' ? (
+      <>
+        {refusal === null ? 'Kaufen' : 'Zu teuer'} · <CurrencyIcon kind="crystals" size={16} />{' '}
+        {item.crystals!.toLocaleString('de-DE')}
+      </>
+    ) : refusal === 'owned' ? (
+      'Gekauft'
+    ) : (
+      'Keine Bezahlung'
+    )
 
   return (
     <li
@@ -162,9 +168,14 @@ function ShopCard({
           <p className="text-sm font-bold">{item.title}</p>
           <p className="text-xs text-ink-muted">{item.description}</p>
           <p className="tabular mt-1 text-sm font-black text-gold">
-            {item.crystals !== undefined
-              ? `💎 ${item.crystals.toLocaleString('de-DE')}`
-              : item.euro}
+            {item.crystals !== undefined ? (
+              <>
+                <CurrencyIcon kind="crystals" size={16} />{' '}
+                {item.crystals.toLocaleString('de-DE')}
+              </>
+            ) : (
+              item.euro
+            )}
           </p>
         </div>
       </div>

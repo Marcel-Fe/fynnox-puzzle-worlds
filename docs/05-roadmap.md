@@ -587,7 +587,13 @@ nachgeliefert. Damit trägt **jede** Ware im Shop ein Bild, Fynnox schaut nach e
 verlorenen Runde tatsächlich betrübt, der Missionsbildschirm hat einen Kopfbereich, und die
 Bildaufhellung im Skript entfällt.
 
-**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,85 MB statt der 2,58 MB vor dieser
+**Sechste Runde: die letzten Emoji.** Münze, Kristall und Energie standen als System-Emoji
+in der Leiste, die auf jedem Bildschirm oben klebt — zwischen gemalten Kulissen fielen sie
+sofort auf. Sie sind jetzt aus der Kopfleiste des Dashboard-Mockups freigestellt und stehen
+über einen gemeinsamen Baustein überall dort, wo vorher das Emoji stand. Sterne bleiben
+Schriftzeichen; die Begründung steht im [Art-Guide](03-art-ui-guide.md).
+
+**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,90 MB statt der 2,58 MB vor dieser
 Phase. Die Grenze, ab der nachgemessen wird, liegt bei 3,5 MB.
 
 **Keine neue Abhängigkeit.** Framer Motion war am 17.08.2026 abgelehnt worden; dabei bleibt es.

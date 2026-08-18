@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import { MOMENTS } from '../content/assets'
+import { CurrencyIcon } from './CurrencyIcon'
 import { FYNNOX_FACES, fynnoxLine, moodFor } from '../content/reactions'
 import { sfx } from '../core/audio'
 import type { RoundRewards } from '../core/round'
@@ -139,7 +140,16 @@ export function RoundResultOverlay({
               className="min-h-12 flex-1 rounded-xl text-sm font-black text-deep uppercase disabled:opacity-40"
               style={{ background: accent }}
             >
-              {againLabel}
+              {/* Die Beschriftung kommt als Zeichenkette aus dem Spiel und trägt
+                die Energiekosten als „(1 ⚡)". Hier wird nur das Zeichen gegen
+                das geschnittene Symbol getauscht — so bleibt die Schnittstelle
+                zu den sieben Spielen unverändert. */}
+            {againLabel.split('⚡').map((teil, i) => (
+              <Fragment key={i}>
+                {i > 0 && <CurrencyIcon kind="energy" size={15} />}
+                {teil}
+              </Fragment>
+            ))}
             </button>
             <button
               type="button"
@@ -169,8 +179,13 @@ function RewardLine({ rewards }: { rewards: RoundRewards }) {
 
   return (
     <p className="tabular mt-1 text-sm font-bold">
-      ⭐ {xp} XP · 🪙 {coins.toLocaleString('de-DE')}
-      {rewards.crystals > 0 && ` · 💎 ${crystals}`}
+      ⭐ {xp} XP · <CurrencyIcon kind="coins" size={16} /> {coins.toLocaleString('de-DE')}
+      {rewards.crystals > 0 && (
+        <>
+          {' · '}
+          <CurrencyIcon kind="crystals" size={16} /> {crystals}
+        </>
+      )}
     </p>
   )
 }

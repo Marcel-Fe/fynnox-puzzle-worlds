@@ -54,3 +54,19 @@ export const MOMENTS = {
   belohnung: asset('moments/belohnung.jpg'),
   truhe: asset('moments/truhe.jpg'),
 } as const
+
+/**
+ * Symbole der Währungsleiste, aus der Kopfleiste von `dashboard-hauptansicht.png`
+ * freigestellt. Einzige PNGs im Projekt — ein Icon braucht Transparenz, sonst
+ * klebt ein Kästchen um jede Münze (docs/03-art-ui-guide.md).
+ *
+ * Sterne sind bewusst NICHT dabei: Der größte gemalte Stern im gesamten
+ * Bildmaterial misst 21 × 19 px und wäre bei 36 px weich. Dafür bleibt „★“.
+ */
+export const CURRENCY_ICONS = {
+  coins: asset('ui/muenze.png'),
+  crystals: asset('ui/kristall.png'),
+  energy: asset('ui/energie.png'),
+} as const
+
+export type CurrencyKind = keyof typeof CURRENCY_ICONS

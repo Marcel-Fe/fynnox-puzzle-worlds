@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Card, ProgressBar } from '../components/Card'
+import { CurrencyIcon } from '../components/CurrencyIcon'
 import {
   ADVENTURE_DONE_LINE,
   ADVENTURE_LINE,
@@ -106,8 +107,9 @@ export function Adventure() {
           />
           <p className="mt-1 text-sm font-bold">Truhe am Kapitelende</p>
           <p className="tabular mt-0.5 text-xs text-ink-muted">
-            🪙 {chestReward(stars).coins.toLocaleString('de-DE')} · 💎{' '}
-            {chestReward(stars).crystals}
+            <CurrencyIcon kind="coins" size={16} />{' '}
+            {chestReward(stars).coins.toLocaleString('de-DE')} ·{' '}
+            <CurrencyIcon kind="crystals" size={16} /> {chestReward(stars).crystals}
           </p>
           <button
             type="button"

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, ProgressBar } from '../components/Card'
+import { CurrencyIcon } from '../components/CurrencyIcon'
 import { DAILY_BONUS_EVENT } from '../content/events'
 import { dailyRewardState } from '../core/dailyReward'
 import { eventSchedule, type ScheduledEvent } from '../core/events'
@@ -121,8 +122,13 @@ function MainEvent({
             <div className="mb-1.5 flex items-baseline justify-between gap-2">
               <span className="text-sm font-semibold">{mission.text}</span>
               <span className="tabular shrink-0 text-sm font-bold text-gold">
-                🪙 {mission.rewardCoins.toLocaleString('de-DE')}
-                {mission.rewardCrystals ? ` · 💎 ${mission.rewardCrystals}` : ''}
+                <CurrencyIcon kind="coins" size={16} /> {mission.rewardCoins.toLocaleString('de-DE')}
+                {mission.rewardCrystals ? (
+                  <>
+                    {' · '}
+                    <CurrencyIcon kind="crystals" size={16} /> {mission.rewardCrystals}
+                  </>
+                ) : null}
               </span>
             </div>
             <ProgressBar

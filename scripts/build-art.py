@@ -12,19 +12,46 @@ die App rund viermal so schwer zu laden.
 """
 
 import os
-from PIL import Image
+from PIL import Image, ImageChops
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REF = os.path.join(ROOT, "docs", "referenzen")
 PUB = os.path.join(ROOT, "public")
 ART = os.path.join(PUB, "art")
 
-for sub in ("chars", "bg", "games", "shop", "moments"):
+for sub in ("chars", "bg", "games", "shop", "moments", "ui"):
     os.makedirs(os.path.join(ART, sub), exist_ok=True)
 
 
 def ref(name):
     return Image.open(os.path.join(REF, name))
+
+
+def save_icon_png(box, path, size=96, lo=72, hi=100):
+    """Schneidet ein UI-Symbol aus der Waehrungsleiste frei.
+
+    Einziger Fall im Projekt, in dem PNG statt JPEG entsteht und in dem
+    freigestellt wird — beides sonst ausgeschlossen (docs/03-art-ui-guide.md,
+    Regeln 2 und 4). Es geht hier aber weder um Transparenz aus Bequemlichkeit
+    noch um eine Figur in einer Landschaft: Die Symbole liegen auf einer nahezu
+    einfarbigen, sehr dunklen Pille, und ein Icon MUSS transparent sein, sonst
+    klebt ein Kaestchen um jede Muenze.
+
+    Die Maske ist die Helligkeit des hellsten Kanals — nicht die Luminanz.
+    Violett faellt in der Luminanz durch (der Kristall kaeme auf 89 statt 192)
+    und waere halb weggeschnitten.
+    """
+    c = dash.crop(box)
+    side = max(c.size)
+    square = Image.new("RGB", (side, side), (13, 21, 32))
+    square.paste(c, ((side - c.width) // 2, (side - c.height) // 2))
+    square = square.resize((size, size), Image.LANCZOS)
+
+    r, g, b = square.split()
+    brightest = ImageChops.lighter(ImageChops.lighter(r, g), b)
+    alpha = brightest.point(lambda v: 0 if v <= lo else (255 if v >= hi else int((v - lo) * 255 / (hi - lo))))
+    square.putalpha(alpha)
+    square.save(path, optimize=True)
 
 
 def save_jpg(im, path, size, quality=84):
@@ -212,6 +239,21 @@ save_jpg(
     os.path.join(ART, "games", "bubbleshooter.jpg"),
     (328, 337),
 )
+
+# --- Waehrungssymbole ----------------------------------------------------
+#
+# Muenze, Kristall und Energie standen bis zum 18.08.2026 als System-Emoji in
+# der Leiste, die auf JEDEM Bildschirm oben klebt. Zwischen gemalten Kulissen
+# und Warenbildern fielen die bunten Systemzeichen sofort auf — und sie sehen
+# auf jedem Geraet anders aus.
+#
+# Die Vorlage ist die Kopfleiste von "dashboard-hauptansicht.png". Sterne
+# bleiben bewusst typografisch (das Zeichen "★"): Der groesste gemalte Stern in
+# allen Referenzbildern misst 21x19 Pixel und waere im Ergebnisbildschirm bei
+# 36 px weich — ein Schriftzeichen ist dort schaerfer und laesst sich einfaerben.
+save_icon_png((901, 32, 927, 69), os.path.join(ART, "ui", "energie.png"))
+save_icon_png((1015, 33, 1053, 68), os.path.join(ART, "ui", "muenze.png"))
+save_icon_png((1168, 32, 1214, 69), os.path.join(ART, "ui", "kristall.png"))
 
 # --- Einblendungen -------------------------------------------------------
 #
