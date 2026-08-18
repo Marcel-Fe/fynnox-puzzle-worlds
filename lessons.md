@@ -5,6 +5,26 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-08-18 — Eine CSS-Variable verträgt kein angehängtes Alpha
+
+**Was passiert ist**: Die Warenkarten im Shop sollten einen Verlauf in der Kategoriefarbe
+bekommen. Der Code lautete `` `linear-gradient(155deg, ${accent}66, ${accent}14)` `` mit
+`accent = 'var(--color-gold)'`. Im Browser war von dem Verlauf nichts zu sehen — die
+Kacheln blieben leer. Erst das Bildschirmfoto zeigte es; TypeScript und der Build waren grün.
+
+**Ursache**: `var()` wird als Token ersetzt, nicht als Text. Aus `var(--color-gold)66` wird
+darum `#f9b316 66` — zwei getrennte Tokens statt einer achtstelligen Hex-Farbe. Der
+Farbwert ist ungültig, der Verlauf fällt still aus. Die Kurzform `#rrggbbaa` funktioniert
+nur mit einem wörtlich hingeschriebenen Hex-Wert.
+
+**Konsequenz**: Deckkraft auf einer CSS-Variablen immer über
+`color-mix(in srgb, var(--x) 55%, transparent)` — dasselbe Muster, das `SudokuGame.tsx`
+schon benutzt. Und: Eine Farbänderung ist erst belegt, wenn sie auf einem Bildschirmfoto
+zu sehen ist. Ein stiller CSS-Ausfall erzeugt keinen einzigen Fehler.
+
+
+---
+
 ## 2026-08-17 — Eine flache Darstellung wird durch Schattierung nicht zum Spiel
 
 **Was passiert ist**: Das Minigolf-Spielfeld wurde als „einfach nur schlimm, hat kein
