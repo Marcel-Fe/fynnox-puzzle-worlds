@@ -5,6 +5,29 @@ Neueste Einträge oben.
 
 ---
 
+## 2026-08-18 — Ein entferntes Spiel steckt auch in der Grafik
+
+**Was passiert ist**: Der Auftraggeber sah sich die neue Oberfläche an und schrieb:
+„Minigolf ist jetzt immer noch drin? Und es sieht schlimm aus." Zu Recht — alle sechs
+Weltkulissen in `public/art/bg/` waren aus der Reihe „MINIGOLF BAHNEN" geschnitten. Jede
+Welt trug eine Fahne, ein Loch und eine gestrichelte Bahnlinie: auf dem Startbildschirm,
+im Abenteuerpfad, auf dem Mehr-Bildschirm und hinter jedem Spielfeld. Dazu lief jeder
+Ausschnitt über den Kachelrand der Vorlage hinaus und hatte rechts einen schwarzen Balken.
+
+**Ursache**: Beim Entfernen von Minigolf am 17.08.2026 wurden Code, Tests, Spiel-ID,
+Route, Erfolg und Kachelausschnitt nachgezogen — die Roadmap hielt sogar ausdrücklich fest,
+„was blieb: die sechs Weltkulissen". Dass diese Kulissen das entfernte Spiel weiterhin
+zeigen, hat niemand geprüft. Der Kommentar im Skript sagte es sogar wörtlich
+(„Minigolf-Bahnen aus dem Charakterblatt"), er wurde nur nicht als Problem gelesen.
+
+**Konsequenz**: Wird ein Spiel entfernt, gehört **jede Grafik, die aus seinem Bildmaterial
+geschnitten wurde**, auf den Prüfstand — nicht nur seine eigene Kachel. Und allgemeiner:
+Bilder werden angesehen, nicht nur ihre Dateinamen gelesen. Ein Kontaktbogen über den
+Ist-Stand von `public/art/` hätte das in dreißig Sekunden gezeigt.
+
+
+---
+
 ## 2026-08-18 — Eine CSS-Variable verträgt kein angehängtes Alpha
 
 **Was passiert ist**: Die Warenkarten im Shop sollten einen Verlauf in der Kategoriefarbe

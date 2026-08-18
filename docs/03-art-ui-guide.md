@@ -18,7 +18,10 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `chars/` | 10 runde Porträts (Fynnox + 9 Begleiter) | Charakterleiste unten in `gameplay-regeln-und-missionen.png` |
 | `chars/fynnox-jubel.jpg` | Fynnox freut sich — Ergebnisbildschirm nach einem Sieg | Start-Pop-up in `handy-flow-start-bis-minigolf.png` |
 | `chars/fynnox-still.jpg` | Fynnox gedämpft — Ergebnisbildschirm nach einer Niederlage | Übergangsbildschirm in `handy-flow-start-bis-minigolf.png` |
-| `bg/` | 7 Weltkulissen (Sonnenwald, Piratenbucht, Kristallhöhle, Lavatal, Wolkeninsel, Wintergipfel, Tempel) | Minigolf-Bahnen in `charaktere-spiele-minigolf.png` |
+| `bg/` | 4 Weltkulissen (Sonnenwald, Kristallhöhle, Lavatal, Piratenbucht) | Abenteuerpfad-Weltkacheln in `dashboard-uebersicht-alle-bereiche.png` |
+| `bg/wintergipfel.jpg` | 5. Weltkulisse — die golffreie Eiskuppel der Wintergipfel-Bahn | `charaktere-spiele-minigolf.png` |
+| `bg/wolkeninsel.jpg` | 6. Weltkulisse — **Notlösung**, siehe unten | Kachel „NEUES LEVEL!" in `spiele-ansichten-und-charaktere.png` |
+| `bg/tempel.jpg` | 7. Weltkulisse — Tempelinneres | 3D-Ansicht von Tempelpaare in `spiele-ansichten-und-charaktere.png` |
 | `bg/unterwasser.jpg` | 8. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
 | `bg/stadt.jpg` | 9. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-city-hafenpromenade.png` |
 | `games/` | 5 Kachelbilder (Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Solitaire) | echte Spielansichten in `spiele-ansichten-und-charaktere.png` |
@@ -58,6 +61,33 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
    („Tempel geräumt!", „Zu viele Fehler!"). Warenbilder fallen ausdrücklich **nicht**
    unter diese Ausnahme: Ihre Mockup-Kachel trägt Name und Preis, und beide werden
    weggeschnitten, weil ein eingebrannter Preis sich nie wieder ändern ließe.
+
+### Die Weltkulissen kamen aus den Minigolf-Bahnen — bis zum 18.08.2026
+
+Alle sechs Kulissen in `bg/` waren aus der Reihe „MINIGOLF BAHNEN" des Charakterblatts
+geschnitten. Damit trug jede Welt eine **Fahne, ein Loch und eine gestrichelte Bahnlinie** —
+ein Spiel, das seit dem 17.08.2026 gar nicht mehr zum Umfang gehört, war dadurch weiterhin
+auf dem Startbildschirm, im Abenteuerpfad, auf dem Mehr-Bildschirm und hinter jedem
+Spielfeld zu sehen. Dazu lief jeder Ausschnitt über den Kachelrand der Vorlage hinaus und
+hatte rechts einen schwarzen Balken.
+
+Vier Welten liegen als **echte Illustration** im Abenteuerpfad-Block von
+`dashboard-uebersicht-alle-bereiche.png`: SUNFOREST, KRISTALLHÖHEN, LAVAWELT, PIRATENINSEL.
+Der Ausschnitt endet oberhalb der Mockup-Beschriftung, wo Weltname und Levelbereich stehen.
+Für den **Wintergipfel** gibt es keine solche Kachel, wohl aber einen golffreien Bereich auf
+seiner Bahn: die Eiskuppel mit Wolken und Himmel oberhalb der blauen Bahn.
+
+**Die Wolkeninsel bleibt eine Notlösung.** In keinem der dreizehn Referenzbilder gibt es
+eine Himmels- oder Wolkenlandschaft ohne Fahne oder Loch — auf der Wolkeninsel-Bahn steht
+die Fahne mitten im Himmelsstreifen, und was links von ihr bleibt, sind 66 × 56 Pixel.
+Ersatzweise steht dort die Landschaft aus der Kachel „NEUES LEVEL!", unterhalb ihres
+Schildes geschnitten: ein weiter Talblick mit Fluss und Himmel. Er passt zu Fynnox’ Satz
+zum Kapitel („Von hier sieht man alle Welten auf einmal"), ist aber ehrlich gesagt eine
+Wald- und keine Wolkenlandschaft. **Ein echtes Bild dafür braucht ein neues Konzeptbild.**
+
+**Lehre daraus**: Wird ein Spiel entfernt, reicht es nicht, seinen Code und seine Kachel zu
+löschen. Auch jede Grafik, die aus seinem Bildmaterial geschnitten wurde, gehört auf den
+Prüfstand — sonst bleibt das Spiel sichtbar, obwohl es niemand mehr spielen kann.
 
 ### Die zwei Kacheln ohne Spielansicht
 

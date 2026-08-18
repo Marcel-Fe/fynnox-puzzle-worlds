@@ -572,8 +572,17 @@ Drei Runden, jede im Browser bei 390 × 844 belegt:
   eines Spielfelds. Ihre Symbole aus der Spieleauswahl von
   `handy-ladebildschirm-und-hauptbereiche.png` schließen die Lücke.
 
-**Was das kostete**: der Vorab-Cache der PWA wächst von 2,58 MB auf 2,64 MB — elf neue
-JPEGs zu zusammen rund 190 KB. Die Grenze, ab der nachgemessen wird, liegt bei 3,5 MB.
+**Vierte Runde, am selben Tag nach Rückmeldung des Auftraggebers**: „Minigolf ist immer noch
+drin." Und er hatte recht — alle sechs Weltkulissen in `bg/` waren aus den **Minigolf-Bahnen**
+geschnitten. Jede Welt trug damit Fahne, Loch und Bahnlinie, auf dem Startbildschirm, im
+Abenteuerpfad, auf dem Mehr-Bildschirm und hinter jedem Spielfeld. Vier Welten kommen jetzt
+aus den echten Abenteuerpfad-Weltkacheln, der Wintergipfel aus dem golffreien Teil seiner
+Bahn. Nur die Wolkeninsel bleibt eine Notlösung — dafür gibt es in keinem Referenzbild ein
+Bild ohne Golf (Begründung in [03-art-ui-guide.md](03-art-ui-guide.md)).
+
+**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,63 MB statt vorher 2,58 MB — elf
+neue JPEGs, dafür sechs kleinere Weltkulissen. Die Grenze, ab der nachgemessen wird, liegt
+bei 3,5 MB.
 
 **Keine neue Abhängigkeit.** Framer Motion war am 17.08.2026 abgelehnt worden; dabei bleibt es.
 

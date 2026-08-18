@@ -91,18 +91,45 @@ save_jpg(dash.crop((604, 78, 936, 434)), os.path.join(ART, "hero.jpg"), (664, 71
 save_jpg(dash.crop((604, 78, 936, 434)), os.path.join(ART, "hero-portrait.jpg"), (498, 534))
 
 # --- Weltkulissen --------------------------------------------------------
-# Minigolf-Bahnen aus dem Charakterblatt. y 790..910 laesst das Titelschild
-# oben und das PAR-Schild unten weg.
+#
+# Bis zum 18.08.2026 waren das die sechs MINIGOLF-BAHNEN aus dem Charakterblatt.
+# Damit trug jede Welt eine Fahne, ein Loch und eine gestrichelte Bahnlinie —
+# ein Spiel, das seit dem 17.08.2026 gar nicht mehr zum Umfang gehoert, war
+# dadurch auf dem Startbildschirm, im Abenteuerpfad und hinter jedem Spielfeld
+# weiter zu sehen. Dazu lief jeder Ausschnitt ueber den Kachelrand der Vorlage
+# hinaus und hatte rechts einen schwarzen Balken.
+#
+# Vier Welten liegen als echte Illustration im Abenteuerpfad-Block von
+# "dashboard-uebersicht-alle-bereiche.png" (SUNFOREST, KRISTALLHOEHEN, LAVAWELT,
+# PIRATENINSEL). Der Ausschnitt endet oberhalb der Beschriftung, wo im Mockup
+# der Weltname und der Levelbereich ("1-20") stehen.
+dash_uebersicht = ref("dashboard-uebersicht-alle-bereiche.png")
 WORLDS = {
-    "sonnenwald": (20, 170),
-    "piratenbucht": (175, 325),
-    "kristallhoehle": (330, 465),
-    "lavatal": (490, 600),
-    "wolkeninsel": (605, 725),
-    "wintergipfel": (730, 870),
+    "sonnenwald": (921, 67, 1022, 148),
+    "kristallhoehle": (1040, 67, 1140, 148),
+    "lavatal": (1162, 67, 1259, 148),
+    "piratenbucht": (1287, 67, 1377, 148),
 }
-for name, (x0, x1) in WORLDS.items():
-    save_jpg(charsheet.crop((x0, 790, x1, 910)), os.path.join(ART, "bg", f"{name}.jpg"), (640, 512))
+for name, box in WORLDS.items():
+    save_jpg(dash_uebersicht.crop(box), os.path.join(ART, "bg", f"{name}.jpg"), (640, 512))
+
+# Wintergipfel: Fuer die Schneewelt gibt es keine eigene Weltkachel. Die
+# Minigolf-Bahn hat aber einen Bereich ganz ohne Golf — die Eiskuppel mit
+# Wolken und Himmel oberhalb der blauen Bahn, die erst bei y=855 anfaengt.
+save_jpg(charsheet.crop((736, 792, 854, 850)), os.path.join(ART, "bg", "wintergipfel.jpg"), (640, 314))
+
+# Wolkeninsel: die einzige Welt ohne passendes Bildmaterial. In KEINEM der
+# dreizehn Referenzbilder gibt es eine Himmels- oder Wolkenlandschaft ohne
+# Fahne oder Loch — auf der Wolkeninsel-Bahn steht die Fahne mitten im
+# Himmelsstreifen, und was links davon bleibt, sind 66x56 Pixel.
+#
+# Ersatzweise die Landschaft aus der Kachel "NEUES LEVEL!" (Block SPIEL
+# MOMENTE), unterhalb ihres Schildes geschnitten: ein weiter Talblick mit
+# Fluss und Himmel. Er passt zu Fynnox' Satz zum Kapitel ("Von hier sieht man
+# alle Welten auf einmal"), ist aber ehrlich gesagt eine Wald- und keine
+# Wolkenlandschaft. Ein echtes Bild braucht ein neues Konzeptbild
+# (docs/03-art-ui-guide.md).
+save_jpg(ansichten.crop((1389, 963, 1506, 1014)), os.path.join(ART, "bg", "wolkeninsel.jpg"), (640, 280))
 
 # Tempelinneres aus der 3D-Ansicht von Tempelpaare, ab y 322 ohne Beschriftung
 save_jpg(ansichten.crop((390, 322, 545, 420)), os.path.join(ART, "bg", "tempel.jpg"), (640, 404))
