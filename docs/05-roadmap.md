@@ -580,9 +580,15 @@ aus den echten Abenteuerpfad-Weltkacheln, der Wintergipfel aus dem golffreien Te
 Bahn. Nur die Wolkeninsel bleibt eine Notlösung — dafür gibt es in keinem Referenzbild ein
 Bild ohne Golf (Begründung in [03-art-ui-guide.md](03-art-ui-guide.md)).
 
-**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,63 MB statt vorher 2,58 MB — elf
-neue JPEGs, dafür sechs kleinere Weltkulissen. Die Grenze, ab der nachgemessen wird, liegt
-bei 3,5 MB.
+**Fünfte Runde: die Nachlieferung.** Nach der vierten Runde blieben vier Stellen ohne Bild —
+die Wolkeninsel, ein enttäuschter Fynnox, neun Shop-Waren und ein Missions-Motiv. Sie wurden
+benannt statt erfunden, und der Auftraggeber hat sie noch am selben Tag als ein Blatt
+nachgeliefert. Damit trägt **jede** Ware im Shop ein Bild, Fynnox schaut nach einer
+verlorenen Runde tatsächlich betrübt, der Missionsbildschirm hat einen Kopfbereich, und die
+Bildaufhellung im Skript entfällt.
+
+**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,85 MB statt der 2,58 MB vor dieser
+Phase. Die Grenze, ab der nachgemessen wird, liegt bei 3,5 MB.
 
 **Keine neue Abhängigkeit.** Framer Motion war am 17.08.2026 abgelehnt worden; dabei bleibt es.
 

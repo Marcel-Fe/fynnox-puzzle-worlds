@@ -12,7 +12,7 @@ die App rund viermal so schwer zu laden.
 """
 
 import os
-from PIL import Image, ImageEnhance
+from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REF = os.path.join(ROOT, "docs", "referenzen")
@@ -38,6 +38,13 @@ charsheet = ref("charaktere-spiele-minigolf.png")
 ansichten = ref("spiele-ansichten-und-charaktere.png")
 flow = ref("handy-flow-start-bis-minigolf.png")
 lade = ref("handy-ladebildschirm-und-hauptbereiche.png")
+# Nachlieferung des Auftraggebers vom 18.08.2026: ein Blatt mit genau den vier
+# Motiven, fuer die in den urspruenglichen Konzeptbildern nichts vorhanden war —
+# Wolkeninsel, ein enttaeuschter Fynnox, die neun Shop-Waren ohne Vorlage und
+# eine Missionstafel. Es liegt eine zweite Fassung daneben
+# (nachlieferung-variante-mit-nummern.png); die traegt Ziffern im Bild und wird
+# darum nicht geschnitten.
+neu = ref("nachlieferung-wolkeninsel-trauer-waren-missionen.png")
 
 # --- Charakterportraets --------------------------------------------------
 # Neun beschriftete Karten in der Leiste unten im Gameplay-Blatt.
@@ -67,15 +74,15 @@ save_jpg(icon_src.crop((330, 40, 950, 660)), os.path.join(ART, "chars", "fynnox.
 # neues Konzeptbild, kein Nachbearbeiten dieses hier.
 save_jpg(flow.crop((45, 85, 175, 215)), os.path.join(ART, "chars", "fynnox-jubel.jpg"), (256, 256), 86)
 
-# Die Daemmerungsszene ist im Original sehr dunkel: mittlere Helligkeit 35 bei
-# einer Streuung von 16. Auf der dunklen Ergebniskarte waere davon bei 56 px
-# nichts mehr zu erkennen. Belichtung und Kontrast werden darum angehoben --
-# hier im Skript, damit der Stand reproduzierbar bleibt. Das Motiv selbst wird
-# nicht veraendert; es bleibt sichtbar gedaempfter als "fynnox-jubel".
-still = flow.crop((500, 95, 630, 225))
-still = ImageEnhance.Brightness(still).enhance(1.55)
-still = ImageEnhance.Contrast(still).enhance(1.35)
-save_jpg(still, os.path.join(ART, "chars", "fynnox-still.jpg"), (256, 256), 86)
+# Enttaeuschter Fynnox — aus der Nachlieferung vom 18.08.2026.
+#
+# Vorher stand hier eine Notloesung, und der Kommentar sagte auch warum: In
+# keinem der urspruenglichen Konzeptbilder gibt es einen traurigen Fynnox, er
+# laechelt auf jedem einzelnen. "fynnox-still" war deshalb dieselbe Figur in
+# einer Daemmerungsszene, im Skript um 55 Prozent aufgehellt — die
+# Enttaeuschung trug allein der Text. Jetzt ist sie im Gesicht zu sehen, und
+# die Bildbearbeitung faellt weg.
+save_jpg(neu.crop((1090, 28, 1350, 288)), os.path.join(ART, "chars", "fynnox-still.jpg"), (256, 256), 86)
 
 # --- Begruessungsbanner --------------------------------------------------
 # Fynnox samt Landschaft als ganzer Ausschnitt. Eine freigestellte Figur ist
@@ -118,18 +125,21 @@ for name, box in WORLDS.items():
 # Wolken und Himmel oberhalb der blauen Bahn, die erst bei y=855 anfaengt.
 save_jpg(charsheet.crop((736, 792, 854, 850)), os.path.join(ART, "bg", "wintergipfel.jpg"), (640, 314))
 
-# Wolkeninsel: die einzige Welt ohne passendes Bildmaterial. In KEINEM der
-# dreizehn Referenzbilder gibt es eine Himmels- oder Wolkenlandschaft ohne
-# Fahne oder Loch — auf der Wolkeninsel-Bahn steht die Fahne mitten im
-# Himmelsstreifen, und was links davon bleibt, sind 66x56 Pixel.
-#
-# Ersatzweise die Landschaft aus der Kachel "NEUES LEVEL!" (Block SPIEL
-# MOMENTE), unterhalb ihres Schildes geschnitten: ein weiter Talblick mit
-# Fluss und Himmel. Er passt zu Fynnox' Satz zum Kapitel ("Von hier sieht man
-# alle Welten auf einmal"), ist aber ehrlich gesagt eine Wald- und keine
-# Wolkenlandschaft. Ein echtes Bild braucht ein neues Konzeptbild
-# (docs/03-art-ui-guide.md).
-save_jpg(ansichten.crop((1389, 963, 1506, 1014)), os.path.join(ART, "bg", "wolkeninsel.jpg"), (640, 280))
+# Wolkeninsel — aus der Nachlieferung. Bis zum 18.08.2026 gab es dafuer kein
+# Bild: Auf der Minigolf-Bahn stand die Fahne mitten im Himmelsstreifen, und
+# ein Ersatz aus der Kachel "NEUES LEVEL!" war eine Wald- statt einer
+# Wolkenlandschaft. Jetzt steht dort, was das Kapitel verspricht — schwebende
+# Inseln ueber einem Wolkenmeer, und Fynnox blickt hinaus ("Von hier sieht man
+# alle Welten auf einmal").
+save_jpg(neu.crop((12, 12, 986, 488)), os.path.join(ART, "bg", "wolkeninsel.jpg"), (640, 313))
+
+# Missionen — zwei Ausschnitte derselben Tafel, weil sie sehr unterschiedlich
+# gross gezeigt werden: der ganze Streifen als Kopfbereich des
+# Missionsbildschirms, die Zielscheibe allein fuer die Kachel auf dem
+# Startbildschirm. Dort ist die Flaeche rund 110x95 Pixel gross; von einem
+# 5:1-Streifen bliebe darin nur leeres Pergament uebrig.
+save_jpg(neu.crop((12, 736, 1524, 1016)), os.path.join(ART, "bg", "missionen.jpg"), (640, 119))
+save_jpg(neu.crop((1120, 745, 1450, 1015)), os.path.join(ART, "bg", "missionen-ziel.jpg"), (400, 328))
 
 # Tempelinneres aus der 3D-Ansicht von Tempelpaare, ab y 322 ohne Beschriftung
 save_jpg(ansichten.crop((390, 322, 545, 420)), os.path.join(ART, "bg", "tempel.jpg"), (640, 404))
@@ -264,6 +274,28 @@ SHOP_HANDY = {
 }
 for name, box in SHOP_HANDY.items():
     save_jpg(handy.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (256, 384), 88)
+
+# Die neun Waren, fuer die es auf keinem Mockup eine Abbildung gab. Sie kamen
+# am 18.08.2026 nachgeliefert und stehen dort in genau der Reihenfolge von
+# SHOP_ITEMS. Raster: erste Kachel bei x=10, Abstand 168, Breite 150.
+SHOP_NEU = [
+    "winter",
+    "forscher",
+    "schal",
+    "laterne",
+    "kompass",
+    "eule",
+    "sanduhr",
+    "hinweis",
+    "glueck",
+]
+for i, name in enumerate(SHOP_NEU):
+    x0 = 10 + i * 168
+    # Die letzte Kachel braucht vier Pixel mehr Abstand, sonst kommt links
+    # der weisse Rand der Blattkante mit.
+    if name == "glueck":
+        x0 += 4
+    save_jpg(neu.crop((x0, 505, x0 + 150, 720)), os.path.join(ART, "shop", f"{name}.jpg"), (256, 362), 88)
 
 # Kopfbild des Shop-Bildschirms: Fynnox vor Kristallen und einer offenen Truhe.
 # Der Ausschnitt beginnt erst bei y=616, weil darueber der Schriftzug

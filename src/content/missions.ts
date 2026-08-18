@@ -129,3 +129,7 @@ export const MISSION_TABS = [
   { kind: 'weekly', label: 'Wöchentlich' },
   { kind: 'event', label: 'Event' },
 ] as const
+
+/** Kopfbereich des Missionsbildschirms (Bild: public/art/bg/missionen.jpg). */
+export const MISSIONS_HEADLINE = 'Fynnox’ Aufgabentafel'
+export const MISSIONS_TEASER = 'Täglich, wöchentlich und im Event — jede Aufgabe zahlt sich aus.'

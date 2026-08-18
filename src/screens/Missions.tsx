@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Card, ProgressBar } from '../components/Card'
 import { Tabs } from '../components/Tabs'
-import { MISSION_TABS } from '../content/missions'
+import { asset } from '../content/assets'
+import { MISSION_TABS, MISSIONS_HEADLINE, MISSIONS_TEASER } from '../content/missions'
 import { sfx } from '../core/audio'
 import { formatRemaining } from '../core/time'
 import type { Mission, MissionKind } from '../save/types'
@@ -37,6 +38,24 @@ export function Missions() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-3">
+      {/* Kopfbereich nach dem Muster von Shop und Mehr-Bildschirm. Das Motiv
+          ist die Aufgabentafel aus der Nachlieferung vom 18.08.2026. */}
+      <section className="relative flex min-h-24 flex-col justify-end overflow-hidden rounded-2xl border border-edge shadow-lg shadow-black/30">
+        <img
+          src={asset('bg/missionen.jpg')}
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/70 to-deep/10" />
+        <div className="relative p-3">
+          <h1 className="text-xl font-black text-gold drop-shadow-[0_2px_0_rgba(0,0,0,0.7)]">
+            {MISSIONS_HEADLINE}
+          </h1>
+          <p className="mt-0.5 text-xs text-ink-muted">{MISSIONS_TEASER}</p>
+        </div>
+      </section>
+
       <Tabs<MissionKind>
         tabs={MISSION_TABS.map((t) => ({
           key: t.kind,

@@ -65,8 +65,7 @@ export function Dashboard() {
       </section>
 
       {/* Kurzwege: Missionen · aktuelles Kapitel · Profil. Das Bild jeder Kachel
-          ist das des Bildschirms dahinter — für Missionen gibt es kein eigenes
-          Motiv in den Konzeptbildern, dort steht die Piratenbucht als Schatzsuche. */}
+          ist das des Bildschirms dahinter. */}
       <div className="flex gap-3">
         <QuickTile
           to="/missionen"
@@ -74,7 +73,7 @@ export function Dashboard() {
           value={`${doneMissions}/${missions.length}`}
           note={openMissions > 0 ? `${openMissions} abholbereit` : undefined}
           accent="var(--color-gold)"
-          image={asset('bg/piratenbucht.jpg')}
+          image={asset('bg/missionen-ziel.jpg')}
         />
         <QuickTile
           to="/abenteuer"

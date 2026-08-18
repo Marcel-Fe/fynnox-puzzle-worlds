@@ -24,9 +24,9 @@ export interface ShopItem {
   featured?: boolean
   icon: string
   /**
-   * Warenbild aus den Konzeptbildern. Es gibt nur für die sechs Waren eines,
-   * die auf einem Mockup abgebildet sind — der Rest behält sein Emoji, weil
-   * hier keine Grafik erfunden wird (CLAUDE.md, Abschnitt Grafik).
+   * Warenbild aus den Konzeptbildern. Seit der Nachlieferung vom 18.08.2026
+   * hat jede Ware eines; das Emoji bleibt als Rückfall für neue Waren, für
+   * die noch nichts gezeichnet ist.
    */
   image?: string
 }
@@ -59,6 +59,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'outfits',
     crystals: 900,
     icon: '🧥',
+    image: asset('shop/winter.jpg'),
   },
   {
     id: 'outfit-forscher',
@@ -67,6 +68,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'outfits',
     crystals: 800,
     icon: '🎒',
+    image: asset('shop/forscher.jpg'),
   },
   {
     id: 'outfit-gold',
@@ -75,6 +77,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'outfits',
     crystals: 1500,
     icon: '🧣',
+    image: asset('shop/schal.jpg'),
   },
   {
     id: 'helfer-kristall',
@@ -93,6 +96,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'helfer',
     crystals: 600,
     icon: '🏮',
+    image: asset('shop/laterne.jpg'),
   },
   {
     id: 'helfer-kompass',
@@ -101,6 +105,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'helfer',
     crystals: 1000,
     icon: '🧭',
+    image: asset('shop/kompass.jpg'),
   },
   {
     id: 'helfer-eule',
@@ -109,6 +114,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'helfer',
     crystals: 1200,
     icon: '🦉',
+    image: asset('shop/eule.jpg'),
   },
   {
     id: 'booster-mega',
@@ -127,6 +133,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     crystals: 400,
     icon: '⌛',
+    image: asset('shop/sanduhr.jpg'),
   },
   {
     id: 'booster-hinweis',
@@ -135,6 +142,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     crystals: 250,
     icon: '💡',
+    image: asset('shop/hinweis.jpg'),
   },
   {
     id: 'booster-glueck',
@@ -143,6 +151,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     crystals: 700,
     icon: '🍀',
+    image: asset('shop/glueck.jpg'),
   },
   {
     id: 'euro-muenzen',

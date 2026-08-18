@@ -17,16 +17,17 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 |---|---|---|
 | `chars/` | 10 runde Porträts (Fynnox + 9 Begleiter) | Charakterleiste unten in `gameplay-regeln-und-missionen.png` |
 | `chars/fynnox-jubel.jpg` | Fynnox freut sich — Ergebnisbildschirm nach einem Sieg | Start-Pop-up in `handy-flow-start-bis-minigolf.png` |
-| `chars/fynnox-still.jpg` | Fynnox gedämpft — Ergebnisbildschirm nach einer Niederlage | Übergangsbildschirm in `handy-flow-start-bis-minigolf.png` |
+| `chars/fynnox-still.jpg` | Fynnox enttäuscht — Ergebnisbildschirm nach einer Niederlage | `nachlieferung-wolkeninsel-trauer-waren-missionen.png` |
 | `bg/` | 4 Weltkulissen (Sonnenwald, Kristallhöhle, Lavatal, Piratenbucht) | Abenteuerpfad-Weltkacheln in `dashboard-uebersicht-alle-bereiche.png` |
 | `bg/wintergipfel.jpg` | 5. Weltkulisse — die golffreie Eiskuppel der Wintergipfel-Bahn | `charaktere-spiele-minigolf.png` |
-| `bg/wolkeninsel.jpg` | 6. Weltkulisse — **Notlösung**, siehe unten | Kachel „NEUES LEVEL!" in `spiele-ansichten-und-charaktere.png` |
+| `bg/wolkeninsel.jpg` | 6. Weltkulisse — schwebende Inseln über dem Wolkenmeer | `nachlieferung-wolkeninsel-trauer-waren-missionen.png` |
+| `bg/missionen.jpg`, `bg/missionen-ziel.jpg` | Aufgabentafel: breit für den Kopfbereich, Zielscheibe für die Kachel | dieselbe Nachlieferung |
 | `bg/tempel.jpg` | 7. Weltkulisse — Tempelinneres | 3D-Ansicht von Tempelpaare in `spiele-ansichten-und-charaktere.png` |
 | `bg/unterwasser.jpg` | 8. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-adventure-unterwasser.png` |
 | `bg/stadt.jpg` | 9. Weltkulisse — **Ausnahme**, siehe unten | `fynnox-city-hafenpromenade.png` |
 | `games/` | 5 Kachelbilder (Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Solitaire) | echte Spielansichten in `spiele-ansichten-und-charaktere.png` |
 | `games/sudoku.jpg`, `games/bubbleshooter.jpg` | die zwei Kacheln ohne ausgearbeitete Spielansicht | Symbole der Spieleauswahl in `handy-ladebildschirm-und-hauptbereiche.png` |
-| `shop/` | 6 Warenbilder + Kopfbild des Shops | Shop-Bildschirme in `handy-app-10-bildschirme.png` und `handy-ladebildschirm-und-hauptbereiche.png` |
+| `shop/` | 15 Warenbilder + Kopfbild des Shops | 6 aus den Shop-Bildschirmen der Mockups, 9 aus der Nachlieferung |
 | `moments/` | 4 Einblendungen (`SIEG!`, `FEHLER!`, `LEVEL UP!`, `BELOHNUNG!`) + Truhe ohne Schild | Block „SPIEL MOMENTE" in `spiele-ansichten-und-charaktere.png` |
 | `hero.jpg`, `hero-portrait.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
@@ -77,17 +78,40 @@ Der Ausschnitt endet oberhalb der Mockup-Beschriftung, wo Weltname und Levelbere
 Für den **Wintergipfel** gibt es keine solche Kachel, wohl aber einen golffreien Bereich auf
 seiner Bahn: die Eiskuppel mit Wolken und Himmel oberhalb der blauen Bahn.
 
-**Die Wolkeninsel bleibt eine Notlösung.** In keinem der dreizehn Referenzbilder gibt es
-eine Himmels- oder Wolkenlandschaft ohne Fahne oder Loch — auf der Wolkeninsel-Bahn steht
-die Fahne mitten im Himmelsstreifen, und was links von ihr bleibt, sind 66 × 56 Pixel.
-Ersatzweise steht dort die Landschaft aus der Kachel „NEUES LEVEL!", unterhalb ihres
-Schildes geschnitten: ein weiter Talblick mit Fluss und Himmel. Er passt zu Fynnox’ Satz
-zum Kapitel („Von hier sieht man alle Welten auf einmal"), ist aber ehrlich gesagt eine
-Wald- und keine Wolkenlandschaft. **Ein echtes Bild dafür braucht ein neues Konzeptbild.**
+**Die Wolkeninsel** hatte am selben Tag noch kein Bild: In keinem der dreizehn
+Referenzbilder gab es eine Himmels- oder Wolkenlandschaft ohne Fahne oder Loch. Der
+Auftraggeber hat sie **nachgeliefert** (siehe unten); dort schaut Fynnox jetzt über ein
+Wolkenmeer voller schwebender Inseln — genau das, was der Kapiteltext verspricht.
 
 **Lehre daraus**: Wird ein Spiel entfernt, reicht es nicht, seinen Code und seine Kachel zu
 löschen. Auch jede Grafik, die aus seinem Bildmaterial geschnitten wurde, gehört auf den
 Prüfstand — sonst bleibt das Spiel sichtbar, obwohl es niemand mehr spielen kann.
+
+### Nachlieferung vom 18.08.2026 — vier Motive, die es nirgends gab
+
+Vier Stellen liessen sich aus den ursprünglichen Konzeptbildern nicht bedienen. Statt sie
+zu erfinden oder als CSS nachzubauen, wurden sie benannt — und der Auftraggeber hat sie als
+ein Blatt nachgeliefert (`nachlieferung-wolkeninsel-trauer-waren-missionen.png`, 1536 × 1024):
+
+| Motiv | Warum es fehlte | Wohin es geht |
+|---|---|---|
+| Wolkeninsel | keine Himmelswelt ohne Golffahne | `bg/wolkeninsel.jpg`, Kapitel 6 |
+| Fynnox enttäuscht | er lächelt auf **jedem** Konzeptbild | `chars/fynnox-still.jpg`, Ergebnisbildschirm |
+| 9 Shop-Waren | Mantel, Weste, Schal, Laterne, Kompass, Eule, Sanduhr, Hinweise, Klee | `shop/`, Reiter Outfits · Helfer · Booster |
+| Aufgabentafel | kein Missions-Motiv in den Mockups | `bg/missionen*.jpg`, Startbildschirm und Missionskopf |
+
+Zwei Nebenwirkungen davon:
+
+- **`fynnox-still` braucht keine Bildbearbeitung mehr.** Vorher war es dieselbe lächelnde
+  Figur in einer Dämmerungsszene, im Skript um 55 Prozent aufgehellt, weil auf der dunklen
+  Ergebniskarte sonst nichts zu erkennen war. Regel 5 (Belichtung darf angehoben werden)
+  gilt weiter, wird aber von keinem Bild mehr in Anspruch genommen.
+- **Jede Ware im Shop hat jetzt ein Bild.** Das `icon`-Emoji in `src/content/shop.ts`
+  bleibt als Rückfall für Waren, die später dazukommen.
+
+Eine zweite Fassung desselben Blattes liegt als `nachlieferung-variante-mit-nummern.png`
+daneben. Sie wird **nicht** geschnitten: Ihre vier Bereiche tragen Ziffern im Bild, und die
+Warenreihe steht dort vor grauem Hintergrund statt auf farbigen Kacheln.
 
 ### Die zwei Kacheln ohne Spielansicht
 
