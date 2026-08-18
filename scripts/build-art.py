@@ -37,6 +37,7 @@ icon_src = ref("app-icon.png").convert("RGB")
 charsheet = ref("charaktere-spiele-minigolf.png")
 ansichten = ref("spiele-ansichten-und-charaktere.png")
 flow = ref("handy-flow-start-bis-minigolf.png")
+lade = ref("handy-ladebildschirm-und-hauptbereiche.png")
 
 # --- Charakterportraets --------------------------------------------------
 # Neun beschriftete Karten in der Leiste unten im Gameplay-Blatt.
@@ -154,13 +155,25 @@ TILES = {
 for name, box in TILES.items():
     save_jpg(ansichten.crop(box), os.path.join(ART, "games", f"{name}.jpg"), (328, 380))
 
-# Sudoku und Bubble Shooter gibt es auf keinem Mockup als Kachel —
-# bis dahin dienen zwei Kulissen als Platzhalter.
-save_jpg(charsheet.crop((730, 790, 870, 910)), os.path.join(ART, "games", "sudoku.jpg"), (328, 380))
+# Sudoku und Bubble Shooter haben keine ausgearbeitete Spielansicht wie die
+# fuenf oben — wohl aber ein eigenes Symbol: In der Spieleauswahl des
+# Ladebildschirm-Blattes steht fuer Sudoku ein 3x3-Gitter und fuer Bubble
+# Shooter eine Traube farbiger Blasen. Vorher stand hier ein Charakterausschnitt
+# aus dem Minigolf-Blatt, wodurch beide Spiele in der Liste ein Fuchsgesicht
+# zeigten statt ihres Spielfelds.
+#
+# Der Ausschnitt liegt innerhalb der Mockup-Kachel, damit deren abgerundeter
+# Rahmen nicht mitkommt, und endet oberhalb der Beschriftung "SUDOKU" bzw.
+# "BUBBLE SHOOTER" (y = 877).
+#
+# Beide behalten ihr Seitenverhaeltnis, statt wie die fuenf oben auf 328x380
+# gezogen zu werden: Ein gezerrtes 3x3-Gitter faellt sofort auf. Die Kachel
+# zeigt das Bild ohnehin als `object-cover`.
+save_jpg(lade.crop((353, 801, 421, 873)), os.path.join(ART, "games", "sudoku.jpg"), (328, 347))
 save_jpg(
-    charsheet.crop((330, 790, 465, 910)),
+    lade.crop((436, 801, 506, 873)),
     os.path.join(ART, "games", "bubbleshooter.jpg"),
-    (328, 380),
+    (328, 337),
 )
 
 # --- App-Icons -----------------------------------------------------------
