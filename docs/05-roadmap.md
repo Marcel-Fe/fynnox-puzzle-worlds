@@ -593,7 +593,14 @@ sofort auf. Sie sind jetzt aus der Kopfleiste des Dashboard-Mockups freigestellt
 über einen gemeinsamen Baustein überall dort, wo vorher das Emoji stand. Sterne bleiben
 Schriftzeichen; die Begründung steht im [Art-Guide](03-art-ui-guide.md).
 
-**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,90 MB statt der 2,58 MB vor dieser
+**Siebte Runde: die Restliste.** Die Navigationssymbole sind jetzt Masken aus den Mockups
+statt Emoji (Farbe aus dem Stylesheet, deshalb eine Datei statt zweier je Zustand). Damit
+sind auch die letzten beiden Einblendungen des Gamedesigns gebaut: `PAUSE` als Schicht über
+dem Blockfall-Feld, `NEUES LEVEL!` im Ergebnisbildschirm, wenn Solitaire das nächste Level
+freischaltet. Die fünfzehn Warenbilder liegen jetzt bei 200 statt 256 px Breite — sie werden
+auf einer 64-px-Kachel gezeigt, die größere Fassung kostete 80 KB ohne sichtbar zu werden.
+
+**Was das kostete**: der Vorab-Cache der PWA liegt bei 2,87 MB statt der 2,58 MB vor dieser
 Phase. Die Grenze, ab der nachgemessen wird, liegt bei 3,5 MB.
 
 **Keine neue Abhängigkeit.** Framer Motion war am 17.08.2026 abgelehnt worden; dabei bleibt es.

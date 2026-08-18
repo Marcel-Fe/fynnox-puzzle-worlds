@@ -24,6 +24,7 @@ export function RoundResultOverlay({
   onLeave,
   againDisabled,
   againLabel = 'Nochmal (1 ⚡)',
+  unlockedLevel,
 }: {
   won: boolean
   title: string
@@ -37,6 +38,8 @@ export function RoundResultOverlay({
   againDisabled?: boolean
   /** Abweichende Beschriftung, z. B. „Level 4" nach einem Sieg mit Freischaltung */
   againLabel?: string
+  /** Gesetzt, wenn die Runde das nächste Spiellevel freigeschaltet hat */
+  unlockedLevel?: number
 }) {
   const mood = moodFor(won)
 
@@ -67,7 +70,22 @@ export function RoundResultOverlay({
         />
 
         <div className="p-5 pt-3">
-          <h2 className="text-3xl font-black tracking-wide text-gold">{title}</h2>
+          {/* Kleiner als das Bild darüber: Dort steht das Urteil („SIEG!"),
+              hier nur der spielspezifische Grund. */}
+          <h2 className="text-xl font-black tracking-wide text-gold">{title}</h2>
+
+          {/* Die Einblendung NEUES LEVEL! aus dem Gamedesign. Das Wort steht
+              im Bild, daneben nur die Nummer — sonst stünde „Level" zweimal. */}
+          {unlockedLevel !== undefined && (
+            <div className="mt-3 flex items-center justify-center gap-3">
+              <img
+                src={MOMENTS.neuesLevel}
+                alt="Neues Level!"
+                className="h-16 rounded-lg object-cover"
+              />
+              <span className="tabular text-2xl font-black text-gold">{unlockedLevel}</span>
+            </div>
+          )}
 
           <p className="mt-2 text-4xl" aria-label={`${stars} von 3 Sternen`}>
             <span className="text-gold">{'★'.repeat(stars)}</span>

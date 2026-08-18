@@ -28,8 +28,9 @@ Deshalb werden sie **als Bilder verwendet**, nicht nachgeahmt.
 | `games/` | 5 Kachelbilder (Blockfall, Waldblöcke, Tempelpaare, Kristallmix, Solitaire) | echte Spielansichten in `spiele-ansichten-und-charaktere.png` |
 | `games/sudoku.jpg`, `games/bubbleshooter.jpg` | die zwei Kacheln ohne ausgearbeitete Spielansicht | Symbole der Spieleauswahl in `handy-ladebildschirm-und-hauptbereiche.png` |
 | `shop/` | 15 Warenbilder + Kopfbild des Shops | 6 aus den Shop-Bildschirmen der Mockups, 9 aus der Nachlieferung |
-| `moments/` | 4 Einblendungen (`SIEG!`, `FEHLER!`, `LEVEL UP!`, `BELOHNUNG!`) + Truhe ohne Schild | Block „SPIEL MOMENTE" in `spiele-ansichten-und-charaktere.png` |
-| `ui/` | Münze, Kristall, Energie — freigestellte Symbole der Währungsleiste | Kopfleiste in `dashboard-hauptansicht.png` |
+| `moments/` | alle 6 Einblendungen des Gamedesigns + Truhe ohne Schild | Block „SPIEL MOMENTE" in `spiele-ansichten-und-charaktere.png` |
+| `ui/muenze`, `kristall`, `energie` | freigestellte Symbole der Währungsleiste | Kopfleiste in `dashboard-hauptansicht.png` |
+| `ui/nav-*.png` | 10 Navigationspiktogramme als **CSS-Maske** | Seitenleiste in `dashboard-uebersicht-alle-bereiche.png` |
 | `hero.jpg`, `hero-portrait.jpg` | Begrüßungsbanner mit Fynnox in der Landschaft | `dashboard-hauptansicht.png` |
 
 **Regeln dazu:**
@@ -93,6 +94,28 @@ Wolkenmeer voller schwebender Inseln — genau das, was der Kapiteltext verspric
 **Lehre daraus**: Wird ein Spiel entfernt, reicht es nicht, seinen Code und seine Kachel zu
 löschen. Auch jede Grafik, die aus seinem Bildmaterial geschnitten wurde, gehört auf den
 Prüfstand — sonst bleibt das Spiel sichtbar, obwohl es niemand mehr spielen kann.
+
+### Navigationssymbole sind Masken, keine Bilder
+
+Die Tab-Leiste am Handy und die Seitenleiste am Desktop zeigten System-Emoji. Die Mockups
+haben dafür Piktogramme — aber nur **21 × 20 px** groß, und jedes bräuchte zwei Fassungen
+(Gold für den aktiven Punkt, Grau für alle anderen).
+
+Beides löst dieselbe Entscheidung: Die Dateien in `ui/nav-*.png` sind **weiße Masken mit
+Alphakanal**, eingebunden über `mask-image` mit `background-color: currentColor`
+(`src/components/NavIcon.tsx`). Die Datei gibt nur die Silhouette vor, die Farbe kommt aus
+dem Stylesheet. Damit genügt eine Datei je Symbol statt zweier, und die geringe Auflösung
+fällt kaum auf, weil nur die Form zählt — nicht Farbverlauf oder Textur.
+
+Zwei Punkte behalten ihr Schriftzeichen: **Mehr** (im Mockup eine Personensilhouette von
+14 px; „☰" ist ohnehin das erwartete Zeichen) und **Profil** (dafür gibt es gar kein
+Piktogramm, dort steht der Fuchs). Beide erben ebenfalls die Textfarbe, sodass die Leiste
+einheitlich bleibt.
+
+`nav-start.png` kommt als einziges aus einer anderen Vorlage: In der Seitenleiste ist
+Dashboard der **aktive** Punkt und sitzt auf einer goldenen Pille, die heller ist als die
+Maskenschwelle — das Haus hätte einen Kasten mitgebracht. Auf der Tab-Leiste von
+Bildschirm 2 in `handy-app-10-bildschirme.png` steht es grau auf dunklem Grund.
 
 ### Warum Sterne Schriftzeichen bleiben
 

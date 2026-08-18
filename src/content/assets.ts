@@ -52,6 +52,8 @@ export const MOMENTS = {
   fehler: asset('moments/fehler.jpg'),
   levelup: asset('moments/levelup.jpg'),
   belohnung: asset('moments/belohnung.jpg'),
+  pause: asset('moments/pause.jpg'),
+  neuesLevel: asset('moments/neues-level.jpg'),
   truhe: asset('moments/truhe.jpg'),
 } as const
 

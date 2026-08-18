@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SpeechBubble } from '../../../components/Avatar'
 import { Card } from '../../../components/Card'
+import { PauseOverlay } from '../../../components/PauseOverlay'
 import { RoundResultOverlay } from '../../../components/RoundResult'
 import { GAMES_BY_ID } from '../../../content/games'
 import { useGameStore } from '../../../store/gameStore'
@@ -284,6 +285,10 @@ export function BlockfallGame() {
       >
         {paused ? 'Weiterspielen' : 'Pause'}
       </button>
+
+      {/* Die Einblendung PAUSE aus dem Gamedesign. Sie liegt über dem Feld,
+          damit beim Weiterspielen sofort wieder zu sehen ist, wo man war. */}
+      {paused && !game.over && <PauseOverlay onResume={() => setPaused(false)} />}
 
       {game.over && (
         <RoundResultOverlay

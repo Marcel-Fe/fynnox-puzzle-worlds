@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { NavIcon } from '../components/NavIcon'
 import { MORE_ITEMS } from '../content/navigation'
 
 /**
@@ -45,7 +46,7 @@ export function More() {
 
               <div className="relative">
                 <p className="flex items-center gap-2 text-base font-black text-ink">
-                  <span aria-hidden>{item.icon}</span>
+                  <NavIcon mask={item.mask} fallback={item.icon} size={18} />
                   {item.label}
                 </p>
                 {item.teaser && (

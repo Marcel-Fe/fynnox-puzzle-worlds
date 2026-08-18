@@ -631,6 +631,7 @@ export function SolitaireGame() {
           onAgain={() => start(nextLevel, game.draw)}
           onLeave={() => navigate('/')}
           againDisabled={energy < 1}
+          unlockedLevel={nextLevel === game.level ? undefined : nextLevel}
           againLabel={
             nextLevel === game.level
               ? 'Nochmal (1 ⚡)'

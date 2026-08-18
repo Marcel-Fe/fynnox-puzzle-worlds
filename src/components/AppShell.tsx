@@ -2,6 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { NAV_ITEMS } from '../content/navigation'
 import { useGameStore } from '../store/gameStore'
 import { Avatar } from './Avatar'
+import { NavIcon } from './NavIcon'
 import { CurrencyBar } from './CurrencyBar'
 
 /**
@@ -37,7 +38,7 @@ export function AppShell() {
               ].join(' ')
             }
           >
-            <span aria-hidden>{item.icon}</span>
+            <NavIcon mask={item.mask} fallback={item.icon} />
             {item.label}
           </NavLink>
         ))}
@@ -76,9 +77,7 @@ export function AppShell() {
                 ].join(' ')
               }
             >
-              <span className="text-lg" aria-hidden>
-                {item.icon}
-              </span>
+              <NavIcon mask={item.mask} fallback={item.icon} size={22} />
               {item.label}
             </NavLink>
           ))}

@@ -54,6 +54,26 @@ def save_icon_png(box, path, size=96, lo=72, hi=100):
     square.save(path, optimize=True)
 
 
+def save_mask_png(crop, path, size=96, lo=60, hi=110):
+    """Erzeugt aus einem Piktogramm eine weisse Maske mit Alphakanal.
+
+    Anders als save_icon_png bleibt hier keine Farbe uebrig — nur die Form.
+    Eingefaerbt wird im Stylesheet ueber `mask-image` und `currentColor`, damit
+    dasselbe Symbol aktiv golden und inaktiv grau erscheinen kann.
+    """
+    side = max(crop.size)
+    square = Image.new("RGB", (side, side), (8, 16, 28))
+    square.paste(crop, ((side - crop.width) // 2, (side - crop.height) // 2))
+    square = square.resize((size, size), Image.LANCZOS)
+
+    r, g, b = square.split()
+    brightest = ImageChops.lighter(ImageChops.lighter(r, g), b)
+    alpha = brightest.point(lambda v: 0 if v <= lo else (255 if v >= hi else int((v - lo) * 255 / (hi - lo))))
+    white = Image.new("RGB", (size, size), (255, 255, 255))
+    white.putalpha(alpha)
+    white.save(path, optimize=True)
+
+
 def save_jpg(im, path, size, quality=84):
     im.resize(size, Image.LANCZOS).convert("RGB").save(path, quality=quality, optimize=True)
 
@@ -65,6 +85,8 @@ charsheet = ref("charaktere-spiele-minigolf.png")
 ansichten = ref("spiele-ansichten-und-charaktere.png")
 flow = ref("handy-flow-start-bis-minigolf.png")
 lade = ref("handy-ladebildschirm-und-hauptbereiche.png")
+handy = ref("handy-app-10-bildschirme.png")
+dash_uebersicht = ref("dashboard-uebersicht-alle-bereiche.png")
 # Nachlieferung des Auftraggebers vom 18.08.2026: ein Blatt mit genau den vier
 # Motiven, fuer die in den urspruenglichen Konzeptbildern nichts vorhanden war —
 # Wolkeninsel, ein enttaeuschter Fynnox, die neun Shop-Waren ohne Vorlage und
@@ -137,7 +159,6 @@ save_jpg(dash.crop((604, 78, 936, 434)), os.path.join(ART, "hero-portrait.jpg"),
 # "dashboard-uebersicht-alle-bereiche.png" (SUNFOREST, KRISTALLHOEHEN, LAVAWELT,
 # PIRATENINSEL). Der Ausschnitt endet oberhalb der Beschriftung, wo im Mockup
 # der Weltname und der Levelbereich ("1-20") stehen.
-dash_uebersicht = ref("dashboard-uebersicht-alle-bereiche.png")
 WORLDS = {
     "sonnenwald": (921, 67, 1022, 148),
     "kristallhoehle": (1040, 67, 1140, 148),
@@ -255,6 +276,42 @@ save_icon_png((901, 32, 927, 69), os.path.join(ART, "ui", "energie.png"))
 save_icon_png((1015, 33, 1053, 68), os.path.join(ART, "ui", "muenze.png"))
 save_icon_png((1168, 32, 1214, 69), os.path.join(ART, "ui", "kristall.png"))
 
+# --- Navigationssymbole --------------------------------------------------
+#
+# Zehn Piktogramme aus der Seitenleiste von "dashboard-uebersicht-alle-bereiche.png".
+# Sie werden NICHT als Bild gezeigt, sondern als CSS-Maske: Die Datei liefert
+# nur die Silhouette, die Farbe kommt aus dem Stylesheet (`currentColor`).
+#
+# Das loest zwei Probleme auf einmal. Erstens die Groesse: Das groesste
+# Navigationssymbol im gesamten Material misst 21x20 Pixel und waere als Bild
+# bei 24 px matschig — als Maske zaehlt nur die Silhouette, und die traegt.
+# Zweitens den Zustand: Die Leiste braucht jedes Symbol in Gold (aktiv) und in
+# Grau (inaktiv). Als Bild waeren das zwanzig Dateien, als Maske zehn.
+#
+# "Mehr" und "Profil" bleiben Schriftzeichen. Im Mockup ist "Mehr" eine
+# Personensilhouette von 14 px — zu klein, und "☰" ist ohnehin das erwartete
+# Zeichen. Fuer das Profil gibt es gar kein Piktogramm; dort steht der Fuchs.
+# "start" kommt aus einer anderen Vorlage: In der Seitenleiste ist Dashboard der
+# AKTIVE Punkt und sitzt auf einer goldenen Pille, die heller ist als die
+# Maskenschwelle — das Haus haette dadurch einen Kasten mitgebracht. Auf der
+# Tab-Leiste von Bildschirm 2 in "handy-app-10-bildschirme.png" ist Start
+# inaktiv und steht grau auf dunklem Grund.
+save_mask_png(handy.crop((245, 661, 267, 683)), os.path.join(ART, "ui", "nav-start.png"), lo=45, hi=95)
+
+NAV_MASKS = {
+    "spiele": 135,
+    "abenteuer": 165,
+    "missionen": 196,
+    "events": 226,
+    "shop": 256,
+    "freunde": 286,
+    "rangliste": 316,
+    "erfolge": 346,
+    "einstellungen": 376,
+}
+for name, y0 in NAV_MASKS.items():
+    save_mask_png(dash_uebersicht.crop((26, y0, 47, y0 + 21)), os.path.join(ART, "ui", f"nav-{name}.png"))
+
 # --- Einblendungen -------------------------------------------------------
 #
 # docs/01-gamedesign.md legt sechs Einblendungen fest, die in jedem Spiel gleich
@@ -266,14 +323,17 @@ save_icon_png((1168, 32, 1214, 69), os.path.join(ART, "ui", "kristall.png"))
 # und kann keinem echten Wert widersprechen. Die Oberflaeche darf denselben Text
 # dann aber kein zweites Mal danebenschreiben.
 #
-# PAUSE und NEUES LEVEL! werden bewusst nicht geschnitten: Fuer beide gibt es
-# im Code noch keinen Ort, und ein ungenutztes Bild wuerde nur den Vorab-Cache
-# der PWA belasten.
+# Seit dem 18.08.2026 sind alle sechs geschnitten. PAUSE und NEUES LEVEL!
+# fehlten anfangs, weil es im Code keinen Ort dafuer gab — die Pause war nur
+# ein Knopf ohne Schicht darueber, und ein neues Spiellevel stand allein in der
+# Beschriftung des "Nochmal"-Knopfes. Beides ist jetzt gebaut.
 MOMENTS = {
     "sieg": (1141, 850, 1256, 935),
     "fehler": (1141, 938, 1256, 1022),
     "levelup": (1261, 850, 1382, 935),
     "belohnung": (1386, 850, 1509, 935),
+    "pause": (1261, 938, 1382, 1022),
+    "neues-level": (1386, 938, 1509, 1020),
 }
 for name, box in MOMENTS.items():
     save_jpg(ansichten.crop(box), os.path.join(ART, "moments", f"{name}.jpg"), (460, 340), 86)
@@ -305,9 +365,8 @@ SHOP_LADE = {
     "boosterpack": (1401, 758, 1486, 852),
 }
 for name, box in SHOP_LADE.items():
-    save_jpg(lade.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (256, 288), 88)
+    save_jpg(lade.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (200, 225), 86)
 
-handy = ref("handy-app-10-bildschirme.png")
 SHOP_HANDY = {
     # Bildschirm 6 "SHOP", Reihe "Empfohlen fuer dich"
     "pirat": (13, 1093, 65, 1174),
@@ -315,8 +374,12 @@ SHOP_HANDY = {
     "megabooster": (131, 1093, 184, 1174),
 }
 for name, box in SHOP_HANDY.items():
-    save_jpg(handy.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (256, 384), 88)
+    save_jpg(handy.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (200, 300), 86)
 
+# Warenbilder liegen bei 200 px Breite statt 256: Sie werden auf einer 64-px-
+# Kachel gezeigt, also selbst bei dreifacher Pixeldichte nur mit 192 px. Die
+# groessere Fassung kostete 80 KB im Vorab-Cache, ohne sichtbar zu werden.
+#
 # Die neun Waren, fuer die es auf keinem Mockup eine Abbildung gab. Sie kamen
 # am 18.08.2026 nachgeliefert und stehen dort in genau der Reihenfolge von
 # SHOP_ITEMS. Raster: erste Kachel bei x=10, Abstand 168, Breite 150.
@@ -337,7 +400,7 @@ for i, name in enumerate(SHOP_NEU):
     # der weisse Rand der Blattkante mit.
     if name == "glueck":
         x0 += 4
-    save_jpg(neu.crop((x0, 505, x0 + 150, 720)), os.path.join(ART, "shop", f"{name}.jpg"), (256, 362), 88)
+    save_jpg(neu.crop((x0, 505, x0 + 150, 720)), os.path.join(ART, "shop", f"{name}.jpg"), (200, 283), 86)
 
 # Kopfbild des Shop-Bildschirms: Fynnox vor Kristallen und einer offenen Truhe.
 # Der Ausschnitt beginnt erst bei y=616, weil darueber der Schriftzug

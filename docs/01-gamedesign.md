@@ -451,9 +451,9 @@ Aus den Mockups belegte Einblendungen, die in **jedem** Spiel gleich aussehen so
 | `SIEG!` | Runde gewonnen | Kopfbild des Ergebnisbildschirms, alle sieben Spiele |
 | `LEVEL UP!` | Levelaufstieg des Profils | in der Belohnungsbox des Ergebnisbildschirms |
 | `BELOHNUNG!` | Truhe oder Belohnung freigeschaltet | an der Truhe im Abenteuerpfad, solange etwas bereitliegt |
-| `NEUES LEVEL!` | nächstes Spiellevel erreicht | **nicht umgesetzt** — siehe unten |
+| `NEUES LEVEL!` | nächstes Spiellevel erreicht | im Ergebnisbildschirm, wenn eine Runde das nächste Level freischaltet (Solitaire) |
 | `FEHLER!` | Fehlzug oder verlorene Runde | Kopfbild des Ergebnisbildschirms, alle sieben Spiele |
-| `PAUSE` | Spiel angehalten | **nicht umgesetzt** — siehe unten |
+| `PAUSE` | Spiel angehalten | eigene Schicht über dem Spielfeld (Blockfall) |
 
 Alle vier umgesetzten Einblendungen sind Bildausschnitte aus dem Block „SPIEL MOMENTE"
 in `docs/referenzen/spiele-ansichten-und-charaktere.png` und tragen ihr Wort **im Bild**.
@@ -462,11 +462,16 @@ Das ist die einzige zugelassene Ausnahme von der Regel, fremde Beschriftungen we
 die Oberfläche denselben Text nicht wiederholen: Die Überschrift des Ergebnisbildschirms
 nennt nur noch den spielspezifischen Grund („Tempel geräumt!", „Zu viele Fehler!").
 
-`NEUES LEVEL!` und `PAUSE` sind bewusst offen. Für beide gibt es im Code noch keinen Ort:
-Die Pause ist bisher nur ein Knopf in Blockfall ohne eigene Schicht darüber, und ein
-Spiellevel wird heute über die Beschriftung des „Nochmal"-Knopfes angekündigt. Ein
-geschnittenes, aber ungenutztes Bild würde nur den Vorab-Cache der PWA belasten — beide
-Ausschnitte entstehen erst, wenn die Stelle dafür existiert.
+`NEUES LEVEL!` und `PAUSE` kamen zuletzt dazu und brauchten dafür je einen Ort im Code:
+Die Pause war nur ein Knopf in Blockfall ohne Schicht darüber — jetzt liegt
+`PauseOverlay` über dem Feld, damit beim Weiterspielen sofort wieder zu sehen ist, wo man
+war. Ein freigeschaltetes Spiellevel stand allein in der Beschriftung des „Nochmal"-Knopfes;
+der Ergebnisbildschirm nimmt es jetzt über `unlockedLevel` entgegen und zeigt daneben nur
+die Nummer, damit „Level" nicht zweimal dasteht.
+
+Beide gelten bisher für **je ein Spiel** — Pause hat nur Blockfall, Spiellevel nur
+Solitaire. Beide Bausteine liegen aber unter `src/components/` und stehen jedem weiteren
+Spiel offen, das die Momente bekommt.
 
 Dazu spielspezifisch: `COMBO x4` / `KOMBO x3` / `Combo x5!` (Blockfall, Tempelpaare, Kristallmix),
 `TETRIS!` (Blockfall) und `Sweet!` (Kristallmix). `PERFEKT!` und `HOLE IN ONE!` standen
