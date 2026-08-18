@@ -11,7 +11,6 @@ const FILTERS: { key: GameCategory | 'alle'; label: string }[] = [
   { key: 'alle', label: 'Alle Spiele' },
   { key: 'puzzle', label: 'Puzzle' },
   { key: 'karten', label: 'Karten' },
-  { key: 'sport', label: 'Sport' },
 ]
 
 export function Games() {

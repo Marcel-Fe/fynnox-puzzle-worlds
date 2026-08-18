@@ -135,17 +135,24 @@ stadt = ref("fynnox-city-hafenpromenade.png")
 save_jpg(stadt, os.path.join(ART, "bg", "stadt.jpg"), (640, 360))
 
 # --- Vorschaubilder der Spielkacheln -------------------------------------
+#
+# Aus "spiele-ansichten-und-charaktere.png", nicht aus dem Dashboard-Streifen:
+# Dort zeigte jede Kachel dieselbe Fynnox-Illustration, wodurch alle Spiele in
+# der Liste gleich aussahen. Hier steht fuer jedes Spiel eine echte Ansicht
+# seines Spielfelds.
+#
+# Die Ausschnitte lassen die HUD-Zeilen der Vorlage bewusst weg ("PUNKTE 18.450",
+# "ZEIT 03:20", "ZUEGE 18"). Solche Zahlen wuerden spaeter den echten Werten im
+# Spiel widersprechen (CLAUDE.md, Abschnitt "Grafik").
 TILES = {
-    "blockfall": (247, 410),
-    "waldbloecke": (413, 577),
-    "tempelpaare": (580, 744),
-    "kristallmix": (747, 911),
-    "solitaire": (914, 1078),
+    "blockfall": (22, 68, 128, 228),
+    "waldbloecke": (722, 100, 858, 248),
+    "tempelpaare": (22, 352, 152, 480),
+    "kristallmix": (722, 352, 858, 480),
+    "solitaire": (22, 578, 152, 690),
 }
-# y ab 476: Auf der Blockfall-Karte klebt oben links ein "NEU"-Fahnchen,
-# das sonst angeschnitten als sinnloses "EU" auf der Kachel landet.
-for name, (x0, x1) in TILES.items():
-    save_jpg(dash.crop((x0, 476, x1, 640)), os.path.join(ART, "games", f"{name}.jpg"), (328, 380))
+for name, box in TILES.items():
+    save_jpg(ansichten.crop(box), os.path.join(ART, "games", f"{name}.jpg"), (328, 380))
 
 # Sudoku und Bubble Shooter gibt es auf keinem Mockup als Kachel —
 # bis dahin dienen zwei Kulissen als Platzhalter.

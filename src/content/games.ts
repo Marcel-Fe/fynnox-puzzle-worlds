@@ -14,7 +14,7 @@ export type GameId =
   | 'bubbleshooter'
 
 /** Kategorien der Filterleiste in der Spieleauswahl (docs/01-gamedesign.md). */
-export type GameCategory = 'puzzle' | 'karten' | 'sport'
+export type GameCategory = 'puzzle' | 'karten'
 
 export interface GameInfo {
   id: GameId
