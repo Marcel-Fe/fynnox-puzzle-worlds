@@ -64,6 +64,9 @@ export function Dashboard() {
         </div>
       </section>
 
+      {/* Kurzwege: Missionen · aktuelles Kapitel · Profil. Das Bild jeder Kachel
+          ist das des Bildschirms dahinter — für Missionen gibt es kein eigenes
+          Motiv in den Konzeptbildern, dort steht die Piratenbucht als Schatzsuche. */}
       <div className="flex gap-3">
         <QuickTile
           to="/missionen"
@@ -71,6 +74,7 @@ export function Dashboard() {
           value={`${doneMissions}/${missions.length}`}
           note={openMissions > 0 ? `${openMissions} abholbereit` : undefined}
           accent="var(--color-gold)"
+          image={asset('bg/piratenbucht.jpg')}
         />
         <QuickTile
           to="/abenteuer"
@@ -78,12 +82,16 @@ export function Dashboard() {
           value={`${chapterProgress(adventure, adventure.chapter)}/${NODES_PER_CHAPTER}`}
           note={`Kapitel ${adventure.chapter}`}
           accent="var(--color-purple)"
+          image={chapterAt(adventure.chapter).image}
         />
         <QuickTile
           to="/profil"
           label="Gespielt"
           value={String(save.stats.totalGames)}
           accent="var(--color-game-kristallmix)"
+          // Dasselbe Bild, das auch die Profil-Kachel auf dem Mehr-Bildschirm
+          // trägt (src/content/navigation.ts) — beide führen zum Profil.
+          image={asset('chars/fynnox-jubel.jpg')}
         />
       </div>
 
@@ -126,30 +134,49 @@ export function Dashboard() {
   )
 }
 
+/**
+ * Die drei Kurzwege unter dem Begrüßungsbanner. Jeder zeigt das Bild des
+ * Bildschirms, in den er führt — dasselbe Muster wie die Kacheln auf dem
+ * Mehr-Bildschirm (src/screens/More.tsx). Vorher war es ein leerer Kasten mit
+ * farbigem Rand, obwohl für jeden der drei längst Bildmaterial im Projekt liegt.
+ */
 function QuickTile({
   to,
   label,
   value,
   note,
   accent,
+  image,
 }: {
   to: string
   label: string
   value: string
   note?: string
   accent: string
+  image: string
 }) {
   return (
     <Link
       to={to}
-      className="flex min-h-20 flex-1 flex-col justify-center gap-0.5 rounded-xl border border-edge bg-card/80 px-3 py-2"
-      style={{ borderLeftColor: accent, borderLeftWidth: 3 }}
+      className="relative flex min-h-24 flex-1 flex-col justify-end gap-0.5 overflow-hidden rounded-xl border border-edge px-3 py-2 shadow-lg shadow-black/30"
+      style={{ borderBottomColor: accent, borderBottomWidth: 3 }}
     >
-      <span className="text-[10px] font-bold tracking-wider text-ink-muted uppercase">
+      <img
+        src={image}
+        alt=""
+        className="absolute inset-0 size-full object-cover object-[center_40%]"
+        loading="lazy"
+      />
+      {/* Von unten aufgehellt, damit Beschriftung und Zahl auf jedem Motiv tragen */}
+      <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/75 to-deep/10" />
+
+      <span className="relative text-[10px] font-bold tracking-wider text-ink-muted uppercase">
         {label}
       </span>
-      <span className="tabular text-sm font-bold">{value}</span>
-      {note && <span className="text-[10px] font-bold text-gold">{note}</span>}
+      <span className="tabular relative text-sm font-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+        {value}
+      </span>
+      {note && <span className="relative text-[10px] font-bold text-gold">{note}</span>}
     </Link>
   )
 }
