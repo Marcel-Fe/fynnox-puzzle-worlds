@@ -19,7 +19,7 @@ REF = os.path.join(ROOT, "docs", "referenzen")
 PUB = os.path.join(ROOT, "public")
 ART = os.path.join(PUB, "art")
 
-for sub in ("chars", "bg", "games"):
+for sub in ("chars", "bg", "games", "shop", "moments"):
     os.makedirs(os.path.join(ART, sub), exist_ok=True)
 
 
@@ -175,6 +175,42 @@ save_jpg(
     os.path.join(ART, "games", "bubbleshooter.jpg"),
     (328, 337),
 )
+
+# --- Shop ----------------------------------------------------------------
+#
+# Alle Warenbilder stammen aus dem Shop-Bildschirm von
+# "handy-ladebildschirm-und-hauptbereiche.png" bzw. aus dem Shop von
+# "handy-app-10-bildschirme.png". Beide Mockups zeigen genau die Waren, die
+# auch in src/content/shop.ts stehen — der Katalog wurde daraus abgeleitet.
+#
+# Jeder Ausschnitt endet OBERHALB der Beschriftung der Mockup-Karte: Dort steht
+# der Warenname und darunter ein Preisschild ("4,99 EUR", "1.200"). Beides gehoert
+# in die Oberflaeche, nicht ins Bild — sonst stuende der Preis zweimal da und
+# liesse sich nie wieder aendern.
+SHOP_LADE = {
+    # Empfohlen fuer dich, Shop-Bildschirm rechts aussen
+    "kristallpaket": (1215, 758, 1296, 852),
+    "muenzpaket": (1307, 758, 1391, 852),
+    "boosterpack": (1401, 758, 1486, 852),
+}
+for name, box in SHOP_LADE.items():
+    save_jpg(lade.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (256, 288), 88)
+
+handy = ref("handy-app-10-bildschirme.png")
+SHOP_HANDY = {
+    # Bildschirm 6 "SHOP", Reihe "Empfohlen fuer dich"
+    "pirat": (13, 1093, 65, 1174),
+    "kristallhaustier": (71, 1093, 125, 1174),
+    "megabooster": (131, 1093, 184, 1174),
+}
+for name, box in SHOP_HANDY.items():
+    save_jpg(handy.crop(box), os.path.join(ART, "shop", f"{name}.jpg"), (256, 384), 88)
+
+# Kopfbild des Shop-Bildschirms: Fynnox vor Kristallen und einer offenen Truhe.
+# Der Ausschnitt beginnt erst bei y=616, weil darueber der Schriftzug
+# "Sonderangebot!" und die Marke "16h 45m" stehen — eine Restzeit, die es im
+# Spiel nicht gibt.
+save_jpg(lade.crop((1214, 616, 1488, 716)), os.path.join(ART, "shop", "hero.jpg"), (548, 200))
 
 # --- App-Icons -----------------------------------------------------------
 def save_icon(size, path, pad=1.0):

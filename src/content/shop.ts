@@ -7,6 +7,8 @@
  * Die sechs belegten Waren stammen unverändert aus dem Mockup. Die übrigen
  * füllen die vier Reiter und übernehmen deren Preislage.
  */
+import { asset } from './assets'
+
 export type ShopCategory = 'outfits' | 'helfer' | 'booster'
 
 export interface ShopItem {
@@ -21,6 +23,22 @@ export interface ShopItem {
   /** Steht zusätzlich unter „Empfohlen" */
   featured?: boolean
   icon: string
+  /**
+   * Warenbild aus den Konzeptbildern. Es gibt nur für die sechs Waren eines,
+   * die auf einem Mockup abgebildet sind — der Rest behält sein Emoji, weil
+   * hier keine Grafik erfunden wird (CLAUDE.md, Abschnitt Grafik).
+   */
+  image?: string
+}
+
+/**
+ * Farbe hinter der Ware. Sie stammt aus der Kachel des jeweiligen Mockups:
+ * Outfits stehen dort auf Gold, Helfer auf Rot, Booster auf Violett.
+ */
+export const SHOP_CATEGORY_ACCENT: Record<ShopCategory, string> = {
+  outfits: 'var(--color-gold)',
+  helfer: 'var(--color-game-kristallmix)',
+  booster: 'var(--color-purple)',
 }
 
 export const SHOP_ITEMS: ShopItem[] = [
@@ -32,6 +50,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     crystals: 1200,
     featured: true,
     icon: '🏴‍☠️',
+    image: asset('shop/pirat.jpg'),
   },
   {
     id: 'outfit-winter',
@@ -65,6 +84,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     crystals: 800,
     featured: true,
     icon: '💠',
+    image: asset('shop/kristallhaustier.jpg'),
   },
   {
     id: 'helfer-laterne',
@@ -98,6 +118,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     crystals: 2500,
     featured: true,
     icon: '🎁',
+    image: asset('shop/megabooster.jpg'),
   },
   {
     id: 'booster-sanduhr',
@@ -130,6 +151,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     euro: '2,49 €',
     icon: '🪙',
+    image: asset('shop/muenzpaket.jpg'),
   },
   {
     id: 'euro-kristalle',
@@ -138,6 +160,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     euro: '4,99 €',
     icon: '💎',
+    image: asset('shop/kristallpaket.jpg'),
   },
   {
     id: 'euro-booster',
@@ -146,6 +169,7 @@ export const SHOP_ITEMS: ShopItem[] = [
     category: 'booster',
     euro: '5,99 €',
     icon: '📦',
+    image: asset('shop/boosterpack.jpg'),
   },
 ]
 
@@ -170,3 +194,8 @@ export const SHOP_ITEMS_BY_ID = Object.fromEntries(SHOP_ITEMS.map((i) => [i.id, 
  */
 export const SHOP_NOTE =
   'Gekauftes landet in deiner Sammlung. Wie es im Spiel wirkt, kommt später dazu.'
+
+/** Kopfbereich des Shop-Bildschirms (Bild: public/art/shop/hero.jpg). */
+export const SHOP_HEADLINE = 'Fynnox’ Schatzkammer'
+export const SHOP_TEASER = 'Outfits, Helfer und Booster — bezahlt wird mit Kristallen.'
+export const SHOP_HERO = asset('shop/hero.jpg')

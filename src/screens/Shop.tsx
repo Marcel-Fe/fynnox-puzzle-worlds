@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { Card } from '../components/Card'
 import { Tabs } from '../components/Tabs'
 import {
+  SHOP_CATEGORY_ACCENT,
+  SHOP_HEADLINE,
+  SHOP_HERO,
   SHOP_ITEMS,
   SHOP_NOTE,
   SHOP_TABS,
+  SHOP_TEASER,
   type ShopItem,
   type ShopTab,
 } from '../content/shop'
@@ -35,6 +39,24 @@ export function Shop() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-3">
+      {/* Kopfbereich nach dem Muster des Mehr-Bildschirms: Bild, Verlauf,
+          Schrift darauf. Das Motiv ist der Shop-Bildschirm der Mockups. */}
+      <section className="relative flex min-h-28 flex-col justify-end overflow-hidden rounded-2xl border border-edge shadow-lg shadow-black/30">
+        <img
+          src={SHOP_HERO}
+          alt=""
+          className="absolute inset-0 size-full object-cover object-[center_40%]"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/70 to-deep/10" />
+        <div className="relative p-3">
+          <h1 className="text-xl font-black text-gold drop-shadow-[0_2px_0_rgba(0,0,0,0.7)]">
+            {SHOP_HEADLINE}
+          </h1>
+          <p className="mt-0.5 text-xs text-ink-muted">{SHOP_TEASER}</p>
+        </div>
+      </section>
+
       <Tabs<ShopTab>
         tabs={SHOP_TABS.map((t) => ({ key: t.key, label: t.label }))}
         active={tab}
@@ -61,9 +83,20 @@ export function Shop() {
             {owned.map((item) => (
               <li
                 key={item.id}
-                className="flex min-h-11 items-center gap-2 rounded-lg border border-edge bg-deep/60 px-3 text-sm font-bold"
+                className="flex min-h-11 items-center gap-2 rounded-lg border border-edge bg-deep/60 py-1 pr-3 pl-1 text-sm font-bold"
               >
-                <span aria-hidden>{item.icon}</span>
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt=""
+                    className="size-9 rounded-md object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="grid size-9 place-items-center" aria-hidden>
+                    {item.icon}
+                  </span>
+                )}
                 {item.title}
               </li>
             ))}
@@ -84,6 +117,7 @@ function ShopCard({
   onBuy(id: string): void
 }) {
   const refusal = refusalFor(save, item.id)
+  const accent = SHOP_CATEGORY_ACCENT[item.category]
 
   const label =
     refusal === null
@@ -95,21 +129,46 @@ function ShopCard({
           : 'Keine Bezahlung'
 
   return (
-    <li className="flex flex-col rounded-xl border border-edge bg-deep/50 p-3">
-      <div className="flex items-start gap-2">
-        <span className="text-3xl" aria-hidden>
-          {item.icon}
-        </span>
+    <li
+      className="flex flex-col rounded-xl border border-edge bg-deep/50 p-3"
+      style={{ borderTopColor: accent, borderTopWidth: 2 }}
+    >
+      <div className="flex items-start gap-3">
+        {/* Warenbild in der Größe der Mockup-Kachel. Wo keines existiert,
+            steht das Emoji auf derselben Fläche vor der Kategoriefarbe —
+            damit bleiben alle Karten gleich hoch. */}
+        <div
+          className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-lg text-4xl drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)] ring-1 ring-edge"
+          style={{
+            // color-mix statt `${accent}66`: `accent` ist eine CSS-Variable,
+            // und ein angehaengtes Alpha ergaebe `var(--color-gold)66` — kein
+            // gueltiger Farbwert, der Verlauf faellt dann still aus.
+            background: `linear-gradient(155deg, color-mix(in srgb, ${accent} 55%, transparent), color-mix(in srgb, ${accent} 12%, transparent))`,
+          }}
+        >
+          {item.image ? (
+            <img
+              src={item.image}
+              alt=""
+              className="size-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <span aria-hidden>{item.icon}</span>
+          )}
+        </div>
+
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold">{item.title}</p>
           <p className="text-xs text-ink-muted">{item.description}</p>
+          <p className="tabular mt-1 text-sm font-black text-gold">
+            {item.crystals !== undefined
+              ? `💎 ${item.crystals.toLocaleString('de-DE')}`
+              : item.euro}
+          </p>
         </div>
       </div>
-      <p className="tabular mt-2 text-sm font-black text-gold">
-        {item.crystals !== undefined
-          ? `💎 ${item.crystals.toLocaleString('de-DE')}`
-          : item.euro}
-      </p>
+
       <button
         type="button"
         disabled={refusal !== null}
